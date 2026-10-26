@@ -1,0 +1,39 @@
+{
+ "members": [
+  "total",
+  "fs_gamma",
+  "fs_lognorm",
+  "peril",
+  "fs_peril",
+  "glm"
+ ],
+ "cross_year_d2": {
+  "2023": 0.13860263046354016,
+  "2024": 0.1375057706664572,
+  "mean": 0.13805420056499867
+ },
+ "recalibration": [
+  {
+   "line": "motor",
+   "b0": 0.007649004386617725,
+   "b1": 1.0354432520178842,
+   "geo_per_year_on_cover_2025": 548.3143854532226,
+   "cost_per_year_on_cover_2025": 556.0089831001746
+  },
+  {
+   "line": "buildings",
+   "b0": 0.015330605871808345,
+   "b1": 1.078288966783094,
+   "geo_per_year_on_cover_2025": 478.67346228151797,
+   "cost_per_year_on_cover_2025": 496.74686571407943
+  },
+  {
+   "line": "contents",
+   "b0": 0.049000908034457114,
+   "b1": 1.0897100656789802,
+   "geo_per_year_on_cover_2025": 122.59472464498548,
+   "cost_per_year_on_cover_2025": 131.5844218119831
+  }
+ ],
+ "submission": "v2_geo_ensemble.csv"
+}

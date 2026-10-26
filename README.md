@@ -204,6 +204,111 @@ Each model step saves its submission as the next version in `submissions/` (see
 2nd round. The starter file `submission_2nd_round.csv` from `fit_example.py` stays where it was;
 a byte-for-byte copy is the 2nd round's v1.
 
+## The 1st round's winning ensemble, in both rounds
+
+The best 1st-round private score (0.13830, public 0.12851) came from the code in
+`IAA_Part1_geo_models`: six experts per line, their row-by-row geometric mean, and a small
+recalibration per line. `geo_experts.py` holds that method, and each round has its own steps.
+
+| Expert | What it is |
+|---|---|
+| `total` | Tweedie LightGBM on the capped total cost, x the line's large-loss load |
+| `glm` | Tweedie GLM on banded numeric factors and grouped categories |
+| `peril` | one Tweedie LightGBM per peril, with its own reported share and load, summed |
+| `fs_gamma` | claim-frequency LightGBM (Poisson) x claim-size LightGBM (Gamma) |
+| `fs_lognorm` | the same frequency x a lognormal claim size whose variance depends on the risk |
+| `fs_peril` | frequency x claim size for each peril, summed |
+
+Claims are developed first: an open claim loses the recovery ratio seen on closed claims, and a
+share of it is declined later if recent years show significantly too few repudiations. Claim sizes
+are learnt on claim records, from mature loss years only. The recalibration is a Tweedie GLM with
+two parameters per line, log E = log(exposure x L) + b0 + b1 x log(geo rate / L), where L is the
+mean's average rate in the scored year.
+
+Three things differ from the original on purpose. The frequency trend divides the offsets (the
+original multiplied by it, a defect its README admits; it only touched contents). The features are
+this folder's step-3 selection plus the original's credibility-weighted `make_model`: step 3
+dropped `make_model` as a random label, but its 2021-22 claim frequency by code predicts 2023-24
+(correlation 0.22, against 0.02 with shuffled labels). Reporting completeness comes from step 3.
+
+**1st round** (`05_geo_experts.py`, `06_geo_ensemble.py`). The experts are fitted on 2021-22 to
+price 2023, on 2021-23 to price 2024, and on every year to price 2025. The recalibration is fitted
+on the two back-tests; the check fits it on one back-test year and scores the other.
+
+| 1st round, all lines pooled | 2023 | 2024 |
+|---|---:|---:|
+| `total` (one LightGBM) | 0.1364 | 0.1338 |
+| best single expert (`fs_peril`) | 0.1379 | 0.1365 |
+| geometric mean of the six | 0.1386 | 0.1373 |
+| recalibrated, fitted on the other year | **0.1386** | **0.1375** |
+| the original code, as it reported itself | 0.1380 | 0.1367 |
+
+The frequency x claim-size experts beat a single cost model in every back-test, and the six
+together beat each of them. The 2025 file (v2) follows the original winning file closely: log
+correlation 0.998 (motor), 0.996 (buildings), 0.996 (contents), total 0.3% lower. The fitted
+slopes (b1 1.04 motor, 1.08 buildings, 1.09 contents) match the original's.
+
+**2nd round** (`06_geo_priors.py`, `07_geo_experts.py`, `08_geo_ensemble.py`). The round's best
+recipe is the developed prior, so every expert starts from a prior of its own component. Step 6
+fits claim frequency, claim size, and the cost, frequency and size of each peril on every 1st-round
+row, with the factors both markets share (as in step 4). Step 7 puts them in the experts' offsets.
+Where a peril has too few claims here (under 50, or under 300 for claim sizes), its prior alone,
+re-levelled, replaces the model. Two training years give only one forward back-test, so step 7
+also fits every expert on five folds of customers over 2023-2024. Those out-of-fold predictions
+drive the tuning and the ensemble.
+
+What cross-validation decided:
+
+* LightGBM settings: stumps (one split per tree) for motor and contents, 7 leaves with large
+  leaves and a strong L2 penalty for buildings. On top of the prior, simple trees do best.
+* GLM ridge: strong (alpha 10 motor, 30 buildings, 1 contents). With the prior in the offset, a
+  strong ridge means staying close to the developed market; a weak one overfits buildings badly.
+* Members: here all six together score worse than `total` alone, because two years give few claims
+  to learn claim sizes from. Each line keeps the combination that ranks its risks best (level
+  known, mean of the two years): motor `total` + `fs_peril` + `glm`, buildings `fs_lognorm` +
+  `peril`, contents `total` + `glm`.
+* Recalibration: a fitted slope b1 changed the other year's D^2 by -0.0035 to +0.0008 with no
+  consistent sign, so b1 stays at 1 and only the level is fitted, on both years' folds.
+* New-business and gender factors, as in step 5, from the ensemble's out-of-fold predictions.
+
+| 2nd round, all lines pooled | Out of fold 2023 | Out of fold 2024 | Forward 2024 |
+|---|---:|---:|---:|
+| `total` (transfer LightGBM, tuned) | 0.1301 | 0.1386 | 0.1278 |
+| `glm` | 0.1300 | 0.1389 | 0.1279 |
+| geometric mean of the chosen members | 0.1339 | 0.1398 | **0.1300** |
+| step 5's transfer LightGBM (v2) | | | 0.1277 |
+
+The forward check fits on 2023 and prices 2024: the ensemble gains 0.0023 over step 5's model. The
+members were chosen on out-of-fold rows that include 2024, so that gain is a little optimistic.
+The 2025 file (v4) stays close to the pricing repository's best public file: log correlation 0.989
+(motor), 0.946 (buildings), 0.983 (contents), total 1.5% lower.
+
+To try another combination without refitting the experts, run the ensemble step with fixed
+members; each run is saved as a new version:
+
+```bash
+python 06_geo_ensemble.py --members total fs_gamma fs_peril --tag three    # in "1st round"
+python 08_geo_ensemble.py --members total glm --tag total_glm               # in "2nd round"
+```
+
+## Submissions
+
+Every model step saves its 2025 file as the next version in its round's `submissions/` folder,
+named after the model, and never overwrites one. `submissions/versions.csv`, and the same table in
+`submissions/README.md`, records for each version the model, the script, the date, the
+out-of-time evidence, a description and a checksum. A run that reproduces an existing file adds no
+version. Every file is checked before it is saved: one row per row_id of the sample submission, in
+its order, and every prediction finite and positive.
+
+| Round | Version | Model | Out-of-time evidence (all lines) |
+|---|---|---|---|
+| 1st | v1 | `lightgbm`: one LightGBM per line (step 4) | 2024 holdout 0.1342 |
+| 1st | v2 | `geo_ensemble`: the winning ensemble (steps 5-6) | 2023 0.1386, 2024 0.1375 |
+| 2nd | v1 | `starter_lightgbm`: the earlier `fit_example.py` file, unchanged | none |
+| 2nd | v2 | `transfer_lightgbm`: LightGBM on the developed prior (step 5) | forward 2024 0.1286 |
+| 2nd | v3 | `geo_ensemble_transfer`: first ensemble setup (slope fitted) | kept for comparison |
+| 2nd | v4 | `geo_ensemble_transfer`: steps 6-8 as they are now | forward 2024 0.1300 (plain mean) |
+
 ## Using the features with a boosting model
 
 * `python fit_example.py "2nd round"` (or `"1st round"`) fits one LightGBM Tweedie model per line

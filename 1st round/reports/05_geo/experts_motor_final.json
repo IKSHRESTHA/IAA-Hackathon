@@ -1,0 +1,151 @@
+{
+ "summary": {
+  "target_year": 2025,
+  "train_rows": 979968,
+  "score_rows": 254986,
+  "features": [
+   "driver_age",
+   "ncb_years",
+   "vehicle_value_group",
+   "vehicle_age",
+   "engine_size_cc",
+   "body_type",
+   "vehicle_colour",
+   "fuel_type",
+   "driver_assist",
+   "cover_type",
+   "annual_mileage",
+   "overnight_parking",
+   "vehicle_use",
+   "telematics_opt_in",
+   "telematics_score",
+   "voluntary_excess",
+   "channel",
+   "payment_method",
+   "missed_payments_12m",
+   "renewal_count",
+   "days_quote_to_inception",
+   "dq_mileage_zero",
+   "occupation",
+   "marital_status",
+   "household_size",
+   "credit_band",
+   "prior_claims_5y",
+   "licence_points",
+   "years_at_address",
+   "region",
+   "urban_density",
+   "property_type",
+   "start_month",
+   "winter_fraction",
+   "starts_after_jan1",
+   "age_first_licensed",
+   "wx_hail_days",
+   "wx_freezing_days",
+   "wx_dry_summer_index",
+   "wx_mean_temperature_c",
+   "wx_hail_days_mean",
+   "wx_wind_exposure_index_mean",
+   "wx_dry_summer_index_mean",
+   "wx_wildfire_index_mean",
+   "wx_mean_temperature_c_mean",
+   "hist_pol_claims_1y",
+   "hist_pol_claims_3y",
+   "hist_pol_cost_3y",
+   "hist_pol_years_since_claim",
+   "hist_pol_exposure_3y",
+   "hist_cust_claims_3y",
+   "holds_buildings",
+   "holds_contents",
+   "make_model_te"
+  ],
+  "cap": 45235.46579999999,
+  "load": 1.0628865564009708,
+  "peril_loads": {
+   "own_damage": 1.000149077508534,
+   "third_party_prop": 1.000071772022723,
+   "bodily_injury": 1.21696779993328,
+   "theft": 1.0050538781362113,
+   "glass_hail": 1.0
+  },
+  "load_years": [
+   2021,
+   2022,
+   2023
+  ],
+  "severity_claims": 84631
+ },
+ "experts": {
+  "total": {
+   "trees": 320,
+   "balance": 1.0249064649841992
+  },
+  "glm": {
+   "balance": 0.9998227955010918
+  },
+  "peril": {
+   "own_damage": {
+    "trees": 343,
+    "balance": 1.0447521314595365,
+    "load": 1.000149077508534
+   },
+   "third_party_prop": {
+    "trees": 208,
+    "balance": 1.0348285782266202,
+    "load": 1.000071772022723
+   },
+   "bodily_injury": {
+    "trees": 116,
+    "balance": 1.0739797479427131,
+    "load": 1.21696779993328
+   },
+   "theft": {
+    "trees": 122,
+    "balance": 1.0866680898488876,
+    "load": 1.0050538781362113
+   },
+   "glass_hail": {
+    "trees": 157,
+    "balance": 1.0493543109006185,
+    "load": 1.0
+   }
+  },
+  "fs": {
+   "freq_trees": 1430,
+   "gamma_trees": 109,
+   "lognorm_trees": [
+    135,
+    47
+   ],
+   "lognorm_calibration": 0.8037227481827085,
+   "claims": 84631
+  },
+  "fs_peril": {
+   "own_damage": {
+    "freq_trees": 1023,
+    "size_trees": 187,
+    "claims": 36721
+   },
+   "third_party_prop": {
+    "freq_trees": 802,
+    "size_trees": 73,
+    "claims": 25337
+   },
+   "bodily_injury": {
+    "freq_trees": 595,
+    "size_trees": 20,
+    "claims": 6334
+   },
+   "theft": {
+    "freq_trees": 439,
+    "size_trees": 79,
+    "claims": 4616
+   },
+   "glass_hail": {
+    "freq_trees": 610,
+    "size_trees": 113,
+    "claims": 11623
+   }
+  }
+ }
+}

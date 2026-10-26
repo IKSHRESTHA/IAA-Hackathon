@@ -128,3 +128,27 @@ What the LightGBM steps of this folder added (README, "The LightGBM model"):
 * 2nd-round buildings claims of 2024 came in at 0.59 of what 2023 predicted, because of a fire-cost
   spike in 2023 (283 per year on cover against 93). A one-year holdout cannot judge the buildings
   level.
+
+## 7. The 1st round's winning ensemble, rebuilt here for both rounds
+
+The six-expert geometric mean of `IAA_Part1_geo_models` (private 0.13830) now runs on this
+folder's data (README, "The 1st round's winning ensemble").
+
+* 1st round: it reproduces the original. Out of time, 0.1386 (2023) and 0.1375 (2024) against the
+  original's own 0.1380 and 0.1367, and 0.0033 above a single LightGBM on 2024. The 2025 file has
+  a log correlation of 0.996-0.998 with the original winning file per line.
+* Frequency x claim-size experts beat a single cost model in the 1st round, every line and year.
+  In the 2nd round they lose: two years give too few claims to learn claim sizes, even with a
+  developed prior for the size. There, all six together score below `total` alone (contents,
+  cross-year 0.1071 against 0.1087), and choosing members per line by cross-validation recovers
+  the gain (0.1120 with `total` + `glm`).
+* With a developed prior in the offset, the 2nd round wants very simple local models: LightGBM
+  stumps (motor, contents) and a strong GLM ridge (alpha 1 to 30). A weak ridge overfits buildings
+  (out-of-fold D^2 below 0).
+* The 1st round's recalibration slope (b1 about 1.04-1.09) holds out of time there. In the 2nd round
+  a slope fitted on one year does not carry to the other (-0.0035 to +0.0008), so it is fixed at 1.
+* `make_model` is not a random label for risk: its 2021-22 claim frequency by code predicts
+  2023-24 (correlation 0.22; 0.02 with shuffled labels). It enters as a credibility-weighted
+  relativity.
+* Developing open claims (recoveries still to come) lowers the 1st round's open incurred by about
+  1.3%; no later-repudiation effect was significant in either round.
