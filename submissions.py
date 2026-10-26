@@ -15,7 +15,8 @@ from pathlib import Path
 
 import pandas as pd
 
-COLUMNS = ["version", "file", "model", "script", "created", "rows", "sha256", "evidence", "description"]
+COLUMNS = ["version", "file", "model", "script", "created", "rows", "sha256", "evidence", "public_score",
+           "description"]
 
 
 def save(sub: pd.DataFrame, round_dir: Path, model: str, script: str, description: str = "",
@@ -55,23 +56,36 @@ def _store(data: bytes, rows: int, round_dir: Path, model: str, script: str, des
     path.write_bytes(data)
     row = {"version": version, "file": path.name, "model": model, "script": script,
            "created": datetime.now().strftime("%Y-%m-%d %H:%M"), "rows": str(rows), "sha256": digest,
-           "evidence": evidence, "description": description}
+           "evidence": evidence, "public_score": "", "description": description}
     _write_register(folder, pd.concat([reg, pd.DataFrame([row])], ignore_index=True)[COLUMNS])
     print(f"   saved as {version}: {path}")
     return path
 
 
+def record_score(round_dir: Path, version: str, score: float) -> None:
+    """Write a version's public leaderboard score into the register."""
+    folder = Path(round_dir) / "submissions"
+    reg = _register(folder)
+    if version not in set(reg["version"]):
+        raise KeyError(f"{version} is not in {folder / 'versions.csv'}")
+    reg.loc[reg["version"] == version, "public_score"] = f"{score:.5f}"
+    _write_register(folder, reg)
+
+
 def _register(folder: Path) -> pd.DataFrame:
     path = folder / "versions.csv"
-    return pd.read_csv(path, dtype=str).fillna("") if path.exists() else pd.DataFrame(columns=COLUMNS)
+    if not path.exists():
+        return pd.DataFrame(columns=COLUMNS)
+    return pd.read_csv(path, dtype=str).fillna("").reindex(columns=COLUMNS, fill_value="")
 
 
 def _write_register(folder: Path, reg: pd.DataFrame) -> None:
     reg.to_csv(folder / "versions.csv", index=False)
     lines = ["# Submissions", "",
              "Every submission file made in this round, newest last. `versions.csv` holds the same table.", "",
-             "| Version | File | Model | Script | Created | Evidence | Description |",
-             "|---|---|---|---|---|---|---|"]
+             "| Version | File | Model | Script | Created | Evidence | Public score | Description |",
+             "|---|---|---|---|---|---|---|---|"]
     for r in reg.itertuples(index=False):
-        lines.append(f"| {r.version} | `{r.file}` | {r.model} | `{r.script}` | {r.created} | {r.evidence} | {r.description} |")
+        lines.append(f"| {r.version} | `{r.file}` | {r.model} | `{r.script}` | {r.created} | {r.evidence} "
+                     f"| {r.public_score} | {r.description} |")
     (folder / "README.md").write_text("\n".join(lines) + "\n", encoding="utf-8")

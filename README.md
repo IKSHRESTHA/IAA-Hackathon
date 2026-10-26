@@ -17,6 +17,7 @@ submission is kept as a numbered version (see [Submissions](#submissions)):
 | 4. Developed prior (2nd round) | `04_developed_prior.py` | | `data/prior/` + `reports/04_prior/` |
 | 5. LightGBM model (2nd round) | `05_lightgbm_model.py` | | `submissions/v<N>_transfer_lightgbm.csv` + `reports/05_model/` |
 | 6-8. Ensemble on developed priors (2nd round) | `06_geo_priors.py`, `07_geo_experts.py`, `08_geo_ensemble.py` | | `data/prior/`, `data/experts/`, `submissions/v<N>_geo_ensemble_transfer.csv` + `reports/06_geo/` to `08_geo/` |
+| 9. Best public levels, ensemble ranking (2nd round) | `09_rebase_to_best.py` | | `submissions/v<N>_best_levels_ranked_w<weight>.csv` + `reports/09_rebase/` |
 
 **File and column names are those of the case study** in every layer: `data/raw/` holds the
 competition files, `data/clean/` the same tables with errors fixed, and `data/features/` one
@@ -283,6 +284,19 @@ members were chosen on out-of-fold rows that include 2024, so that gain is a lit
 The 2025 file (v4) stays close to the pricing repository's best public file: log correlation 0.989
 (motor), 0.946 (buildings), 0.983 (contents), total 1.5% lower.
 
+**What the leaderboard said, and step 9.** v4 scored 0.16198 in public, below the best known file
+(0.16529, the pricing repository's single transfer LightGBM), although it ranks the 2024 risks
+better. The difference is in the levels. That file's new-business, buildings and gender levels were
+settled with leaderboard probes, and v4 departs from them (buildings 6% lower, motor renewals 7%
+higher). The 2024 back-test cannot judge those levels: 2025 is 77% new business, 2024 about 13%.
+
+`09_rebase_to_best.py` keeps the best file's total in every segment (line x new business x gender
+for motor and contents; line x new business for buildings) and replaces only the ranking inside
+each segment by a geometric blend of that file and the ensemble. On 2024, every segment at its
+actual level and rows weighted to the 2025 mix, the ranking D^2 is 0.1016 for the best file, 0.1067
+for a 50/50 blend (v5), 0.1078 for 25/75 (v6) and 0.1080 for the ensemble alone. The reference
+files are in `data/reference/`.
+
 To try another combination without refitting the experts, run the ensemble step with fixed
 members; each run is saved as a new version:
 
@@ -304,10 +318,14 @@ its order, and every prediction finite and positive.
 |---|---|---|---|
 | 1st | v1 | `lightgbm`: one LightGBM per line (step 4) | 2024 holdout 0.1342 |
 | 1st | v2 | `geo_ensemble`: the winning ensemble (steps 5-6) | 2023 0.1386, 2024 0.1375 |
-| 2nd | v1 | `starter_lightgbm`: the earlier `fit_example.py` file, unchanged | none |
+| 2nd | v1 | `starter_lightgbm`: the earlier `fit_example.py` file, unchanged | none; public 0.12519 |
 | 2nd | v2 | `transfer_lightgbm`: LightGBM on the developed prior (step 5) | forward 2024 0.1286 |
 | 2nd | v3 | `geo_ensemble_transfer`: first ensemble setup (slope fitted) | kept for comparison |
-| 2nd | v4 | `geo_ensemble_transfer`: steps 6-8 as they are now | forward 2024 0.1300 (plain mean) |
+| 2nd | v4 | `geo_ensemble_transfer`: steps 6-8 as they are now | forward 2024 0.1300 (plain mean); public 0.16198 |
+| 2nd | v5 | `best_levels_ranked_w50`: best public file's levels, 50/50 ranking (step 9) | 2024 ranking 0.1067 vs 0.1016 |
+| 2nd | v6 | `best_levels_ranked_w25`: the same, 25/75 ranking (step 9) | 2024 ranking 0.1078 vs 0.1016 |
+
+Public scores go into the register with `submissions.record_score(round_dir, "v4", 0.16198)`.
 
 ## Using the features with a boosting model
 

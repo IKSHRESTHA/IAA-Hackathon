@@ -152,3 +152,16 @@ folder's data (README, "The 1st round's winning ensemble").
   relativity.
 * Developing open claims (recoveries still to come) lowers the 1st round's open incurred by about
   1.3%; no later-repudiation effect was significant in either round.
+
+## 8. Leaderboard lesson of the 2nd-round ensemble
+
+* v4 (the ensemble on developed priors) scored 0.16198 in public against 0.16529 for the pricing
+  repository's single transfer LightGBM, although on the 2024 back-test it scores higher (0.1300
+  against 0.1215 for that model on the same rows and claims).
+* The 2024 back-test is mostly renewals (13% new business) and 2025 mostly new business (77%), so
+  it cannot judge the level of new business, of buildings or of gender, which the best file
+  settled with leaderboard probes. v4 departed from those levels (buildings 6% lower, motor
+  renewals 7% higher) and lost.
+* What the back-test can judge is the ranking inside a segment. There the ensemble is clearly
+  better (0.1080 against 0.1016, rows weighted to the 2025 mix), so step 9 keeps the best file's
+  segment totals and blends only the ranking inside (v5 50/50, v6 25/75).

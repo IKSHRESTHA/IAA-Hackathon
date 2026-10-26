@@ -6,7 +6,8 @@ Model steps (they use data/clean and data/features, which are already in the fol
     1st round: 04_lightgbm_model.py, then the round's winning ensemble: 05_geo_experts.py (slow:
                six experts on three fit sets) and 06_geo_ensemble.py
     2nd round: 04_developed_prior.py (reads the 1st round's data), 05_lightgbm_model.py, then the
-               same ensemble on developed priors: 06_geo_priors.py, 07_geo_experts.py, 08_geo_ensemble.py
+               same ensemble on developed priors: 06_geo_priors.py, 07_geo_experts.py, 08_geo_ensemble.py,
+               and 09_rebase_to_best.py (the best public file's levels, the ensemble's ranking inside)
 
 Usage:
     python run_all.py                     # data steps of both rounds
@@ -29,7 +30,7 @@ STEPS = ("01_data_reading.py", "02_data_cleaning.py", "03_feature_engineering.py
 MODEL_STEPS = {
     "1st round": ("04_lightgbm_model.py", "05_geo_experts.py", "06_geo_ensemble.py"),
     "2nd round": ("04_developed_prior.py", "05_lightgbm_model.py", "06_geo_priors.py", "07_geo_experts.py",
-                  "08_geo_ensemble.py"),
+                  "08_geo_ensemble.py", "09_rebase_to_best.py"),
 }
 
 
