@@ -1,0 +1,360 @@
+{
+ "params": {
+  "min_sum_hessian_in_leaf": 1.0,
+  "bagging_freq": 1,
+  "max_bin": 255,
+  "cat_smooth": 50,
+  "cat_l2": 10,
+  "min_data_per_group": 200,
+  "max_cat_to_onehot": 32,
+  "num_leaves": 2,
+  "min_data_in_leaf": 300,
+  "lambda_l2": 10.0,
+  "learning_rate": 0.03,
+  "feature_fraction": 0.8,
+  "bagging_fraction": 0.8
+ },
+ "glm_alpha": 10.0,
+ "experts": {
+  "fold0": {
+   "total": {
+    "trees": 3,
+    "balance": 0.9938926433002351
+   },
+   "glm": {
+    "balance": 0.9970154521857771
+   },
+   "peril": {
+    "own_damage": {
+     "trees": 13,
+     "load": 1.0
+    },
+    "third_party_prop": {
+     "trees": 57,
+     "load": 1.0
+    },
+    "bodily_injury": {
+     "trees": 1,
+     "load": 1.1956538827248393
+    },
+    "theft": {
+     "trees": 1,
+     "load": 1.0
+    },
+    "glass_hail": {
+     "trees": 324,
+     "load": 1.0
+    }
+   },
+   "fs": {
+    "freq_trees": 1381,
+    "gamma_trees": 94,
+    "lognorm_trees": [
+     144,
+     1
+    ],
+    "lognorm_calibration": 0.791166872995356,
+    "claims": 2857
+   },
+   "fs_peril": {
+    "own_damage": {
+     "freq_trees": 393,
+     "size_trees": 63,
+     "claims": 1104
+    },
+    "third_party_prop": {
+     "freq_trees": 150,
+     "size_trees": 10,
+     "claims": 903
+    },
+    "bodily_injury": {
+     "freq_trees": 529,
+     "size_trees": 0,
+     "claims": 213
+    },
+    "theft": {
+     "freq_trees": 575,
+     "size_trees": 0,
+     "claims": 160
+    },
+    "glass_hail": {
+     "freq_trees": 400,
+     "size_trees": 5,
+     "claims": 477
+    }
+   }
+  },
+  "fold1": {
+   "total": {
+    "trees": 98,
+    "balance": 1.0084487006460991
+   },
+   "glm": {
+    "balance": 1.0022658701989957
+   },
+   "peril": {
+    "own_damage": {
+     "trees": 35,
+     "load": 1.0
+    },
+    "third_party_prop": {
+     "trees": 153,
+     "load": 1.0
+    },
+    "bodily_injury": {
+     "trees": 79,
+     "load": 1.1956538827248393
+    },
+    "theft": {
+     "trees": 49,
+     "load": 1.0
+    },
+    "glass_hail": {
+     "trees": 72,
+     "load": 1.0
+    }
+   },
+   "fs": {
+    "freq_trees": 881,
+    "gamma_trees": 25,
+    "lognorm_trees": [
+     23,
+     1
+    ],
+    "lognorm_calibration": 0.7365866398293921,
+    "claims": 2853
+   },
+   "fs_peril": {
+    "own_damage": {
+     "freq_trees": 652,
+     "size_trees": 15,
+     "claims": 1111
+    },
+    "third_party_prop": {
+     "freq_trees": 106,
+     "size_trees": 63,
+     "claims": 909
+    },
+    "bodily_injury": {
+     "freq_trees": 361,
+     "size_trees": 0,
+     "claims": 215
+    },
+    "theft": {
+     "freq_trees": 127,
+     "size_trees": 0,
+     "claims": 145
+    },
+    "glass_hail": {
+     "freq_trees": 380,
+     "size_trees": 1,
+     "claims": 473
+    }
+   }
+  },
+  "fold2": {
+   "total": {
+    "trees": 24,
+    "balance": 0.9948547028193225
+   },
+   "glm": {
+    "balance": 1.0002716858651362
+   },
+   "peril": {
+    "own_damage": {
+     "trees": 26,
+     "load": 1.0
+    },
+    "third_party_prop": {
+     "trees": 18,
+     "load": 1.0
+    },
+    "bodily_injury": {
+     "trees": 3,
+     "load": 1.1956538827248393
+    },
+    "theft": {
+     "trees": 10,
+     "load": 1.0
+    },
+    "glass_hail": {
+     "trees": 156,
+     "load": 1.0
+    }
+   },
+   "fs": {
+    "freq_trees": 1056,
+    "gamma_trees": 10,
+    "lognorm_trees": [
+     22,
+     1
+    ],
+    "lognorm_calibration": 0.7708947751370991,
+    "claims": 2811
+   },
+   "fs_peril": {
+    "own_damage": {
+     "freq_trees": 593,
+     "size_trees": 1,
+     "claims": 1087
+    },
+    "third_party_prop": {
+     "freq_trees": 123,
+     "size_trees": 61,
+     "claims": 889
+    },
+    "bodily_injury": {
+     "freq_trees": 208,
+     "size_trees": 0,
+     "claims": 201
+    },
+    "theft": {
+     "freq_trees": 97,
+     "size_trees": 0,
+     "claims": 146
+    },
+    "glass_hail": {
+     "freq_trees": 276,
+     "size_trees": 93,
+     "claims": 488
+    }
+   }
+  },
+  "fold3": {
+   "total": {
+    "trees": 30,
+    "balance": 0.9938835430589277
+   },
+   "glm": {
+    "balance": 0.9964500042264784
+   },
+   "peril": {
+    "own_damage": {
+     "trees": 9,
+     "load": 1.0
+    },
+    "third_party_prop": {
+     "trees": 117,
+     "load": 1.0
+    },
+    "bodily_injury": {
+     "trees": 2,
+     "load": 1.1956538827248393
+    },
+    "theft": {
+     "trees": 1,
+     "load": 1.0
+    },
+    "glass_hail": {
+     "trees": 120,
+     "load": 1.0
+    }
+   },
+   "fs": {
+    "freq_trees": 963,
+    "gamma_trees": 130,
+    "lognorm_trees": [
+     101,
+     1
+    ],
+    "lognorm_calibration": 0.7811074422556105,
+    "claims": 2847
+   },
+   "fs_peril": {
+    "own_damage": {
+     "freq_trees": 514,
+     "size_trees": 22,
+     "claims": 1093
+    },
+    "third_party_prop": {
+     "freq_trees": 81,
+     "size_trees": 7,
+     "claims": 900
+    },
+    "bodily_injury": {
+     "freq_trees": 347,
+     "size_trees": 0,
+     "claims": 220
+    },
+    "theft": {
+     "freq_trees": 486,
+     "size_trees": 0,
+     "claims": 165
+    },
+    "glass_hail": {
+     "freq_trees": 407,
+     "size_trees": 1,
+     "claims": 469
+    }
+   }
+  },
+  "fold4": {
+   "total": {
+    "trees": 77,
+    "balance": 0.9906468864148137
+   },
+   "glm": {
+    "balance": 0.9966698421337181
+   },
+   "peril": {
+    "own_damage": {
+     "trees": 23,
+     "load": 1.0
+    },
+    "third_party_prop": {
+     "trees": 170,
+     "load": 1.0
+    },
+    "bodily_injury": {
+     "trees": 316,
+     "load": 1.1956538827248393
+    },
+    "theft": {
+     "trees": 1,
+     "load": 1.0
+    },
+    "glass_hail": {
+     "trees": 166,
+     "load": 1.0
+    }
+   },
+   "fs": {
+    "freq_trees": 1919,
+    "gamma_trees": 101,
+    "lognorm_trees": [
+     81,
+     1
+    ],
+    "lognorm_calibration": 0.7676276317980941,
+    "claims": 2860
+   },
+   "fs_peril": {
+    "own_damage": {
+     "freq_trees": 762,
+     "size_trees": 15,
+     "claims": 1113
+    },
+    "third_party_prop": {
+     "freq_trees": 173,
+     "size_trees": 11,
+     "claims": 875
+    },
+    "bodily_injury": {
+     "freq_trees": 830,
+     "size_trees": 0,
+     "claims": 215
+    },
+    "theft": {
+     "freq_trees": 3,
+     "size_trees": 0,
+     "claims": 160
+    },
+    "glass_hail": {
+     "freq_trees": 325,
+     "size_trees": 4,
+     "claims": 497
+    }
+   }
+  }
+ }
+}

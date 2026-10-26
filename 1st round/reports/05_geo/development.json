@@ -1,0 +1,96 @@
+{
+ "recovery_ratio": {
+  "buildings/accidental_damage": 0.0,
+  "buildings/escape_of_water": 0.0,
+  "buildings/fire": 0.0,
+  "buildings/flood": 0.0,
+  "buildings/storm": 0.0,
+  "buildings/subsidence": 0.0,
+  "contents/accidental_damage": 0.0,
+  "contents/escape_of_water": 0.0,
+  "contents/flood": 0.0,
+  "contents/theft": 0.0,
+  "motor/bodily_injury": 0.0,
+  "motor/glass_hail": 0.0,
+  "motor/own_damage": 0.23588723625404398,
+  "motor/theft": 0.040008162041998405,
+  "motor/third_party_prop": 0.0
+ },
+ "repudiation": {
+  "buildings/accidental_damage": {
+   "z": 0.0,
+   "p_raw": 0.0,
+   "p": 0.0
+  },
+  "buildings/escape_of_water": {
+   "z": 0.0,
+   "p_raw": 0.0,
+   "p": 0.0
+  },
+  "buildings/fire": {
+   "z": 0.0,
+   "p_raw": 0.0,
+   "p": 0.0
+  },
+  "buildings/flood": {
+   "z": 0.0,
+   "p_raw": 0.0,
+   "p": 0.0
+  },
+  "buildings/storm": {
+   "z": 0.0,
+   "p_raw": 0.0,
+   "p": 0.0
+  },
+  "buildings/subsidence": {
+   "z": 0.0,
+   "p_raw": 0.0,
+   "p": 0.0
+  },
+  "contents/accidental_damage": {
+   "z": -0.5124188256251037,
+   "p_raw": 0.0,
+   "p": 0.0
+  },
+  "contents/escape_of_water": {
+   "z": 0.0,
+   "p_raw": 0.0,
+   "p": 0.0
+  },
+  "contents/flood": {
+   "z": 0.0,
+   "p_raw": 0.0,
+   "p": 0.0
+  },
+  "contents/theft": {
+   "z": -1.1277609151483983,
+   "p_raw": 0.0,
+   "p": 0.0
+  },
+  "motor/bodily_injury": {
+   "z": 0.0,
+   "p_raw": 0.0,
+   "p": 0.0
+  },
+  "motor/glass_hail": {
+   "z": 0.0,
+   "p_raw": 0.0,
+   "p": 0.0
+  },
+  "motor/own_damage": {
+   "z": 1.1184914219868114,
+   "p_raw": 0.011098559743576073,
+   "p": 0.0
+  },
+  "motor/theft": {
+   "z": 0.7708083973764549,
+   "p_raw": 0.05875027073857478,
+   "p": 0.0
+  },
+  "motor/third_party_prop": {
+   "z": -0.597837413284756,
+   "p_raw": 0.0,
+   "p": 0.0
+  }
+ }
+}

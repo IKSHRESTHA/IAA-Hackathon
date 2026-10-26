@@ -1,0 +1,405 @@
+{
+ "params": {
+  "min_sum_hessian_in_leaf": 1.0,
+  "bagging_freq": 1,
+  "max_bin": 255,
+  "cat_smooth": 50,
+  "cat_l2": 10,
+  "min_data_per_group": 200,
+  "max_cat_to_onehot": 32,
+  "num_leaves": 7,
+  "min_data_in_leaf": 1000,
+  "lambda_l2": 100.0,
+  "learning_rate": 0.03,
+  "feature_fraction": 0.8,
+  "bagging_fraction": 0.8
+ },
+ "glm_alpha": 30.0,
+ "experts": {
+  "fold0": {
+   "total": {
+    "trees": 40,
+    "balance": 1.1077184455250402
+   },
+   "glm": {
+    "balance": 1.0472080945759015
+   },
+   "peril": {
+    "storm": {
+     "trees": 55,
+     "load": 1.0
+    },
+    "flood": {
+     "trees": 1,
+     "load": 1.0
+    },
+    "escape_of_water": {
+     "trees": 3,
+     "load": 1.0
+    },
+    "subsidence": {
+     "trees": 0,
+     "load": 1.0
+    },
+    "fire": {
+     "trees": 67,
+     "load": 1.110290432507872
+    },
+    "accidental_damage": {
+     "trees": 1,
+     "load": 1.0
+    }
+   },
+   "fs": {
+    "freq_trees": 211,
+    "gamma_trees": 2,
+    "lognorm_trees": [
+     1,
+     1
+    ],
+    "lognorm_calibration": 0.9423257428231665,
+    "claims": 403
+   },
+   "fs_peril": {
+    "storm": {
+     "freq_trees": 359,
+     "size_trees": 0,
+     "claims": 163
+    },
+    "flood": {
+     "freq_trees": 639,
+     "size_trees": 0,
+     "claims": 31
+    },
+    "escape_of_water": {
+     "freq_trees": 4,
+     "size_trees": 0,
+     "claims": 103
+    },
+    "subsidence": {
+     "freq_trees": 0,
+     "size_trees": 0,
+     "claims": 23
+    },
+    "fire": {
+     "freq_trees": 532,
+     "size_trees": 0,
+     "claims": 41
+    },
+    "accidental_damage": {
+     "freq_trees": 221,
+     "size_trees": 0,
+     "claims": 42
+    }
+   }
+  },
+  "fold1": {
+   "total": {
+    "trees": 9,
+    "balance": 1.024957457418549
+   },
+   "glm": {
+    "balance": 1.0126637565275693
+   },
+   "peril": {
+    "storm": {
+     "trees": 133,
+     "load": 1.0
+    },
+    "flood": {
+     "trees": 1,
+     "load": 1.0
+    },
+    "escape_of_water": {
+     "trees": 2,
+     "load": 1.0
+    },
+    "subsidence": {
+     "trees": 0,
+     "load": 1.0
+    },
+    "fire": {
+     "trees": 41,
+     "load": 1.110290432507872
+    },
+    "accidental_damage": {
+     "trees": 13,
+     "load": 1.0
+    }
+   },
+   "fs": {
+    "freq_trees": 217,
+    "gamma_trees": 59,
+    "lognorm_trees": [
+     1,
+     1
+    ],
+    "lognorm_calibration": 0.826262461438867,
+    "claims": 410
+   },
+   "fs_peril": {
+    "storm": {
+     "freq_trees": 817,
+     "size_trees": 0,
+     "claims": 157
+    },
+    "flood": {
+     "freq_trees": 624,
+     "size_trees": 0,
+     "claims": 32
+    },
+    "escape_of_water": {
+     "freq_trees": 3,
+     "size_trees": 0,
+     "claims": 106
+    },
+    "subsidence": {
+     "freq_trees": 0,
+     "size_trees": 0,
+     "claims": 29
+    },
+    "fire": {
+     "freq_trees": 524,
+     "size_trees": 0,
+     "claims": 39
+    },
+    "accidental_damage": {
+     "freq_trees": 307,
+     "size_trees": 0,
+     "claims": 47
+    }
+   }
+  },
+  "fold2": {
+   "total": {
+    "trees": 7,
+    "balance": 0.9764336557825699
+   },
+   "glm": {
+    "balance": 1.0232635868763773
+   },
+   "peril": {
+    "storm": {
+     "trees": 33,
+     "load": 1.0
+    },
+    "flood": {
+     "trees": 75,
+     "load": 1.0
+    },
+    "escape_of_water": {
+     "trees": 5,
+     "load": 1.0
+    },
+    "subsidence": {
+     "trees": 0,
+     "load": 1.0
+    },
+    "fire": {
+     "trees": 35,
+     "load": 1.110290432507872
+    },
+    "accidental_damage": {
+     "trees": 2,
+     "load": 1.0
+    }
+   },
+   "fs": {
+    "freq_trees": 173,
+    "gamma_trees": 25,
+    "lognorm_trees": [
+     1,
+     1
+    ],
+    "lognorm_calibration": 0.9336585359788447,
+    "claims": 422
+   },
+   "fs_peril": {
+    "storm": {
+     "freq_trees": 1021,
+     "size_trees": 0,
+     "claims": 181
+    },
+    "flood": {
+     "freq_trees": 656,
+     "size_trees": 0,
+     "claims": 31
+    },
+    "escape_of_water": {
+     "freq_trees": 1,
+     "size_trees": 0,
+     "claims": 98
+    },
+    "subsidence": {
+     "freq_trees": 0,
+     "size_trees": 0,
+     "claims": 27
+    },
+    "fire": {
+     "freq_trees": 251,
+     "size_trees": 0,
+     "claims": 38
+    },
+    "accidental_damage": {
+     "freq_trees": 127,
+     "size_trees": 0,
+     "claims": 47
+    }
+   }
+  },
+  "fold3": {
+   "total": {
+    "trees": 20,
+    "balance": 1.0473814405457815
+   },
+   "glm": {
+    "balance": 1.0072701138196973
+   },
+   "peril": {
+    "storm": {
+     "trees": 115,
+     "load": 1.0
+    },
+    "flood": {
+     "trees": 1,
+     "load": 1.0
+    },
+    "escape_of_water": {
+     "trees": 1,
+     "load": 1.0
+    },
+    "subsidence": {
+     "trees": 0,
+     "load": 1.0
+    },
+    "fire": {
+     "trees": 58,
+     "load": 1.110290432507872
+    },
+    "accidental_damage": {
+     "trees": 3,
+     "load": 1.0
+    }
+   },
+   "fs": {
+    "freq_trees": 227,
+    "gamma_trees": 27,
+    "lognorm_trees": [
+     1,
+     1
+    ],
+    "lognorm_calibration": 0.8964727295856728,
+    "claims": 433
+   },
+   "fs_peril": {
+    "storm": {
+     "freq_trees": 311,
+     "size_trees": 0,
+     "claims": 173
+    },
+    "flood": {
+     "freq_trees": 1146,
+     "size_trees": 0,
+     "claims": 37
+    },
+    "escape_of_water": {
+     "freq_trees": 1,
+     "size_trees": 0,
+     "claims": 106
+    },
+    "subsidence": {
+     "freq_trees": 0,
+     "size_trees": 0,
+     "claims": 26
+    },
+    "fire": {
+     "freq_trees": 77,
+     "size_trees": 0,
+     "claims": 45
+    },
+    "accidental_damage": {
+     "freq_trees": 126,
+     "size_trees": 0,
+     "claims": 46
+    }
+   }
+  },
+  "fold4": {
+   "total": {
+    "trees": 15,
+    "balance": 1.0661426137219305
+   },
+   "glm": {
+    "balance": 1.0407076153081791
+   },
+   "peril": {
+    "storm": {
+     "trees": 10,
+     "load": 1.0
+    },
+    "flood": {
+     "trees": 4,
+     "load": 1.0
+    },
+    "escape_of_water": {
+     "trees": 2,
+     "load": 1.0
+    },
+    "subsidence": {
+     "trees": 0,
+     "load": 1.0
+    },
+    "fire": {
+     "trees": 41,
+     "load": 1.110290432507872
+    },
+    "accidental_damage": {
+     "trees": 1,
+     "load": 1.0
+    }
+   },
+   "fs": {
+    "freq_trees": 276,
+    "gamma_trees": 1,
+    "lognorm_trees": [
+     1,
+     1
+    ],
+    "lognorm_calibration": 0.8618725590325403,
+    "claims": 408
+   },
+   "fs_peril": {
+    "storm": {
+     "freq_trees": 418,
+     "size_trees": 0,
+     "claims": 166
+    },
+    "flood": {
+     "freq_trees": 539,
+     "size_trees": 0,
+     "claims": 37
+    },
+    "escape_of_water": {
+     "freq_trees": 1,
+     "size_trees": 0,
+     "claims": 111
+    },
+    "subsidence": {
+     "freq_trees": 0,
+     "size_trees": 0,
+     "claims": 23
+    },
+    "fire": {
+     "freq_trees": 3,
+     "size_trees": 0,
+     "claims": 33
+    },
+    "accidental_damage": {
+     "freq_trees": 9,
+     "size_trees": 0,
+     "claims": 38
+    }
+   }
+  }
+ }
+}

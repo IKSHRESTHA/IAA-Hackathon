@@ -1,0 +1,90 @@
+{
+ "features": [
+  "age_band_mid",
+  "sum_insured",
+  "tenure",
+  "security_level",
+  "high_value_items",
+  "accidental_damage_cover",
+  "works_from_home",
+  "lodgers",
+  "voluntary_excess",
+  "channel",
+  "payment_method",
+  "missed_payments_12m",
+  "renewal_count",
+  "days_quote_to_inception",
+  "occupation",
+  "marital_status",
+  "household_size",
+  "prior_claims_5y",
+  "urban_density",
+  "flood_zone",
+  "distance_to_river_km",
+  "elevation_m",
+  "start_month",
+  "starts_after_jan1",
+  "si_per_bedroom",
+  "flood_zone_missing"
+ ],
+ "cap": 31125.380129645928,
+ "load": 1.021162044960342,
+ "components": {
+  "freq": {
+   "rows": 721617,
+   "target_total": 23670.0
+  },
+  "cost_theft": {
+   "rows": 721617,
+   "target_total": 30081447.97811215
+  },
+  "freq_theft": {
+   "rows": 721617,
+   "target_total": 7626.0
+  },
+  "cost_escape_of_water": {
+   "rows": 721617,
+   "target_total": 15941161.656311005
+  },
+  "freq_escape_of_water": {
+   "rows": 721617,
+   "target_total": 5366.0
+  },
+  "cost_accidental_damage": {
+   "rows": 721617,
+   "target_total": 7695005.398268964
+  },
+  "freq_accidental_damage": {
+   "rows": 721617,
+   "target_total": 9063.0
+  },
+  "cost_flood": {
+   "rows": 721617,
+   "target_total": 16145800.588917203
+  },
+  "freq_flood": {
+   "rows": 721617,
+   "target_total": 1615.0
+  },
+  "sev": {
+   "rows": 17682,
+   "target_total": 52185027.482089594
+  },
+  "sev_theft": {
+   "rows": 5650,
+   "target_total": 22023081.208393566
+  },
+  "sev_escape_of_water": {
+   "rows": 4004,
+   "target_total": 11981738.218891004
+  },
+  "sev_accidental_damage": {
+   "rows": 6774,
+   "target_total": 5746831.087988964
+  },
+  "sev_flood": {
+   "rows": 1254,
+   "target_total": 12433376.966816053
+  }
+ }
+}

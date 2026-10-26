@@ -1,0 +1,22 @@
+step,rule_id,table,column,rule,rows_affected,action,evidence
+02_cleaning,C01,customers,gender,"one spelling per category (trim, case, local codes)",135856,recoded,"'F'->'f' (67,973); 'M'->'m' (67,883)"
+02_cleaning,C01,customers,occupation,"one spelling per category (trim, case, local codes)",89397,recoded,"'Retired'->'retired' (9,218); 'Student'->'student' (6,445); 'Retired '->'retired' (2,736); 'Care worker'->'care worker' (2,694); 'Nurse'->'nurse' (2,648); 'Teacher'->'teacher' (2,638); 'Administrator'->'administrator' (2,636); 'Hairdresser'->'hairdresser' (2,606)"
+02_cleaning,C02,customers,occupation,'self-employed' prefix split into its own flag,11975,new column self_employed,20 base occupations remain
+02_cleaning,C10,weather,*,negative weather measures,0,none found,
+02_cleaning,C04,policies_motor,exposure,exposure recomputed from the period dates (days / 365),249,recomputed,recorded in days: 47; on a 360-day basis: 202; other: 0
+02_cleaning,C04,policies_buildings,exposure,exposure recomputed from the period dates (days / 365),152,recomputed,recorded in days: 33; on a 360-day basis: 119; other: 0
+02_cleaning,C05,policies_buildings,sum_insured,"sum insured > 100x the median (229,000) divided by 1,000",53,rescaled,"after the fix: 73,000 to 470,000 (median 229,000)"
+02_cleaning,C01,policies_buildings,construction_type,"one spelling per category (trim, case, local codes)",27447,recoded,"'BRK'->'brick' (19,194); 'WOD'->'timber' (3,302); 'MIX'->'non_standard' (2,781); 'STN'->'stone' (2,170)"
+02_cleaning,C04,policies_contents,exposure,exposure recomputed from the period dates (days / 365),194,recomputed,recorded in days: 34; on a 360-day basis: 160; other: 0
+02_cleaning,C05,policies_contents,sum_insured,"sum insured > 100x the median (35,800) divided by 1,000",57,rescaled,"after the fix: 7,600 to 131,600 (median 39,100)"
+02_cleaning,C05,test_buildings,sum_insured,"sum insured > 100x the median (241,000) divided by 1,000",104,rescaled,"after the fix: 60,000 to 568,000 (median 236,000)"
+02_cleaning,C01,test_buildings,construction_type,"one spelling per category (trim, case, local codes)",52295,recoded,"'BRK'->'brick' (36,709); 'WOD'->'timber' (6,255); 'MIX'->'non_standard' (5,214); 'STN'->'stone' (4,117)"
+02_cleaning,C05,test_contents,sum_insured,"sum insured > 100x the median (36,300) divided by 1,000",135,rescaled,"after the fix: 9,200 to 98,100 (median 33,000)"
+02_cleaning,C08,policies_motor,ncb_years,no-claims bonus longer than the licence,7756,"kept as declared, flagged",too common to be typing errors (mostly young drivers); the declaration itself carries risk information
+02_cleaning,C08,test_motor,ncb_years,no-claims bonus longer than the licence,20051,"kept as declared, flagged",too common to be typing errors (mostly young drivers); the declaration itself carries risk information
+02_cleaning,K03,claims,net_incurred,claim cost = incurred - recoveries (floored at 0); 0 if repudiated,9258,new column,repudiated: 120
+02_cleaning,K04,claims,row_id,claim linked to the policy row on cover at the loss date,36,"unmatched kept, flagged (excluded from targets)","status counts: {'matched': 9222, 'before_first_row': 36}"
+02_cleaning,K05,claims,peril,motor claim of a peril the cover does not include,0,"kept, flagged",{}
+02_cleaning,K06,claims,peril,accidental-damage claim on a row without AD cover,74,"kept, flagged",16% of home AD claims; mean size 1.03x the covered ones: plausibly basic AD cover
+02_cleaning,C11,reference_policies,*,each reference policy is a copy of a 2025 row: taken from the cleaned 2025 files,20,replaced by the cleaned row,values identical to the raw 2025 rows before cleaning
+02_cleaning,C12,expenses,emerging,expense item without a value in this market,1,kept missing (no assumption made here),items: ['commission_comparison_site']

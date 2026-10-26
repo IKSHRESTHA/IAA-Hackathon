@@ -1,0 +1,26 @@
+step,rule_id,table,column,rule,rows_affected,action,evidence
+02_cleaning,C01,customers,occupation,"one spelling per category (trim, case, local codes)",531778,recoded,"'Retired'->'retired' (98,624); 'Student'->'student' (40,063); 'Hairdresser'->'hairdresser' (23,869); 'Care worker'->'care worker' (23,383); 'Nurse'->'nurse' (23,313); 'Teacher'->'teacher' (23,004); 'Administrator'->'administrator' (22,937); 'Retail assistant'->'retail assistant' (22,807)"
+02_cleaning,C10,weather,*,negative weather measures,0,none found,
+02_cleaning,C03,policies_motor,customer_id,lost leading zeros restored (width 8),98110,zero-padded,"lengths before: {2: 5, 3: 11, 4: 79, 5: 927, 6: 8958, 7: 88130}; every padded id is found in customers"
+02_cleaning,C04,policies_motor,exposure,exposure recomputed from the period dates (days / 365),5596,recomputed,"recorded in days: 934; on a 360-day basis: 4,662; other: 0"
+02_cleaning,C06,policies_motor,annual_mileage,annual mileage of 0 (45% of them commute) flagged,11928,flag dq_mileage_zero,value kept: these cars claim a little less than the lowest band
+02_cleaning,C04,policies_buildings,exposure,exposure recomputed from the period dates (days / 365),4078,recomputed,"recorded in days: 656; on a 360-day basis: 3,422; other: 0"
+02_cleaning,C05,policies_buildings,sum_insured,"sum insured > 100x the median (223,000) divided by 1,000",1395,rescaled,"after the fix: 52,000 to 594,000 (median 222,000)"
+02_cleaning,C01,policies_buildings,construction_type,"one spelling per category (trim, case, local codes)",560124,recoded,"'Brick'->'brick' (456,072); 'W'->'timber' (42,319); 'T'->'timber' (38,937); 'BRICK'->'brick' (14,709); 'w'->'timber' (2,243); 'NON_STANDARD'->'non_standard' (2,097); 't'->'timber' (2,057); 'STONE'->'stone' (1,690)"
+02_cleaning,C04,policies_contents,exposure,exposure recomputed from the period dates (days / 365),4206,recomputed,"recorded in days: 729; on a 360-day basis: 3,477; other: 0"
+02_cleaning,C05,policies_contents,sum_insured,"sum insured > 100x the median (39,000) divided by 1,000",1402,rescaled,"after the fix: 8,200 to 152,600 (median 37,900)"
+02_cleaning,C03,test_motor,customer_id,lost leading zeros restored (width 8),25554,zero-padded,"lengths before: {2: 1, 3: 3, 4: 18, 5: 241, 6: 2316, 7: 22975}; every padded id is found in customers"
+02_cleaning,C06,test_motor,annual_mileage,annual mileage of 0 (45% of them commute) flagged,3108,flag dq_mileage_zero,value kept: these cars claim a little less than the lowest band
+02_cleaning,C05,test_buildings,sum_insured,"sum insured > 100x the median (240,000) divided by 1,000",370,rescaled,"after the fix: 79,000 to 577,000 (median 243,500)"
+02_cleaning,C01,test_buildings,construction_type,"one spelling per category (trim, case, local codes)",145548,recoded,"'Brick'->'brick' (118,393); 'W'->'timber' (21,099); 'BRICK'->'brick' (3,917); 'w'->'timber' (1,162); 'NON_STANDARD'->'non_standard' (552); 'STONE'->'stone' (425)"
+02_cleaning,C05,test_contents,sum_insured,"sum insured > 100x the median (40,900) divided by 1,000",360,rescaled,"after the fix: 9,500 to 146,800 (median 41,850)"
+02_cleaning,C07,policies_motor,years_licensed,licence before age 17 is impossible,2962,restored from the policy's other rows,"2,962 restored from the same policy's age at first licence, 0 capped at age - 17 (no other row)"
+02_cleaning,C07,test_motor,years_licensed,licence before age 17 is impossible,755,restored from the policy's other rows,"670 restored from the same policy's age at first licence, 85 capped at age - 17 (no other row)"
+02_cleaning,C08,policies_motor,ncb_years,no-claims bonus longer than the licence,127410,"kept as declared, flagged",too common to be typing errors (mostly young drivers); the declaration itself carries risk information
+02_cleaning,C08,test_motor,ncb_years,no-claims bonus longer than the licence,34873,"kept as declared, flagged",too common to be typing errors (mostly young drivers); the declaration itself carries risk information
+02_cleaning,K01,claims,claim_id,claim repeated under a second claim_id (every other field identical),604,duplicate removed,"removed ids have {11: 604} characters (normal: 10); loss years {2020: 1, 2021: 3, 2022: 600}"
+02_cleaning,K02,claims,incurred_to_date,"motor/bodily_injury open claim CL30973963: incurred 11,894,277 is 10.6x the next largest",1,divided by 10^1,"paid 738,769; corrected incurred 1,189,428 (a reserve typed with 1 extra digit(s))"
+02_cleaning,K03,claims,net_incurred,claim cost = incurred - recoveries (floored at 0); 0 if repudiated,162546,new column,"repudiated: 1,705"
+02_cleaning,K04,claims,row_id,claim linked to the policy row on cover at the loss date,413,"unmatched kept, flagged (excluded from targets)","status counts: {'matched': 162133, 'before_first_row': 413}"
+02_cleaning,K05,claims,peril,motor claim of a peril the cover does not include,4,"kept, flagged",{'own_damage': 4}
+02_cleaning,K06,claims,peril,accidental-damage claim on a row without AD cover,1653,"kept, flagged",13% of home AD claims; mean size 1.04x the covered ones: plausibly basic AD cover

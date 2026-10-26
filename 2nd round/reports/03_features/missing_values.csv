@@ -1,0 +1,12 @@
+column,missing_pct,claims_missing,frequency_relativity,z,informative,note,line
+vehicle_age,11.85,820.0,0.98,-0.5,False,,motor
+overnight_parking,12.05,854.0,1.0,0.0,False,,motor
+occupation,12.04,835.0,0.981,-0.5,False,,motor
+marital_status,12.08,831.0,0.971,-0.8,False,,motor
+years_at_address,11.89,802.0,0.949,-1.4,False,,motor
+hist_pol_years_since_claim,93.46,,,,False,"missing exactly when hist_pol_claims_1y says so: structural, no flag needed",motor
+flood_zone,2.82,43.0,1.466,2.5,False,,buildings
+distance_to_river_km,11.91,131.0,1.051,0.5,False,,buildings
+energy_rating,11.87,121.0,0.955,-0.5,False,,buildings
+flood_zone,2.86,34.0,1.204,1.1,False,,contents
+distance_to_river_km,12.11,129.0,1.078,0.8,False,,contents

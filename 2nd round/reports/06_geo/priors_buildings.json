@@ -1,0 +1,112 @@
+{
+ "features": [
+  "sum_insured",
+  "construction_type",
+  "occupancy",
+  "days_unoccupied",
+  "accidental_damage_cover",
+  "voluntary_excess",
+  "channel",
+  "payment_method",
+  "missed_payments_12m",
+  "prior_claims_5y",
+  "flood_zone",
+  "distance_to_river_km",
+  "elevation_m",
+  "soil_type",
+  "property_type",
+  "roof_type",
+  "trees_within_5m",
+  "listed_building",
+  "bedrooms",
+  "energy_rating",
+  "property_age",
+  "si_per_bedroom",
+  "flood_zone_missing",
+  "renewal_count"
+ ],
+ "cap": 166146.495991,
+ "load": 1.0467017092603759,
+ "components": {
+  "freq": {
+   "rows": 707726,
+   "target_total": 26266.0
+  },
+  "cost_storm": {
+   "rows": 707726,
+   "target_total": 30849111.91252825
+  },
+  "freq_storm": {
+   "rows": 707726,
+   "target_total": 7762.0
+  },
+  "cost_flood": {
+   "rows": 707726,
+   "target_total": 78241428.00931844
+  },
+  "freq_flood": {
+   "rows": 707726,
+   "target_total": 2219.0
+  },
+  "cost_escape_of_water": {
+   "rows": 707726,
+   "target_total": 66439281.83508607
+  },
+  "freq_escape_of_water": {
+   "rows": 707726,
+   "target_total": 10065.0
+  },
+  "cost_subsidence": {
+   "rows": 707726,
+   "target_total": 35277086.45339275
+  },
+  "freq_subsidence": {
+   "rows": 707726,
+   "target_total": 1288.0
+  },
+  "cost_fire": {
+   "rows": 707726,
+   "target_total": 55789388.44824641
+  },
+  "freq_fire": {
+   "rows": 707726,
+   "target_total": 1107.0
+  },
+  "cost_accidental_damage": {
+   "rows": 707726,
+   "target_total": 5373743.008764199
+  },
+  "freq_accidental_damage": {
+   "rows": 707726,
+   "target_total": 3825.0
+  },
+  "sev": {
+   "rows": 19695,
+   "target_total": 203538459.30600613
+  },
+  "sev_storm": {
+   "rows": 5868,
+   "target_total": 23067792.309528247
+  },
+  "sev_flood": {
+   "rows": 1689,
+   "target_total": 59446223.38900845
+  },
+  "sev_escape_of_water": {
+   "rows": 7507,
+   "target_total": 48844121.386886075
+  },
+  "sev_subsidence": {
+   "rows": 997,
+   "target_total": 26919448.66141075
+  },
+  "sev_fire": {
+   "rows": 798,
+   "target_total": 41235400.67740841
+  },
+  "sev_accidental_damage": {
+   "rows": 2836,
+   "target_total": 4025472.8817641996
+  }
+ }
+}

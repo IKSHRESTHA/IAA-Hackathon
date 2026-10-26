@@ -1,0 +1,13 @@
+line,year,model,rows,d2_level_known
+motor,2023,exposure only,21680,-0.00287
+motor,2023,developed prior,21680,0.04436
+motor,2024,exposure only,25603,0.05008
+motor,2024,developed prior,25603,0.08515
+buildings,2023,exposure only,12580,0.02447
+buildings,2023,developed prior,12580,0.09194
+buildings,2024,exposure only,14867,0.00346
+buildings,2024,developed prior,14867,0.10861
+contents,2023,exposure only,15834,0.03032
+contents,2023,developed prior,15834,0.11615
+contents,2024,exposure only,18732,0.04563
+contents,2024,developed prior,18732,0.09932

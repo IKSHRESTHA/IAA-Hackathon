@@ -1,0 +1,82 @@
+{
+ "members": {
+  "motor": [
+   "total",
+   "fs_peril",
+   "glm"
+  ],
+  "buildings": [
+   "fs_lognorm",
+   "peril"
+  ],
+  "contents": [
+   "total",
+   "glm"
+  ]
+ },
+ "all_lines_d2": {
+  "cv 2023 / fs_gamma": 0.12518295246807043,
+  "cv 2024 / fs_gamma": 0.1295488862840024,
+  "forward 2024 / fs_gamma": 0.12567704692656134,
+  "cv 2023 / fs_lognorm": 0.12463475197650642,
+  "cv 2024 / fs_lognorm": 0.12828912282119853,
+  "forward 2024 / fs_lognorm": 0.12831709086736065,
+  "cv 2023 / fs_peril": 0.1292605499982319,
+  "cv 2024 / fs_peril": 0.13606548388903883,
+  "forward 2024 / fs_peril": 0.124986076265036,
+  "cv 2023 / geo": 0.13387739928089004,
+  "cv 2024 / geo": 0.1397501671372493,
+  "forward 2024 / geo": 0.12997202079749126,
+  "cv 2023 / glm": 0.13002194370191533,
+  "cv 2024 / glm": 0.13886940163927142,
+  "forward 2024 / glm": 0.1278839480448517,
+  "cv 2023 / peril": 0.12783715404013873,
+  "cv 2024 / peril": 0.13683164841291573,
+  "forward 2024 / peril": 0.12218199746559744,
+  "cv 2023 / recalibrated geo": 0.1319129530889488,
+  "cv 2024 / recalibrated geo": 0.14307616215597285,
+  "forward 2024 / recalibrated geo": 0.13472227517461532,
+  "cv 2023 / recalibrated geo (fit on the other year)": 0.12123139040221487,
+  "cv 2024 / recalibrated geo (fit on the other year)": 0.13517048279573174,
+  "forward 2024 / recalibrated geo (fit on the other year)": NaN,
+  "cv 2023 / total": 0.13013062429735112,
+  "cv 2024 / total": 0.1385901548707127,
+  "forward 2024 / total": 0.1278202183084335
+ },
+ "recalibration": [
+  {
+   "line": "motor",
+   "members": "total+fs_peril+glm",
+   "b0": 0.02263745013803996,
+   "b1": 1.0,
+   "factor_new_business": 1.0606475832072542,
+   "factor_renewal": 0.993626510859092,
+   "male_vs_female": 1.1070195194397463,
+   "model_per_year_on_cover_2025": 577.1546737565604,
+   "cost_per_year_on_cover_2025": 605.2575933602379
+  },
+  {
+   "line": "buildings",
+   "members": "fs_lognorm+peril",
+   "b0": -0.11785530584197348,
+   "b1": 1.0,
+   "factor_new_business": 0.9861363132206329,
+   "factor_renewal": 1.0011553090668077,
+   "male_vs_female": 1.095814982237577,
+   "model_per_year_on_cover_2025": 461.2331917322158,
+   "cost_per_year_on_cover_2025": 456.43214166219565
+  },
+  {
+   "line": "contents",
+   "members": "total+glm",
+   "b0": -0.026613002090746064,
+   "b1": 1.0,
+   "factor_new_business": 1.1528338364353505,
+   "factor_renewal": 0.9866344980469819,
+   "male_vs_female": 0.8028826789669513,
+   "model_per_year_on_cover_2025": 95.17279818888494,
+   "cost_per_year_on_cover_2025": 106.15388882696526
+  }
+ ],
+ "submission": "v4_geo_ensemble_transfer.csv"
+}

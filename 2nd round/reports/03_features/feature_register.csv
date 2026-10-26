@@ -1,0 +1,274 @@
+line,column,decision,reason,evidence,frequency_oneway,severity_oneway,frequency_model,severity_model,own_damage_oneway,third_party_prop_oneway,bodily_injury_oneway,theft_oneway,glass_hail_oneway,storm_oneway,flood_oneway,escape_of_water_oneway,subsidence_oneway,fire_oneway,accidental_damage_oneway,frequency_oneway_z,severity_oneway_z,frequency_model_z,severity_model_z,own_damage_oneway_z,third_party_prop_oneway_z,bodily_injury_oneway_z,theft_oneway_z,glass_hail_oneway_z,storm_oneway_z,flood_oneway_z,escape_of_water_oneway_z,subsidence_oneway_z,fire_oneway_z,accidental_damage_oneway_z,tests_passed,z_threshold,probe_false_passes
+motor,exposure,keep,base,exposure: offset and partial-year effect,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,1.5,0.0
+motor,driver_age_band,drop,near-duplicate,"rank correlation +0.967 with years_licensed, which predicts better",1.8004,0.1471,0.0276,0.0,,,,,,,,,,,,8.9406,1.9409,2.5388,,,,,,,,,,,,,2.0,1.5,0.0
+motor,years_licensed,keep,adds value,"beats the random probes (z >= 1.5) on: frequency_oneway, frequency_model",2.214,0.0174,2.2088,0.0,,,,,,,,,,,,9.2427,0.1866,13.1114,,,,,,,,,,,,,2.0,1.5,0.0
+motor,ncb_years,keep,adds value,"beats the random probes (z >= 1.5) on: frequency_oneway, frequency_model",2.0791,-0.1137,1.3272,0.0,,,,,,,,,,,,11.0803,-1.2952,8.9038,,,,,,,,,,,,,2.0,1.5,0.0
+motor,vehicle_value_group,keep,adds value,beats the random probes (z >= 1.5) on: severity_oneway,-0.0202,0.3989,0.0,0.0,,,,,,,,,,,,-0.4991,3.0819,,,,,,,,,,,,,,1.0,1.5,0.0
+motor,vehicle_age,keep,adds value,beats the random probes (z >= 1.5) on: severity_model,-0.0104,0.0369,0.0,0.0326,,,,,,,,,,,,-0.2628,0.2337,,1.5106,,,,,,,,,,,,1.0,1.5,0.0
+motor,make_model,drop,not an identifier,"every code appears with 5.0 of 5 body types and 4.0 of 4 fuel types: a random label, not a vehicle",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,1.5,0.0
+motor,engine_size_cc,drop,no value,no test beats the random probes at z >= 1.5,-0.0105,0.1039,0.0072,0.0168,,,,,,,,,,,,-0.266,0.698,2.3388,1.7751,,,,,,,,,,,,0.0,1.5,0.0
+motor,body_type,keep,adds value,beats the random probes (z >= 1.5) on: frequency_oneway,0.3314,-0.0599,-0.0036,0.0,,,,,,,,,,,,4.3211,-0.8047,-0.7963,,,,,,,,,,,,,1.0,1.5,0.0
+motor,transmission,drop,no value,no test beats the random probes at z >= 1.5,0.0005,-0.0248,-0.0007,0.0,,,,,,,,,,,,0.0916,-0.9142,-0.2782,,,,,,,,,,,,,0.0,1.5,0.0
+motor,seats,drop,no value,no test beats the random probes at z >= 1.5,-0.0478,-0.0659,0.0,0.0,,,,,,,,,,,,-2.4706,-1.3348,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,vehicle_colour,drop,no value,no test beats the random probes at z >= 1.5,-0.0549,-0.3538,0.0,0.0,,,,,,,,,,,,-2.1073,-3.4406,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,fuel_type,drop,no value,no test beats the random probes at z >= 1.5,-0.0433,-0.0391,0.0,0.0,,,,,,,,,,,,-2.0953,-0.7701,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,driver_assist,drop,no value,no test beats the random probes at z >= 1.5,0.0113,0.0668,0.0,0.0,,,,,,,,,,,,0.4743,1.1693,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,cover_type,keep,adds value,"beats the random probes (z >= 1.5) on: frequency_oneway, frequency_model",1.8149,-0.0405,3.3444,0.0,,,,,,,,,,,,12.6825,-0.9215,17.1793,,,,,,,,,,,,,2.0,1.5,0.0
+motor,overnight_parking,keep,adds value,beats the random probes (z >= 1.5) on: theft_oneway,-0.0248,-0.0601,0.0,0.0,,,,0.3371,,,,,,,,-1.9867,-1.2733,,,,,,2.0026,,,,,,,,1.0,1.5,0.0
+motor,vehicle_use,keep,adds value,beats the random probes (z >= 1.5) on: frequency_oneway,0.0627,-0.0439,0.0,0.0,,,,,,,,,,,,1.7158,-1.0106,,,,,,,,,,,,,,1.0,1.5,0.0
+motor,named_young_driver,drop,no value,no test beats the random probes at z >= 1.5,-0.0164,-0.0712,0.0,0.0,,,,,,,,,,,,-1.3703,-1.6808,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,voluntary_excess,keep,adds value,"beats the random probes (z >= 1.5) on: frequency_oneway, frequency_model",1.0828,-0.2653,0.5772,0.0,,,,,,,,,,,,7.7402,-3.3991,8.7439,,,,,,,,,,,,,2.0,1.5,0.0
+motor,compulsory_excess,drop,constant,one value on 100.00% of training rows (250),,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,1.5,0.0
+motor,channel,drop,no value,no test beats the random probes at z >= 1.5,0.0222,0.0165,0.0,0.0,,,,,,,,,,,,1.222,0.6483,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,payment_method,keep,adds value,beats the random probes (z >= 1.5) on: frequency_oneway,0.1435,-0.0188,0.0,0.0,,,,,,,,,,,,2.6463,-1.0107,,,,,,,,,,,,,,1.0,1.5,0.0
+motor,missed_payments_12m,keep,adds value,beats the random probes (z >= 1.5) on: frequency_oneway,0.2129,-0.0054,0.0,0.0,,,,,,,,,,,,3.2831,-0.2376,,,,,,,,,,,,,,1.0,1.5,0.0
+motor,new_business,drop,redundant,new_business == (renewal_count == 0) on 100.00% of rows,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,1.5,0.0
+motor,renewal_count,keep,adds value,beats the random probes (z >= 1.5) on: frequency_oneway,0.1127,-0.031,0.0,0.0,,,,,,,,,,,,1.7104,-0.3009,,,,,,,,,,,,,,1.0,1.5,0.0
+motor,days_quote_to_inception,drop,no value,no test beats the random probes at z >= 1.5,-0.0795,-0.3707,0.0,0.0,,,,,,,,,,,,-2.65,-2.8108,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,discount_applied,drop,governance,"commercial decision, not risk (and fully set by channel x new business)",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,1.5,0.0
+motor,written_premium,drop,governance,output of the current tariff: a model using it would copy the old price,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,1.5,0.0
+motor,customer_service_contacts,drop,leakage,driven by the claims of the same period (0 contacts on 0.2% of rows with a claim vs 67% without); the 2025 file looks like no-claim rows,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,1.5,0.0
+motor,renewal_decision,drop,leakage,outcome after the period; absent from the 2025 files,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,1.5,0.0
+motor,dq_exposure_fixed,drop,data-quality flag,records a correction (kept in data/clean); no risk meaning,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,1.5,0.0
+motor,dq_ncb_exceeds_licence,keep,adds value,beats the random probes (z >= 1.5) on: frequency_oneway,0.2646,-0.0465,0.0,0.0,,,,,,,,,,,,3.4318,-1.0508,,,,,,,,,,,,,,1.0,1.5,0.0
+motor,surname,drop,personal data,"personal identifier, no risk meaning",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,1.5,0.0
+motor,gender,keep,adds value,"beats the random probes (z >= 1.5) on: frequency_oneway, frequency_model",0.4093,-0.1036,0.5189,0.0,,,,,,,,,,,,4.6624,-1.5112,8.0601,,,,,,,,,,,,,2.0,1.5,0.0
+motor,occupation,keep,adds value,beats the random probes (z >= 1.5) on: frequency_oneway,0.4788,-0.6489,0.0179,0.0,,,,,,,,,,,,5.5672,-4.144,1.091,,,,,,,,,,,,,1.0,1.5,0.0
+motor,marital_status,keep,adds value,beats the random probes (z >= 1.5) on: frequency_oneway,0.3924,0.0528,0.0,0.0,,,,,,,,,,,,4.9095,0.6015,,,,,,,,,,,,,,1.0,1.5,0.0
+motor,household_size,drop,no value,no test beats the random probes at z >= 1.5,-0.0262,-0.1431,-0.0005,0.0,,,,,,,,,,,,-0.5797,-1.6138,-0.0753,,,,,,,,,,,,,0.0,1.5,0.0
+motor,prior_claims_5y,keep,adds value,beats the random probes (z >= 1.5) on: frequency_oneway,0.4104,-0.2519,0.0255,0.0,,,,,,,,,,,,5.0148,-2.2747,2.8259,,,,,,,,,,,,,1.0,1.5,0.0
+motor,licence_points,drop,no value,no test beats the random probes at z >= 1.5,-0.0142,-0.006,0.0,0.0,,,,,,,,,,,,-0.5856,-0.2917,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,years_at_address,keep,adds value,beats the random probes (z >= 1.5) on: frequency_oneway,0.2019,-0.1425,0.023,0.0,,,,,,,,,,,,3.1669,-1.0472,3.2228,,,,,,,,,,,,,1.0,1.5,0.0
+motor,customer_since_year,drop,redundant,year - customer_since_year == renewal_count on 100.00% of rows,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,1.5,0.0
+motor,email_domain,drop,governance,non-risk marketing attribute (regulatory precedent of unfair proxy pricing),,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,1.5,0.0
+motor,marketing_consent,drop,governance,service attribute,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,1.5,0.0
+motor,document_preference,drop,governance,service attribute,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,1.5,0.0
+motor,previous_insurer,drop,governance,commercial attribute,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,1.5,0.0
+motor,campaign_code,drop,governance,"acquisition attribute (customer-cohort proxy), not a risk characteristic",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,1.5,0.0
+motor,branch_id,drop,governance,servicing attribute,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,1.5,0.0
+motor,marketing_segment,drop,governance,assigned by marketing (age x affluence proxy),,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,1.5,0.0
+motor,self_employed,drop,no value,no test beats the random probes at z >= 1.5,-0.0225,-0.0175,0.0,0.0,,,,,,,,,,,,-1.473,-0.4553,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,region,drop,no value,no test beats the random probes at z >= 1.5,0.022,-0.0882,0.0,0.0,,,,,,,,,,,,0.5195,-1.2926,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,urban_density,keep,adds value,"beats the random probes (z >= 1.5) on: frequency_oneway, theft_oneway",0.1573,-0.0094,-0.0002,0.0,,,,0.9923,,,,,,,,2.6395,-0.1309,-0.1072,,,,,3.5567,,,,,,,,2.0,1.5,0.0
+motor,flood_zone,drop,no value,no test beats the random probes at z >= 1.5,-0.0347,-0.0226,0.0,0.0,,,,,,,,,,,,-1.89,-0.2401,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,distance_to_river_km,drop,no value,no test beats the random probes at z >= 1.5,0.0187,-0.0308,0.0,0.0,,,,,,,,,,,,0.5431,-0.2783,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,elevation_m,drop,no value,no test beats the random probes at z >= 1.5,-0.0847,-0.4478,0.0,0.0,,,,,,,,,,,,-2.2544,-3.2695,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,soil_type,drop,no value,no test beats the random probes at z >= 1.5,0.0149,-0.1575,0.0,0.0,,,,,,,,,,,,0.6165,-1.7097,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,year_built,drop,redundant,replaced by property_age = year - year_built,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,1.5,0.0
+motor,property_type,drop,no value,no test beats the random probes at z >= 1.5,-0.0463,-0.0967,0.0,0.0,,,,,,,,,,,,-1.8886,-2.2086,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,roof_type,drop,no value,no test beats the random probes at z >= 1.5,-0.0495,-0.0128,0.0,0.0,,,,,,,,,,,,-2.9001,-0.3123,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,basement,drop,no value,no test beats the random probes at z >= 1.5,-0.0067,-0.0048,0.0,0.0,,,,,,,,,,,,-0.8388,-0.2368,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,trees_within_5m,drop,no value,no test beats the random probes at z >= 1.5,0.0,0.0,0.0,0.0,,,,,,,,,,,,0.022,0.0006,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,listed_building,drop,no value,no test beats the random probes at z >= 1.5,0.0316,-0.0257,0.0,0.0,,,,,,,,,,,,1.6858,-1.6072,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,bedrooms,drop,no value,no test beats the random probes at z >= 1.5,0.0313,-0.1525,0.0,0.0,,,,,,,,,,,,1.2425,-1.9406,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,energy_rating,drop,no value,no test beats the random probes at z >= 1.5,-0.0856,-0.045,0.0,0.0,,,,,,,,,,,,-2.8445,-0.3578,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,solar_panels,drop,no value,no test beats the random probes at z >= 1.5,0.0003,0.0,0.0,0.0,,,,,,,,,,,,0.0364,0.0011,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,start_month,keep,adds value,beats the random probes (z >= 1.5) on: frequency_oneway,0.0742,-0.0566,0.0,0.0,,,,,,,,,,,,2.3621,-0.6899,,,,,,,,,,,,,,1.0,1.5,0.0
+motor,winter_fraction,drop,no value,no test beats the random probes at z >= 1.5,0.0637,-0.035,0.0012,0.0,,,,,,,,,,,,1.326,-0.5103,0.4067,,,,,,,,,,,,,0.0,1.5,0.0
+motor,starts_after_jan1,keep,adds value,beats the random probes (z >= 1.5) on: frequency_oneway,0.1692,0.0236,0.0,0.0,,,,,,,,,,,,3.0883,0.4174,,,,,,,,,,,,,,1.0,1.5,0.0
+motor,ends_before_year_end,keep,adds value,beats the random probes (z >= 1.5) on: severity_oneway,0.0001,0.0963,0.0,0.0,,,,,,,,,,,,0.151,1.6795,,,,,,,,,,,,,,1.0,1.5,0.0
+motor,property_age,drop,no value,no test beats the random probes at z >= 1.5,-0.1248,-0.3463,0.0,0.0,,,,,,,,,,,,-3.4516,-2.8104,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,wx_hail_days,keep,adds value,"beats the random probes (z >= 1.5) on: frequency_oneway, glass_hail_oneway",0.127,-0.0506,0.0122,0.0,,,,,1.7241,,,,,,,2.1893,-0.517,1.5375,,,,,,6.7413,,,,,,,2.0,1.5,0.0
+motor,wx_wind_exposure_index,drop,no value,no test beats the random probes at z >= 1.5,-0.0531,-0.2489,0.0,0.0,,,,,,,,,,,,-1.9018,-2.4552,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,wx_freezing_days,drop,no value,no test beats the random probes at z >= 1.5,-0.0019,-0.4961,0.0,0.0,,,,,,,,,,,,-0.0396,-3.799,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,wx_dry_summer_index,drop,no value,no test beats the random probes at z >= 1.5,-0.047,-0.1765,0.0,0.0,,,,,,,,,,,,-1.8631,-1.8561,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,wx_wildfire_index,drop,no value,no test beats the random probes at z >= 1.5,-0.035,-0.1308,0.0,0.0,,,,,,,,,,,,-1.0901,-1.3758,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,wx_rainfall_mm,drop,no value,no test beats the random probes at z >= 1.5,-0.0955,-0.3057,0.0,0.0,,,,,,,,,,,,-2.8938,-2.3576,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,wx_mean_temperature_c,drop,no value,no test beats the random probes at z >= 1.5,-0.0058,-0.1493,0.0,0.0,,,,,,,,,,,,-0.1539,-1.216,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,wx_hail_days_mean,keep,adds value,beats the random probes (z >= 1.5) on: glass_hail_oneway,-0.0099,-0.0944,0.0,0.0,,,,,0.7174,,,,,,,-0.1981,-0.6942,,,,,,,3.7076,,,,,,,1.0,1.5,0.0
+motor,wx_wind_exposure_index_mean,drop,no value,no test beats the random probes at z >= 1.5,-0.0296,-0.2876,0.0,0.0,,,,,,,,,,,,-1.0869,-3.484,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,wx_freezing_days_mean,drop,no value,no test beats the random probes at z >= 1.5,0.0294,-0.1518,0.0,0.0,,,,,,,,,,,,0.7805,-1.2293,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,wx_dry_summer_index_mean,drop,no value,no test beats the random probes at z >= 1.5,-0.0199,-0.2565,-0.0025,0.0,,,,,,,,,,,,-0.4904,-1.9492,-0.6906,,,,,,,,,,,,,0.0,1.5,0.0
+motor,wx_wildfire_index_mean,drop,no value,no test beats the random probes at z >= 1.5,-0.0397,-0.2401,0.0,0.0,,,,,,,,,,,,-1.2496,-2.8749,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,wx_rainfall_mm_mean,drop,no value,no test beats the random probes at z >= 1.5,-0.0815,-0.2344,-0.0021,0.0,,,,,,,,,,,,-2.7194,-2.3662,-0.68,,,,,,,,,,,,,0.0,1.5,0.0
+motor,wx_mean_temperature_c_mean,drop,no value,no test beats the random probes at z >= 1.5,-0.0297,-0.3757,-0.0008,0.0,,,,,,,,,,,,-0.7596,-2.5899,-0.2738,,,,,,,,,,,,,0.0,1.5,0.0
+motor,hist_pol_claims_1y,keep,adds value,beats the random probes (z >= 1.5) on: frequency_oneway,0.7731,-0.0041,0.0,0.0,,,,,,,,,,,,7.2968,-0.0983,,,,,,,,,,,,,,1.0,1.5,0.0
+motor,hist_pol_claims_3y,drop,near-duplicate,"rank correlation +1.000 with hist_pol_claims_1y, which predicts better",0.7731,-0.0041,0.0,0.0,,,,,,,,,,,,7.2968,-0.0983,,,,,,,,,,,,,,1.0,1.5,0.0
+motor,hist_pol_cost_3y,keep,adds value,beats the random probes (z >= 1.5) on: frequency_oneway,0.5726,-0.2488,0.0354,0.0,,,,,,,,,,,,8.4098,-3.5751,4.7144,,,,,,,,,,,,,1.0,1.5,0.0
+motor,hist_pol_years_since_claim,keep,adds value,beats the random probes (z >= 1.5) on: frequency_oneway,0.6236,-0.0364,0.0818,0.0,,,,,,,,,,,,8.6755,-0.6836,4.0796,,,,,,,,,,,,,1.0,1.5,0.0
+motor,hist_pol_exposure_3y,drop,no value,no test beats the random probes at z >= 1.5,0.0059,-0.0052,0.0,0.0,,,,,,,,,,,,0.318,-0.1968,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,hist_cust_claims_3y,keep,adds value,beats the random probes (z >= 1.5) on: frequency_oneway,0.6384,-0.0157,0.0,0.0,,,,,,,,,,,,6.5832,-0.3471,,,,,,,,,,,,,,1.0,1.5,0.0
+motor,hist_cust_claims_other_lines_3y,drop,no value,no test beats the random probes at z >= 1.5,0.0009,-0.0138,0.0,0.0,,,,,,,,,,,,0.2448,-0.7476,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,hist_years_available,drop,not testable,constant within every test year (a calendar-year proxy); the window length is known from renewal_count and hist_pol_exposure_3y,0.0,0.0,0.0,0.0,,,,,,,,,,,,,,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,holds_buildings,drop,no value,no test beats the random probes at z >= 1.5,0.0214,0.0056,0.0,0.0,,,,,,,,,,,,1.2784,1.039,,,,,,,,,,,,,,0.0,1.5,0.0
+motor,holds_contents,drop,no value,no test beats the random probes at z >= 1.5,0.0343,-0.0053,0.0,0.0,,,,,,,,,,,,1.4404,-0.1032,,,,,,,,,,,,,,0.0,1.5,0.0
+buildings,exposure,keep,base,exposure: offset and partial-year effect,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+buildings,policyholder_age_band,drop,no value,no test beats the random probes at z >= 2.0,0.0031,0.3802,0.0,0.0,,,,,,,,,,,,0.0531,0.3717,,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,sum_insured,keep,adds value,beats the random probes (z >= 2.0) on: frequency_oneway,0.3917,-6.7442,0.121,0.0,,,,,,,,,,,,2.8883,-4.5476,2.7193,,,,,,,,,,,,,1.0,2.0,1.0
+buildings,construction_type,keep,adds value,beats the random probes (z >= 2.0) on: frequency_oneway,0.4827,-1.2243,0.0043,0.0,,,,,,,,,,0.4684,,3.1913,-2.0009,0.5511,,,,,,,,,,,1.5682,,1.0,2.0,1.0
+buildings,occupancy,drop,no value,no test beats the random probes at z >= 2.0,0.0298,-0.0183,0.0,0.0,,,,,,,,,,,,0.8147,-0.2813,,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,days_unoccupied,drop,no value,no test beats the random probes at z >= 2.0,0.0438,-0.8025,-0.0077,0.0,,,,,,,,0.0812,,,,0.5076,-1.0028,-0.4563,,,,,,,,,0.5706,,,,0.0,2.0,1.0
+buildings,smoke_alarms,drop,no value,no test beats the random probes at z >= 2.0,-0.011,-0.5566,0.0,0.0,,,,,,,,,,0.1747,,-0.7888,-1.0602,,,,,,,,,,,,1.1938,,0.0,2.0,1.0
+buildings,accidental_damage_cover,keep,adds value,beats the random probes (z >= 2.0) on: accidental_damage_oneway,0.1757,-0.0106,0.0046,0.0,,,,,,,,,,,6.1525,1.7655,-0.0235,0.9081,,,,,,,,,,,,6.2098,1.0,2.0,1.0
+buildings,mortgage,drop,no value,no test beats the random probes at z >= 2.0,-0.0829,-0.6473,0.0,0.0,,,,,,,,,,,,-1.1959,-2.1305,,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,voluntary_excess,keep,adds value,beats the random probes (z >= 2.0) on: frequency_oneway,0.2876,-0.1927,-0.0007,0.0,,,,,,,,,,,,2.6365,-0.5274,-0.0628,,,,,,,,,,,,,1.0,2.0,1.0
+buildings,compulsory_excess,drop,constant,one value on 100.00% of training rows (350),,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+buildings,channel,drop,no value,no test beats the random probes at z >= 2.0,0.0144,-0.7,0.0,0.0,,,,,,,,,,,,0.381,-1.4269,,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,payment_method,keep,adds value,beats the random probes (z >= 2.0) on: frequency_oneway,0.231,-1.3227,-0.0037,0.0,,,,,,,,,,,,2.1052,-1.7441,-0.5616,,,,,,,,,,,,,1.0,2.0,1.0
+buildings,missed_payments_12m,keep,adds value,beats the random probes (z >= 2.0) on: frequency_oneway,0.0959,-0.5171,0.0,0.0,,,,,,,,,,,,2.2213,-1.1563,,,,,,,,,,,,,,1.0,2.0,1.0
+buildings,new_business,drop,redundant,new_business == (renewal_count == 0) on 100.00% of rows,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+buildings,renewal_count,drop,no value,no test beats the random probes at z >= 2.0,-0.0835,-3.3488,0.0044,0.0,,,,,,,,,,,,-1.0525,-3.8313,0.7333,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,days_quote_to_inception,drop,no value,no test beats the random probes at z >= 2.0,-0.1382,-4.7807,-0.0034,0.0,,,,,,,,,,,,-2.0471,-3.2706,-0.5032,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,discount_applied,drop,governance,"commercial decision, not risk (and fully set by channel x new business)",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+buildings,written_premium,drop,governance,output of the current tariff: a model using it would copy the old price,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+buildings,customer_service_contacts,drop,leakage,driven by the claims of the same period (0 contacts on 0.2% of rows with a claim vs 67% without); the 2025 file looks like no-claim rows,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+buildings,renewal_decision,drop,leakage,outcome after the period; absent from the 2025 files,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+buildings,dq_exposure_fixed,drop,data-quality flag,records a correction (kept in data/clean); no risk meaning,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+buildings,dq_sum_insured_fixed,drop,data-quality flag,records a correction (kept in data/clean); no risk meaning,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+buildings,surname,drop,personal data,"personal identifier, no risk meaning",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+buildings,gender,drop,no value,no test beats the random probes at z >= 2.0,0.0144,0.1826,0.0,0.0,,,,,,,,,,,,0.3198,0.5728,,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,occupation,drop,no value,no test beats the random probes at z >= 2.0,0.0092,-1.5139,0.0096,0.0,,,,,,,,,,,,0.1049,-1.8076,0.154,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,marital_status,drop,no value,no test beats the random probes at z >= 2.0,-0.0836,-0.5337,0.0,0.0,,,,,,,,,,,,-1.9446,-0.9929,,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,household_size,drop,no value,no test beats the random probes at z >= 2.0,0.0556,-2.6525,-0.0099,0.0,,,,,,,,,,,0.0282,1.1122,-3.5991,-1.6918,,,,,,,,,,,,0.1502,0.0,2.0,1.0
+buildings,prior_claims_5y,drop,no value,no test beats the random probes at z >= 2.0,0.0147,0.153,0.0,0.0,,,,,,,,,,,,0.26,0.2152,,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,licence_points,drop,no value,no test beats the random probes at z >= 2.0,-0.0455,-2.172,0.0,0.0,,,,,,,,,,,,-0.9008,-3.4913,,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,years_at_address,drop,no value,no test beats the random probes at z >= 2.0,-0.1384,-5.3823,-0.0242,0.0,,,,,,,,,,,,-1.7178,-4.6264,-1.3979,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,customer_since_year,drop,redundant,year - customer_since_year == renewal_count on 100.00% of rows,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+buildings,email_domain,drop,governance,non-risk marketing attribute (regulatory precedent of unfair proxy pricing),,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+buildings,marketing_consent,drop,governance,service attribute,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+buildings,document_preference,drop,governance,service attribute,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+buildings,previous_insurer,drop,governance,commercial attribute,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+buildings,campaign_code,drop,governance,"acquisition attribute (customer-cohort proxy), not a risk characteristic",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+buildings,branch_id,drop,governance,servicing attribute,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+buildings,marketing_segment,drop,governance,assigned by marketing (age x affluence proxy),,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+buildings,self_employed,drop,no value,no test beats the random probes at z >= 2.0,0.0268,0.3706,0.0,0.0,,,,,,,,,,,,0.9389,0.8368,,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,region,drop,no value,no test beats the random probes at z >= 2.0,-0.0101,-1.3077,0.0,0.0,,,,,,,,,,,,-0.1052,-2.1815,,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,urban_density,drop,no value,no test beats the random probes at z >= 2.0,-0.0294,-1.9076,0.0,0.0,,,,,,,,,,,,-0.7744,-1.5994,,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,flood_zone,keep,adds value,"beats the random probes (z >= 2.0) on: frequency_oneway, flood_oneway",0.2668,-1.0855,0.0256,0.0,,,,,,,13.9499,,,,,3.0222,-1.5813,1.893,,,,,,,,12.5899,,,,,2.0,2.0,1.0
+buildings,distance_to_river_km,keep,adds value,beats the random probes (z >= 2.0) on: flood_oneway,0.1537,-2.0977,0.0039,0.0,,,,,,,7.1734,,,,,1.8241,-2.3462,0.1154,,,,,,,,8.0745,,,,,1.0,2.0,1.0
+buildings,elevation_m,keep,adds value,beats the random probes (z >= 2.0) on: flood_oneway,-0.1295,-2.8432,0.0225,0.0,,,,,,,11.633,,,,,-1.2245,-3.3965,1.0749,,,,,,,,11.7514,,,,,1.0,2.0,1.0
+buildings,soil_type,drop,no value,no test beats the random probes at z >= 2.0,-0.0789,-1.3167,0.0,0.0,,,,,,,,,0.7996,,,-0.803,-3.0468,,,,,,,,,,,1.6057,,,0.0,2.0,1.0
+buildings,year_built,drop,redundant,replaced by property_age = year - year_built,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+buildings,property_type,drop,no value,no test beats the random probes at z >= 2.0,0.0162,-0.5418,0.0,0.0,,,,,,0.5097,,,,,,0.1919,-1.0771,,,,,,,,1.9442,,,,,,0.0,2.0,1.0
+buildings,roof_type,drop,no value,no test beats the random probes at z >= 2.0,-0.0632,-0.8253,0.0,0.0,,,,,,0.0882,,,,,,-1.5428,-1.26,,,,,,,,0.8801,,,,,,0.0,2.0,1.0
+buildings,basement,drop,no value,no test beats the random probes at z >= 2.0,-0.0108,-0.0193,0.0,0.0,,,,,,,0.471,,,,,-0.8898,-0.0342,,,,,,,,,1.6169,,,,,0.0,2.0,1.0
+buildings,trees_within_5m,drop,no value,no test beats the random probes at z >= 2.0,-0.0015,-0.8404,0.0,0.0,,,,,,-0.0184,,,0.0614,,,-0.3177,-1.5076,,,,,,,,-0.61,,,0.3376,,,0.0,2.0,1.0
+buildings,listed_building,drop,no value,no test beats the random probes at z >= 2.0,0.0041,0.5395,0.0,0.0,,,,,,,,,,,,0.5576,1.4458,,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,bedrooms,drop,no value,no test beats the random probes at z >= 2.0,0.2003,-1.9161,0.0007,0.0,,,,,,,,,,,,1.6439,-2.4257,0.0463,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,energy_rating,keep,adds value,beats the random probes (z >= 2.0) on: frequency_oneway,1.0943,-3.2266,0.1942,0.0,,,,,,,,,,,,6.4136,-3.761,2.4078,,,,,,,,,,,,,1.0,2.0,1.0
+buildings,solar_panels,drop,no value,no test beats the random probes at z >= 2.0,-0.0052,0.0596,0.0,0.0,,,,,,,,,,,,-0.381,0.2929,,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,start_month,drop,no value,no test beats the random probes at z >= 2.0,0.0199,-0.0238,0.0,0.0,,,,,,,,,,,,1.1083,-0.179,,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,winter_fraction,drop,no value,no test beats the random probes at z >= 2.0,0.0086,-0.0931,0.0,0.0,,,,,,,,,,,,0.2773,-0.6637,,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,starts_after_jan1,drop,no value,no test beats the random probes at z >= 2.0,0.0046,-0.16,0.0,0.0,,,,,,,,,,,,0.2674,-1.6456,,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,ends_before_year_end,drop,no value,no test beats the random probes at z >= 2.0,0.0011,0.2207,0.0,0.0,,,,,,,,,,,,0.0703,1.0304,,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,property_age,keep,adds value,"beats the random probes (z >= 2.0) on: frequency_oneway, frequency_model",1.296,-3.16,0.609,0.0,,,,,,,,0.2157,-0.2574,,,6.1835,-3.2806,4.3392,,,,,,,,,0.7759,-0.7427,,,2.0,2.0,1.0
+buildings,si_per_bedroom,drop,no value,no test beats the random probes at z >= 2.0,-0.1257,-3.5595,0.0279,0.0,,,,,,,,,,,,-1.9506,-3.3113,2.3151,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,wx_hail_days,drop,no value,no test beats the random probes at z >= 2.0,0.0999,-4.1767,-0.006,0.0,,,,,,,,,,,,1.0096,-4.0077,-0.2976,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,wx_wind_exposure_index,drop,no value,no test beats the random probes at z >= 2.0,-0.0107,-2.9649,0.0018,0.0,,,,,,0.4079,,,,,,-0.1098,-3.1122,0.193,,,,,,,1.8362,,,,,,0.0,2.0,1.0
+buildings,wx_freezing_days,drop,no value,no test beats the random probes at z >= 2.0,-0.4108,-2.0207,0.0,0.0,,,,,,,,-0.4073,,,,-3.9544,-1.7588,,,,,,,,,,-1.9051,,,,0.0,2.0,1.0
+buildings,wx_dry_summer_index,drop,no value,no test beats the random probes at z >= 2.0,-0.1223,-5.4876,0.0,0.0,,,,,,,,,0.279,,,-1.2898,-3.927,,,,,,,,,,,0.9444,,,0.0,2.0,1.0
+buildings,wx_wildfire_index,drop,no value,no test beats the random probes at z >= 2.0,-0.1838,-2.7566,0.0174,0.0,,,,,,,,,,0.599,,-1.8986,-3.3028,1.5623,,,,,,,,,,,1.8694,,0.0,2.0,1.0
+buildings,wx_rainfall_mm,drop,near-duplicate,"rank correlation +0.980 with wx_rainfall_mm_mean, which predicts better",-0.078,-4.4043,-0.0222,0.0,,,,,,,1.3812,,,,,-1.0516,-3.5955,-1.7623,,,,,,,,3.6178,,,,,1.0,2.0,1.0
+buildings,wx_mean_temperature_c,drop,no value,no test beats the random probes at z >= 2.0,-0.0428,-2.2819,-0.0031,0.0,,,,,,,,-0.2658,,,,-0.524,-3.3554,-1.0641,,,,,,,,,-1.4016,,,,0.0,2.0,1.0
+buildings,wx_hail_days_mean,drop,no value,no test beats the random probes at z >= 2.0,-0.1194,-5.0306,0.0,0.0,,,,,,,,,,,,-1.0422,-3.8584,,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,wx_wind_exposure_index_mean,keep,adds value,beats the random probes (z >= 2.0) on: storm_oneway,0.2105,-2.5782,0.0038,0.0,,,,,,0.6542,,,,,,1.5812,-3.4884,0.7444,,,,,,,3.3186,,,,,,1.0,2.0,1.0
+buildings,wx_freezing_days_mean,drop,no value,no test beats the random probes at z >= 2.0,-0.214,-3.7978,0.0,0.0,,,,,,,,-0.1134,,,,-2.3799,-4.0816,,,,,,,,,,-0.6663,,,,0.0,2.0,1.0
+buildings,wx_dry_summer_index_mean,drop,no value,no test beats the random probes at z >= 2.0,-0.2963,-4.3298,-0.0166,0.0,,,,,,,,,0.0423,,,-2.8268,-4.0328,-0.9391,,,,,,,,,,0.111,,,0.0,2.0,1.0
+buildings,wx_wildfire_index_mean,drop,no value,no test beats the random probes at z >= 2.0,-0.12,-1.8152,0.0168,0.0,,,,,,,,,,0.0731,,-1.4237,-2.4183,1.0993,,,,,,,,,,,0.2761,,0.0,2.0,1.0
+buildings,wx_rainfall_mm_mean,keep,adds value,beats the random probes (z >= 2.0) on: flood_oneway,-0.1318,-2.3324,0.0026,0.0,,,,,,,1.5564,,,,,-1.7272,-2.9933,0.3842,,,,,,,,3.728,,,,,1.0,2.0,1.0
+buildings,wx_mean_temperature_c_mean,drop,no value,no test beats the random probes at z >= 2.0,-0.0418,-4.0843,0.0029,0.0,,,,,,,,-0.1771,,,,-0.3994,-4.4792,0.9341,,,,,,,,,-0.7739,,,,0.0,2.0,1.0
+buildings,hist_pol_claims_1y,drop,no value,no test beats the random probes at z >= 2.0,0.0337,0.0506,0.0,0.0,,,,,,,,,,,,1.1087,1.7852,,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,hist_pol_claims_3y,drop,no value,no test beats the random probes at z >= 2.0,0.0337,0.0506,0.0,0.0,,,,,,,,,,,,1.1087,1.7852,,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,hist_pol_cost_3y,drop,no value,no test beats the random probes at z >= 2.0,0.0139,-0.0041,0.0,0.0,,,,,,,,,,,,1.576,-0.3194,,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,hist_pol_years_since_claim,drop,no value,no test beats the random probes at z >= 2.0,0.0182,0.0099,0.0,0.0,,,,,,,,,,,,1.6786,0.7594,,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,hist_pol_exposure_3y,drop,no value,no test beats the random probes at z >= 2.0,0.0051,-0.135,0.0,0.0,,,,,,,,,,,,0.2486,-0.4336,,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,hist_cust_claims_3y,drop,no value,no test beats the random probes at z >= 2.0,0.0362,-0.3302,0.0,0.0,,,,,,,,,,,,1.4754,-1.4572,,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,hist_cust_claims_other_lines_3y,drop,no value,no test beats the random probes at z >= 2.0,0.0009,-0.2309,0.0,0.0,,,,,,,,,,,,0.1113,-0.907,,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,hist_years_available,drop,not testable,constant within every test year (a calendar-year proxy); the window length is known from renewal_count and hist_pol_exposure_3y,0.0,0.0,0.0,0.0,,,,,,,,,,,,,,,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,hist_addr_claims_3y,keep,adds value,beats the random probes (z >= 2.0) on: frequency_oneway,0.094,-0.398,0.0,0.0,,,,,,,,,,,,2.7055,-1.9231,,,,,,,,,,,,,,1.0,2.0,1.0
+buildings,hist_addr_weather_claims_3y,drop,no value,no test beats the random probes at z >= 2.0,0.0151,-0.2704,0.0,0.0,,,,,,,,,,,,0.4811,-2.6856,,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,hist_pol_flood_3y,drop,constant,one value on 99.84% of training rows (0.0),,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+buildings,hist_pol_subsidence_3y,drop,constant,one value on 99.92% of training rows (0.0),,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+buildings,hist_pol_escape_of_water_3y,drop,constant,one value on 99.53% of training rows (0.0),,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+buildings,holds_motor,drop,no value,no test beats the random probes at z >= 2.0,0.0496,-0.3597,0.0,0.0,,,,,,,,,,,,0.4619,-0.9437,,,,,,,,,,,,,,0.0,2.0,1.0
+buildings,holds_contents,drop,no value,no test beats the random probes at z >= 2.0,-0.0914,-0.8066,0.0,0.0,,,,,,,,,,,,-2.2305,-1.1304,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,exposure,keep,base,exposure: offset and partial-year effect,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+contents,policyholder_age_band,drop,no value,no test beats the random probes at z >= 2.0,0.2646,-1.6331,0.0,0.0,,,,,,,,,,,,1.8618,-2.753,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,sum_insured,keep,adds value,beats the random probes (z >= 2.0) on: severity_oneway,-0.059,5.0732,0.0,0.0,,,,,,,,,,,,-0.5984,3.8701,,,,,,,,,,,,,,1.0,2.0,1.0
+contents,tenure,keep,adds value,beats the random probes (z >= 2.0) on: severity_oneway,-0.0408,2.071,0.0,0.0,,,,,,,,,,,,-1.2688,2.3818,,,,,,,,,,,,,,1.0,2.0,1.0
+contents,security_level,drop,no value,no test beats the random probes at z >= 2.0,-0.1161,-0.7874,0.0045,0.0,,,,-0.2532,,,,,,,,-1.1756,-1.9959,0.389,,,,,-1.2527,,,,,,,,0.0,2.0,1.0
+contents,high_value_items,drop,no value,no test beats the random probes at z >= 2.0,-0.0676,-0.1435,0.0,0.0,,,,-0.2153,,,,,,,,-0.9396,-0.4308,,,,,,-1.7517,,,,,,,,0.0,2.0,1.0
+contents,accidental_damage_cover,keep,adds value,"beats the random probes (z >= 2.0) on: frequency_oneway, accidental_damage_oneway",0.7114,0.1098,0.0,0.0,,,,,,,,,,,7.9282,3.9405,0.4257,,,,,,,,,,,,,9.6094,2.0,2.0,1.0
+contents,works_from_home,drop,no value,no test beats the random probes at z >= 2.0,-0.0388,-0.5049,0.0,0.0,,,,,,,,,,,-0.1322,-0.9827,-1.4806,,,,,,,,,,,,,-1.5816,0.0,2.0,1.0
+contents,lodgers,drop,no value,no test beats the random probes at z >= 2.0,-0.0073,-0.1013,0.0,0.0,,,,,,,,,,,0.087,-0.1797,-0.7302,,,,,,,,,,,,,1.0462,0.0,2.0,1.0
+contents,bicycle_cover,drop,no value,no test beats the random probes at z >= 2.0,-0.1187,-0.2136,0.0,0.0,,,,-0.1165,,,,,,,,-2.2734,-0.675,,,,,,-1.8583,,,,,,,,0.0,2.0,1.0
+contents,voluntary_excess,keep,adds value,beats the random probes (z >= 2.0) on: frequency_oneway,0.4009,0.1276,0.0,0.0,,,,,,,,,,,,3.143,0.4954,,,,,,,,,,,,,,1.0,2.0,1.0
+contents,compulsory_excess,drop,constant,one value on 100.00% of training rows (350),,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+contents,channel,drop,no value,no test beats the random probes at z >= 2.0,0.006,-0.1749,0.0,0.0,,,,,,,,,,,,0.2637,-0.8739,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,payment_method,drop,no value,no test beats the random probes at z >= 2.0,0.0011,-0.723,0.0,0.0,,,,,,,,,,,,0.0128,-2.1409,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,missed_payments_12m,drop,no value,no test beats the random probes at z >= 2.0,0.074,-0.0528,0.0,0.0,,,,,,,,,,,,1.9378,-0.1889,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,new_business,drop,redundant,new_business == (renewal_count == 0) on 100.00% of rows,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+contents,renewal_count,drop,no value,no test beats the random probes at z >= 2.0,0.0304,0.0736,0.0,0.0,,,,,,,,,,,,0.409,0.1416,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,days_quote_to_inception,drop,no value,no test beats the random probes at z >= 2.0,0.0723,-1.0064,0.0,0.0,,,,,,,,,,,,0.7898,-1.8655,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,discount_applied,drop,governance,"commercial decision, not risk (and fully set by channel x new business)",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+contents,written_premium,drop,governance,output of the current tariff: a model using it would copy the old price,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+contents,customer_service_contacts,drop,leakage,driven by the claims of the same period (0 contacts on 0.2% of rows with a claim vs 67% without); the 2025 file looks like no-claim rows,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+contents,renewal_decision,drop,leakage,outcome after the period; absent from the 2025 files,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+contents,dq_exposure_fixed,drop,data-quality flag,records a correction (kept in data/clean); no risk meaning,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+contents,dq_sum_insured_fixed,drop,data-quality flag,records a correction (kept in data/clean); no risk meaning,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+contents,surname,drop,personal data,"personal identifier, no risk meaning",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+contents,gender,drop,no value,no test beats the random probes at z >= 2.0,0.0022,0.0955,0.0,0.0,,,,,,,,,,,,0.0707,0.4531,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,occupation,drop,no value,no test beats the random probes at z >= 2.0,-0.1205,-0.6634,-0.003,0.0,,,,,,,,,,,,-1.489,-0.8031,-0.528,,,,,,,,,,,,,0.0,2.0,1.0
+contents,marital_status,drop,no value,no test beats the random probes at z >= 2.0,0.0067,-0.7374,0.0,0.0,,,,,,,,,,,,0.0764,-1.9639,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,household_size,drop,no value,no test beats the random probes at z >= 2.0,-0.1502,-1.032,0.0,0.0,,,,,,,,,,,-0.3329,-2.5883,-1.8811,,,,,,,,,,,,,-2.3931,0.0,2.0,1.0
+contents,prior_claims_5y,drop,no value,no test beats the random probes at z >= 2.0,0.1027,-0.0517,0.0,0.0,,,,,,,,,,,,1.565,-0.266,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,licence_points,drop,no value,no test beats the random probes at z >= 2.0,-0.0326,-0.0379,0.0,0.0,,,,,,,,,,,,-1.4833,-0.1203,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,years_at_address,drop,no value,no test beats the random probes at z >= 2.0,-0.1898,-0.512,0.0,0.0,,,,,,,,,,,,-1.9306,-0.8948,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,customer_since_year,drop,redundant,year - customer_since_year == renewal_count on 100.00% of rows,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+contents,email_domain,drop,governance,non-risk marketing attribute (regulatory precedent of unfair proxy pricing),,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+contents,marketing_consent,drop,governance,service attribute,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+contents,document_preference,drop,governance,service attribute,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+contents,previous_insurer,drop,governance,commercial attribute,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+contents,campaign_code,drop,governance,"acquisition attribute (customer-cohort proxy), not a risk characteristic",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+contents,branch_id,drop,governance,servicing attribute,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+contents,marketing_segment,drop,governance,assigned by marketing (age x affluence proxy),,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+contents,self_employed,drop,no value,no test beats the random probes at z >= 2.0,-0.0668,-0.5411,0.0,0.0,,,,,,,,,,,,-2.188,-1.8461,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,region,drop,no value,no test beats the random probes at z >= 2.0,0.0258,-1.5146,0.0,0.0,,,,,,,,,,,,0.435,-2.3361,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,urban_density,drop,no value,no test beats the random probes at z >= 2.0,0.098,-1.2969,0.0,0.0,,,,0.7243,,,,,,,,0.8667,-2.0913,,,,,,1.9906,,,,,,,,0.0,2.0,1.0
+contents,flood_zone,keep,adds value,"beats the random probes (z >= 2.0) on: frequency_oneway, flood_oneway",0.2032,-1.6753,0.0,0.0,,,,,,,13.6541,,,,,2.7393,-2.741,,,,,,,,,14.783,,,,,2.0,2.0,1.0
+contents,distance_to_river_km,keep,adds value,beats the random probes (z >= 2.0) on: flood_oneway,-0.1862,-1.3179,0.0,0.0,,,,,,,7.6163,,,,,-1.5123,-3.2396,,,,,,,,,9.0785,,,,,1.0,2.0,1.0
+contents,elevation_m,keep,adds value,beats the random probes (z >= 2.0) on: flood_oneway,0.0964,-1.1822,0.0,0.0,,,,,,,10.6778,,,,,0.8654,-1.8484,,,,,,,,,11.5868,,,,,1.0,2.0,1.0
+contents,soil_type,drop,no value,no test beats the random probes at z >= 2.0,-0.1411,-0.3948,0.0,0.0,,,,,,,,,,,,-2.7397,-0.4471,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,year_built,drop,redundant,replaced by property_age = year - year_built,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+contents,property_type,drop,no value,no test beats the random probes at z >= 2.0,0.0377,0.2093,0.0,0.0,,,,,,,,,,,,0.6551,0.6381,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,roof_type,drop,no value,no test beats the random probes at z >= 2.0,0.0077,-0.1847,0.0,0.0,,,,,,,,,,,,0.2906,-0.7588,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,basement,drop,no value,no test beats the random probes at z >= 2.0,0.0141,-0.0839,0.0,0.0,,,,,,,0.0337,,,,,0.6552,-0.3929,,,,,,,,,0.2557,,,,,0.0,2.0,1.0
+contents,trees_within_5m,drop,no value,no test beats the random probes at z >= 2.0,0.0449,-0.3108,0.0,0.0,,,,,,,,,,,,1.1738,-1.2037,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,listed_building,drop,no value,no test beats the random probes at z >= 2.0,-0.0061,0.0166,0.0,0.0,,,,,,,,,,,,-0.3708,0.2169,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,bedrooms,drop,no value,no test beats the random probes at z >= 2.0,0.0301,-0.809,0.0,0.0,,,,,,,,,,,,0.7382,-1.6331,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,energy_rating,drop,no value,no test beats the random probes at z >= 2.0,-0.1027,0.5674,0.0,0.0,,,,,,,,,,,,-1.352,0.9129,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,solar_panels,drop,no value,no test beats the random probes at z >= 2.0,0.0073,-0.4589,0.0,0.0,,,,,,,,,,,,0.254,-2.0419,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,start_month,drop,no value,no test beats the random probes at z >= 2.0,-0.028,0.0816,0.0,0.0,,,,,,,,,,,,-1.3215,0.3131,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,winter_fraction,keep,adds value,beats the random probes (z >= 2.0) on: frequency_oneway,0.1075,-0.0455,0.0,0.0,,,,,,,,,,,,2.2061,-0.2325,,,,,,,,,,,,,,1.0,2.0,1.0
+contents,starts_after_jan1,drop,no value,no test beats the random probes at z >= 2.0,0.0762,-0.1696,0.0,0.0,,,,,,,,,,,,1.5531,-0.6746,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,ends_before_year_end,drop,no value,no test beats the random probes at z >= 2.0,0.0095,-0.1716,0.0,0.0,,,,,,,,,,,,0.5689,-1.2521,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,property_age,drop,no value,no test beats the random probes at z >= 2.0,-0.2041,-1.2882,0.0,0.0,,,,,,,,-0.1363,,,,-2.325,-2.2823,,,,,,,,,,-0.5904,,,,0.0,2.0,1.0
+contents,si_per_bedroom,drop,no value,no test beats the random probes at z >= 2.0,-0.0805,2.1989,0.0,0.0,,,,,,,,,,,,-1.2999,1.8087,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,wx_hail_days,drop,no value,no test beats the random probes at z >= 2.0,-0.046,-0.2656,0.0,0.0,,,,,,,,,,,,-0.6078,-0.4595,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,wx_wind_exposure_index,drop,no value,no test beats the random probes at z >= 2.0,-0.0588,-2.0182,0.0,0.0,,,,,,,,,,,,-1.2127,-2.1141,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,wx_freezing_days,drop,no value,no test beats the random probes at z >= 2.0,-0.1713,-1.238,0.0,0.0,,,,,,,,0.129,,,,-1.7139,-1.6642,,,,,,,,,,0.4466,,,,0.0,2.0,1.0
+contents,wx_dry_summer_index,drop,no value,no test beats the random probes at z >= 2.0,-0.0147,-0.7717,0.0,0.0,,,,,,,,,,,,-0.1772,-1.8065,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,wx_wildfire_index,drop,no value,no test beats the random probes at z >= 2.0,-0.1761,-2.1384,-0.0062,0.0,,,,,,,,,,,,-1.8425,-2.391,-1.3701,,,,,,,,,,,,,0.0,2.0,1.0
+contents,wx_rainfall_mm,keep,adds value,beats the random probes (z >= 2.0) on: flood_oneway,-0.0725,-0.8101,0.0,0.0,,,,,,,1.6593,,,,,-0.6726,-1.2969,,,,,,,,,5.019,,,,,1.0,2.0,1.0
+contents,wx_mean_temperature_c,drop,no value,no test beats the random probes at z >= 2.0,-0.0281,0.4964,0.0,0.0,,,,,,,,0.2004,,,,-0.3373,0.7403,,,,,,,,,,0.7882,,,,0.0,2.0,1.0
+contents,wx_hail_days_mean,drop,no value,no test beats the random probes at z >= 2.0,-0.0864,-0.2382,0.0,0.0,,,,,,,,,,,,-1.5044,-0.3822,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,wx_wind_exposure_index_mean,drop,no value,no test beats the random probes at z >= 2.0,-0.0954,-1.9478,0.0,0.0,,,,,,,,,,,,-1.4545,-2.4239,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,wx_freezing_days_mean,drop,no value,no test beats the random probes at z >= 2.0,0.0454,-1.4778,0.0,0.0,,,,,,,,0.1559,,,,0.4889,-2.5206,,,,,,,,,,0.6957,,,,0.0,2.0,1.0
+contents,wx_dry_summer_index_mean,drop,no value,no test beats the random probes at z >= 2.0,0.0331,-1.0463,0.0,0.0,,,,,,,,,,,,0.3487,-1.2601,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,wx_wildfire_index_mean,drop,no value,no test beats the random probes at z >= 2.0,-0.1398,-1.935,0.0,0.0,,,,,,,,,,,,-1.858,-2.1606,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,wx_rainfall_mm_mean,drop,near-duplicate,"rank correlation +0.980 with wx_rainfall_mm, which predicts better",-0.0651,-0.8535,0.0,0.0,,,,,,,1.9722,,,,,-0.6696,-1.2863,,,,,,,,,4.8902,,,,,1.0,2.0,1.0
+contents,wx_mean_temperature_c_mean,drop,no value,no test beats the random probes at z >= 2.0,-0.0916,-0.8223,0.0,0.0,,,,,,,,0.2599,,,,-1.1375,-1.0467,,,,,,,,,,0.8427,,,,0.0,2.0,1.0
+contents,hist_pol_claims_1y,drop,no value,no test beats the random probes at z >= 2.0,0.0277,-0.0013,0.0,0.0,,,,,,,,,,,,1.4384,-0.0496,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,hist_pol_claims_3y,drop,no value,no test beats the random probes at z >= 2.0,0.0277,-0.0013,0.0,0.0,,,,,,,,,,,,1.4384,-0.0496,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,hist_pol_cost_3y,drop,no value,no test beats the random probes at z >= 2.0,0.0004,0.0049,0.0,0.0,,,,,,,,,,,,0.072,0.403,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,hist_pol_years_since_claim,drop,no value,no test beats the random probes at z >= 2.0,0.0059,-0.0326,0.0,0.0,,,,,,,,,,,,0.6891,-0.812,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,hist_pol_exposure_3y,drop,no value,no test beats the random probes at z >= 2.0,0.0301,0.2242,0.0,0.0,,,,,,,,,,,,0.7456,1.555,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,hist_cust_claims_3y,drop,no value,no test beats the random probes at z >= 2.0,-0.0068,0.0988,0.0,0.0,,,,,,,,,,,,-0.4251,0.7944,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,hist_cust_claims_other_lines_3y,drop,no value,no test beats the random probes at z >= 2.0,-0.0067,0.3636,0.0,0.0,,,,,,,,,,,,-0.7092,1.8949,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,hist_years_available,drop,not testable,constant within every test year (a calendar-year proxy); the window length is known from renewal_count and hist_pol_exposure_3y,0.0,0.0,0.0,0.0,,,,,,,,,,,,,,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,hist_addr_claims_3y,drop,no value,no test beats the random probes at z >= 2.0,0.0154,-0.0206,0.0,0.0,,,,,,,,,,,,1.0891,-0.2587,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,hist_addr_weather_claims_3y,drop,no value,no test beats the random probes at z >= 2.0,0.0037,0.0845,0.0,0.0,,,,,,,,,,,,0.745,1.1628,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,hist_pol_flood_3y,drop,constant,one value on 99.85% of training rows (0.0),,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+contents,hist_pol_escape_of_water_3y,drop,constant,one value on 99.76% of training rows (0.0),,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,1.0
+contents,holds_motor,drop,no value,no test beats the random probes at z >= 2.0,-0.0159,0.1999,0.0,0.0,,,,,,,,,,,,-0.4899,0.9979,,,,,,,,,,,,,,0.0,2.0,1.0
+contents,holds_buildings,drop,near-duplicate,"Cramer's V +1.000 with tenure, which predicts better",-0.0408,2.071,0.0,0.0,,,,,,,,,,,,-1.2688,2.3818,,,,,,,,,,,,,,1.0,2.0,1.0

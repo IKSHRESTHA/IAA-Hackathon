@@ -1,0 +1,106 @@
+{
+ "features": [
+  "age_band_mid",
+  "ncb_years",
+  "vehicle_value_group",
+  "vehicle_age",
+  "engine_size_cc",
+  "body_type",
+  "vehicle_colour",
+  "fuel_type",
+  "driver_assist",
+  "cover_type",
+  "overnight_parking",
+  "vehicle_use",
+  "voluntary_excess",
+  "channel",
+  "payment_method",
+  "missed_payments_12m",
+  "renewal_count",
+  "days_quote_to_inception",
+  "occupation",
+  "marital_status",
+  "household_size",
+  "prior_claims_5y",
+  "licence_points",
+  "years_at_address",
+  "urban_density",
+  "property_type",
+  "start_month",
+  "winter_fraction",
+  "starts_after_jan1",
+  "age_first_licensed"
+ ],
+ "cap": 45235.46579999999,
+ "load": 1.0628865564009708,
+ "components": {
+  "freq": {
+   "rows": 979968,
+   "target_total": 110496.0
+  },
+  "cost_own_damage": {
+   "rows": 979968,
+   "target_total": 96225894.00846279
+  },
+  "freq_own_damage": {
+   "rows": 979968,
+   "target_total": 48259.0
+  },
+  "cost_third_party_prop": {
+   "rows": 979968,
+   "target_total": 145599738.61256254
+  },
+  "freq_third_party_prop": {
+   "rows": 979968,
+   "target_total": 32963.0
+  },
+  "cost_bodily_injury": {
+   "rows": 979968,
+   "target_total": 110336838.7218
+  },
+  "freq_bodily_injury": {
+   "rows": 979968,
+   "target_total": 7512.0
+  },
+  "cost_theft": {
+   "rows": 979968,
+   "target_total": 41606094.40730953
+  },
+  "freq_theft": {
+   "rows": 979968,
+   "target_total": 6119.0
+  },
+  "cost_glass_hail": {
+   "rows": 979968,
+   "target_total": 20420290.199415594
+  },
+  "freq_glass_hail": {
+   "rows": 979968,
+   "target_total": 15643.0
+  },
+  "sev": {
+   "rows": 84631,
+   "target_total": 325108723.70676255
+  },
+  "sev_own_damage": {
+   "rows": 36721,
+   "target_total": 73211197.41675314
+  },
+  "sev_third_party_prop": {
+   "rows": 25337,
+   "target_total": 111717618.95296252
+  },
+  "sev_bodily_injury": {
+   "rows": 6334,
+   "target_total": 93409071.17199999
+  },
+  "sev_theft": {
+   "rows": 4616,
+   "target_total": 31515417.892261274
+  },
+  "sev_glass_hail": {
+   "rows": 11623,
+   "target_total": 15255418.272785595
+  }
+ }
+}

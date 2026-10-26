@@ -1,0 +1,148 @@
+line,column,used_as,decision,reason
+motor,driver_age,age_band_mid,keep,same meaning in both markets (as age band)
+motor,ncb_years,ncb_years,keep,same meaning in both markets
+motor,vehicle_value_group,vehicle_value_group,keep,same meaning in both markets
+motor,vehicle_age,vehicle_age,keep,same meaning in both markets
+motor,engine_size_cc,engine_size_cc,keep,same meaning in both markets
+motor,body_type,body_type,keep,same meaning in both markets
+motor,vehicle_colour,vehicle_colour,keep,same meaning in both markets
+motor,fuel_type,fuel_type,keep,same meaning in both markets
+motor,driver_assist,driver_assist,keep,same meaning in both markets
+motor,cover_type,cover_type,keep,same meaning in both markets
+motor,annual_mileage,annual_mileage,drop,exists in the 1st round only
+motor,overnight_parking,overnight_parking,keep,same meaning in both markets
+motor,vehicle_use,vehicle_use,keep,same meaning in both markets
+motor,telematics_opt_in,telematics_opt_in,drop,exists in the 1st round only
+motor,telematics_score,telematics_score,drop,exists in the 1st round only
+motor,voluntary_excess,voluntary_excess,keep,same meaning in both markets
+motor,channel,channel,keep,same meaning in both markets
+motor,payment_method,payment_method,keep,same meaning in both markets
+motor,missed_payments_12m,missed_payments_12m,keep,same meaning in both markets
+motor,renewal_count,renewal_count,keep,same meaning in both markets
+motor,days_quote_to_inception,days_quote_to_inception,keep,same meaning in both markets
+motor,dq_mileage_zero,dq_mileage_zero,drop,exists in the 1st round only
+motor,occupation,occupation,keep,same meaning in both markets
+motor,marital_status,marital_status,keep,same meaning in both markets
+motor,household_size,household_size,keep,same meaning in both markets
+motor,credit_band,credit_band,drop,exists in the 1st round only
+motor,prior_claims_5y,prior_claims_5y,keep,same meaning in both markets
+motor,licence_points,licence_points,keep,same meaning in both markets
+motor,years_at_address,years_at_address,keep,same meaning in both markets
+motor,region,region,drop,the regions of the two markets are different places
+motor,urban_density,urban_density,keep,same meaning in both markets
+motor,property_type,property_type,keep,same meaning in both markets
+motor,start_month,start_month,keep,same meaning in both markets
+motor,winter_fraction,winter_fraction,keep,same meaning in both markets
+motor,starts_after_jan1,starts_after_jan1,keep,same meaning in both markets
+motor,age_first_licensed,age_first_licensed,keep,same meaning in both markets
+motor,wx_hail_days,wx_hail_days,drop,a different climate: the 2nd-round model learns the weather itself
+motor,wx_freezing_days,wx_freezing_days,drop,a different climate: the 2nd-round model learns the weather itself
+motor,wx_dry_summer_index,wx_dry_summer_index,drop,a different climate: the 2nd-round model learns the weather itself
+motor,wx_mean_temperature_c,wx_mean_temperature_c,drop,a different climate: the 2nd-round model learns the weather itself
+motor,wx_hail_days_mean,wx_hail_days_mean,drop,a different climate: the 2nd-round model learns the weather itself
+motor,wx_wind_exposure_index_mean,wx_wind_exposure_index_mean,drop,a different climate: the 2nd-round model learns the weather itself
+motor,wx_dry_summer_index_mean,wx_dry_summer_index_mean,drop,a different climate: the 2nd-round model learns the weather itself
+motor,wx_wildfire_index_mean,wx_wildfire_index_mean,drop,a different climate: the 2nd-round model learns the weather itself
+motor,wx_mean_temperature_c_mean,wx_mean_temperature_c_mean,drop,a different climate: the 2nd-round model learns the weather itself
+motor,hist_pol_claims_1y,hist_pol_claims_1y,drop,claims history with a different insurer
+motor,hist_pol_claims_3y,hist_pol_claims_3y,drop,claims history with a different insurer
+motor,hist_pol_cost_3y,hist_pol_cost_3y,drop,claims history with a different insurer
+motor,hist_pol_years_since_claim,hist_pol_years_since_claim,drop,claims history with a different insurer
+motor,hist_pol_exposure_3y,hist_pol_exposure_3y,drop,claims history with a different insurer
+motor,hist_cust_claims_3y,hist_cust_claims_3y,drop,claims history with a different insurer
+motor,holds_buildings,holds_buildings,drop,the other lines a customer holds depend on each insurer's products
+motor,holds_contents,holds_contents,drop,the other lines a customer holds depend on each insurer's products
+buildings,sum_insured,sum_insured,keep,same meaning in both markets
+buildings,construction_type,construction_type,keep,same meaning in both markets
+buildings,occupancy,occupancy,keep,same meaning in both markets
+buildings,days_unoccupied,days_unoccupied,keep,same meaning in both markets
+buildings,accidental_damage_cover,accidental_damage_cover,keep,same meaning in both markets
+buildings,voluntary_excess,voluntary_excess,keep,same meaning in both markets
+buildings,channel,channel,keep,same meaning in both markets
+buildings,payment_method,payment_method,keep,same meaning in both markets
+buildings,missed_payments_12m,missed_payments_12m,keep,same meaning in both markets
+buildings,credit_band,credit_band,drop,exists in the 1st round only
+buildings,prior_claims_5y,prior_claims_5y,keep,same meaning in both markets
+buildings,region,region,drop,the regions of the two markets are different places
+buildings,flood_zone,flood_zone,keep,same meaning in both markets
+buildings,distance_to_river_km,distance_to_river_km,keep,same meaning in both markets
+buildings,elevation_m,elevation_m,keep,same meaning in both markets
+buildings,soil_type,soil_type,keep,same meaning in both markets
+buildings,property_type,property_type,keep,same meaning in both markets
+buildings,roof_type,roof_type,keep,same meaning in both markets
+buildings,trees_within_5m,trees_within_5m,keep,same meaning in both markets
+buildings,listed_building,listed_building,keep,same meaning in both markets
+buildings,bedrooms,bedrooms,keep,same meaning in both markets
+buildings,energy_rating,energy_rating,keep,same meaning in both markets
+buildings,property_age,property_age,keep,same meaning in both markets
+buildings,si_per_bedroom,si_per_bedroom,keep,same meaning in both markets
+buildings,wx_wind_exposure_index,wx_wind_exposure_index,drop,a different climate: the 2nd-round model learns the weather itself
+buildings,wx_freezing_days,wx_freezing_days,drop,a different climate: the 2nd-round model learns the weather itself
+buildings,wx_dry_summer_index,wx_dry_summer_index,drop,a different climate: the 2nd-round model learns the weather itself
+buildings,wx_wildfire_index,wx_wildfire_index,drop,a different climate: the 2nd-round model learns the weather itself
+buildings,wx_rainfall_mm,wx_rainfall_mm,drop,a different climate: the 2nd-round model learns the weather itself
+buildings,wx_mean_temperature_c,wx_mean_temperature_c,drop,a different climate: the 2nd-round model learns the weather itself
+buildings,wx_freezing_days_mean,wx_freezing_days_mean,drop,a different climate: the 2nd-round model learns the weather itself
+buildings,wx_dry_summer_index_mean,wx_dry_summer_index_mean,drop,a different climate: the 2nd-round model learns the weather itself
+buildings,wx_wildfire_index_mean,wx_wildfire_index_mean,drop,a different climate: the 2nd-round model learns the weather itself
+buildings,wx_rainfall_mm_mean,wx_rainfall_mm_mean,drop,a different climate: the 2nd-round model learns the weather itself
+buildings,hist_pol_claims_1y,hist_pol_claims_1y,drop,claims history with a different insurer
+buildings,hist_pol_claims_3y,hist_pol_claims_3y,drop,claims history with a different insurer
+buildings,hist_pol_cost_3y,hist_pol_cost_3y,drop,claims history with a different insurer
+buildings,hist_pol_years_since_claim,hist_pol_years_since_claim,drop,claims history with a different insurer
+buildings,hist_cust_claims_3y,hist_cust_claims_3y,drop,claims history with a different insurer
+buildings,hist_addr_claims_3y,hist_addr_claims_3y,drop,claims history with a different insurer
+buildings,hist_addr_weather_claims_3y,hist_addr_weather_claims_3y,drop,claims history with a different insurer
+buildings,hist_pol_escape_of_water_3y,hist_pol_escape_of_water_3y,drop,claims history with a different insurer
+buildings,holds_motor,holds_motor,drop,the other lines a customer holds depend on each insurer's products
+buildings,flood_zone_missing,flood_zone_missing,keep,same meaning in both markets
+buildings,renewal_count,renewal_count,keep,new business: its developed-market effect was hidden by the history features
+contents,policyholder_age,age_band_mid,keep,same meaning in both markets (as age band)
+contents,sum_insured,sum_insured,keep,same meaning in both markets
+contents,tenure,tenure,keep,same meaning in both markets
+contents,security_level,security_level,keep,same meaning in both markets
+contents,high_value_items,high_value_items,keep,same meaning in both markets
+contents,accidental_damage_cover,accidental_damage_cover,keep,same meaning in both markets
+contents,works_from_home,works_from_home,keep,same meaning in both markets
+contents,lodgers,lodgers,keep,same meaning in both markets
+contents,voluntary_excess,voluntary_excess,keep,same meaning in both markets
+contents,channel,channel,keep,same meaning in both markets
+contents,payment_method,payment_method,keep,same meaning in both markets
+contents,missed_payments_12m,missed_payments_12m,keep,same meaning in both markets
+contents,renewal_count,renewal_count,keep,same meaning in both markets
+contents,days_quote_to_inception,days_quote_to_inception,keep,same meaning in both markets
+contents,occupation,occupation,keep,same meaning in both markets
+contents,marital_status,marital_status,keep,same meaning in both markets
+contents,household_size,household_size,keep,same meaning in both markets
+contents,credit_band,credit_band,drop,exists in the 1st round only
+contents,prior_claims_5y,prior_claims_5y,keep,same meaning in both markets
+contents,region,region,drop,the regions of the two markets are different places
+contents,urban_density,urban_density,keep,same meaning in both markets
+contents,flood_zone,flood_zone,keep,same meaning in both markets
+contents,distance_to_river_km,distance_to_river_km,keep,same meaning in both markets
+contents,elevation_m,elevation_m,keep,same meaning in both markets
+contents,start_month,start_month,keep,same meaning in both markets
+contents,starts_after_jan1,starts_after_jan1,keep,same meaning in both markets
+contents,si_per_bedroom,si_per_bedroom,keep,same meaning in both markets
+contents,wx_freezing_days,wx_freezing_days,drop,a different climate: the 2nd-round model learns the weather itself
+contents,wx_dry_summer_index,wx_dry_summer_index,drop,a different climate: the 2nd-round model learns the weather itself
+contents,wx_wildfire_index,wx_wildfire_index,drop,a different climate: the 2nd-round model learns the weather itself
+contents,wx_rainfall_mm,wx_rainfall_mm,drop,a different climate: the 2nd-round model learns the weather itself
+contents,wx_mean_temperature_c,wx_mean_temperature_c,drop,a different climate: the 2nd-round model learns the weather itself
+contents,wx_hail_days_mean,wx_hail_days_mean,drop,a different climate: the 2nd-round model learns the weather itself
+contents,wx_wind_exposure_index_mean,wx_wind_exposure_index_mean,drop,a different climate: the 2nd-round model learns the weather itself
+contents,wx_freezing_days_mean,wx_freezing_days_mean,drop,a different climate: the 2nd-round model learns the weather itself
+contents,wx_dry_summer_index_mean,wx_dry_summer_index_mean,drop,a different climate: the 2nd-round model learns the weather itself
+contents,wx_wildfire_index_mean,wx_wildfire_index_mean,drop,a different climate: the 2nd-round model learns the weather itself
+contents,wx_rainfall_mm_mean,wx_rainfall_mm_mean,drop,a different climate: the 2nd-round model learns the weather itself
+contents,hist_pol_claims_1y,hist_pol_claims_1y,drop,claims history with a different insurer
+contents,hist_pol_claims_3y,hist_pol_claims_3y,drop,claims history with a different insurer
+contents,hist_pol_cost_3y,hist_pol_cost_3y,drop,claims history with a different insurer
+contents,hist_pol_years_since_claim,hist_pol_years_since_claim,drop,claims history with a different insurer
+contents,hist_pol_exposure_3y,hist_pol_exposure_3y,drop,claims history with a different insurer
+contents,hist_cust_claims_3y,hist_cust_claims_3y,drop,claims history with a different insurer
+contents,hist_addr_claims_3y,hist_addr_claims_3y,drop,claims history with a different insurer
+contents,hist_addr_weather_claims_3y,hist_addr_weather_claims_3y,drop,claims history with a different insurer
+contents,hist_pol_escape_of_water_3y,hist_pol_escape_of_water_3y,drop,claims history with a different insurer
+contents,holds_motor,holds_motor,drop,the other lines a customer holds depend on each insurer's products
+contents,flood_zone_missing,flood_zone_missing,keep,same meaning in both markets

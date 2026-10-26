@@ -1,0 +1,38 @@
+{
+ "motor": {
+  "features": 53,
+  "trees": 372,
+  "base": 6.334523656788942,
+  "balance": 1.025533945659442,
+  "large_loss_cap": 49809.087205759664,
+  "large_loss_load": 1.0548580740061564,
+  "rows_2025": 254986,
+  "predicted_total_2025": 113117734.01040843,
+  "cost_per_year_on_cover_2025": 565.6350509949536,
+  "training_cost_per_year_on_cover_at_2025_level": 594.6243654799105
+ },
+ "buildings": {
+  "features": 44,
+  "trees": 255,
+  "base": 6.153171968667478,
+  "balance": 1.0800935933947926,
+  "large_loss_cap": 172044.71063968033,
+  "large_loss_load": 1.0439962082854246,
+  "rows_2025": 184155,
+  "predicted_total_2025": 72531397.11871934,
+  "cost_per_year_on_cover_2025": 482.75765518900926,
+  "training_cost_per_year_on_cover_at_2025_level": 490.8938074076285
+ },
+ "contents": {
+  "features": 49,
+  "trees": 314,
+  "base": 4.815340744602814,
+  "balance": 1.069870608969156,
+  "large_loss_cap": 33175.33649628999,
+  "large_loss_load": 1.0211045870283055,
+  "rows_2025": 187498,
+  "predicted_total_2025": 18847454.886299446,
+  "cost_per_year_on_cover_2025": 125.54610462267469,
+  "training_cost_per_year_on_cover_at_2025_level": 125.99291993921278
+ }
+}

@@ -1,0 +1,315 @@
+{
+ "params": {
+  "min_sum_hessian_in_leaf": 1.0,
+  "bagging_freq": 1,
+  "max_bin": 255,
+  "cat_smooth": 50,
+  "cat_l2": 10,
+  "min_data_per_group": 200,
+  "max_cat_to_onehot": 32,
+  "num_leaves": 2,
+  "min_data_in_leaf": 300,
+  "lambda_l2": 10.0,
+  "learning_rate": 0.03,
+  "feature_fraction": 0.8,
+  "bagging_fraction": 0.8
+ },
+ "glm_alpha": 1.0,
+ "experts": {
+  "fold0": {
+   "total": {
+    "trees": 31,
+    "balance": 1.1029860930845006
+   },
+   "glm": {
+    "balance": 1.0505514838565346
+   },
+   "peril": {
+    "theft": {
+     "trees": 35,
+     "load": 1.0
+    },
+    "escape_of_water": {
+     "trees": 515,
+     "load": 1.0
+    },
+    "accidental_damage": {
+     "trees": 1,
+     "load": 1.0
+    },
+    "flood": {
+     "trees": 1,
+     "load": 1.0721137145969368
+    }
+   },
+   "fs": {
+    "freq_trees": 125,
+    "gamma_trees": 11,
+    "lognorm_trees": [
+     180,
+     1
+    ],
+    "lognorm_calibration": 0.7981932666475602,
+    "claims": 399
+   },
+   "fs_peril": {
+    "theft": {
+     "freq_trees": 316,
+     "size_trees": 0,
+     "claims": 157
+    },
+    "escape_of_water": {
+     "freq_trees": 92,
+     "size_trees": 0,
+     "claims": 70
+    },
+    "accidental_damage": {
+     "freq_trees": 12,
+     "size_trees": 0,
+     "claims": 129
+    },
+    "flood": {
+     "freq_trees": 10,
+     "size_trees": 0,
+     "claims": 43
+    }
+   }
+  },
+  "fold1": {
+   "total": {
+    "trees": 36,
+    "balance": 1.0606985835933966
+   },
+   "glm": {
+    "balance": 1.0472868290045918
+   },
+   "peril": {
+    "theft": {
+     "trees": 28,
+     "load": 1.0
+    },
+    "escape_of_water": {
+     "trees": 31,
+     "load": 1.0
+    },
+    "accidental_damage": {
+     "trees": 1,
+     "load": 1.0
+    },
+    "flood": {
+     "trees": 1,
+     "load": 1.0721137145969368
+    }
+   },
+   "fs": {
+    "freq_trees": 3,
+    "gamma_trees": 18,
+    "lognorm_trees": [
+     398,
+     1
+    ],
+    "lognorm_calibration": 0.8720167521177274,
+    "claims": 401
+   },
+   "fs_peril": {
+    "theft": {
+     "freq_trees": 159,
+     "size_trees": 0,
+     "claims": 153
+    },
+    "escape_of_water": {
+     "freq_trees": 1,
+     "size_trees": 0,
+     "claims": 65
+    },
+    "accidental_damage": {
+     "freq_trees": 130,
+     "size_trees": 0,
+     "claims": 141
+    },
+    "flood": {
+     "freq_trees": 316,
+     "size_trees": 0,
+     "claims": 42
+    }
+   }
+  },
+  "fold2": {
+   "total": {
+    "trees": 11,
+    "balance": 1.0379376409181618
+   },
+   "glm": {
+    "balance": 1.0434319636563754
+   },
+   "peril": {
+    "theft": {
+     "trees": 8,
+     "load": 1.0
+    },
+    "escape_of_water": {
+     "trees": 1,
+     "load": 1.0
+    },
+    "accidental_damage": {
+     "trees": 1,
+     "load": 1.0
+    },
+    "flood": {
+     "trees": 5,
+     "load": 1.0721137145969368
+    }
+   },
+   "fs": {
+    "freq_trees": 12,
+    "gamma_trees": 1,
+    "lognorm_trees": [
+     35,
+     1
+    ],
+    "lognorm_calibration": 0.8068849111289345,
+    "claims": 392
+   },
+   "fs_peril": {
+    "theft": {
+     "freq_trees": 293,
+     "size_trees": 0,
+     "claims": 146
+    },
+    "escape_of_water": {
+     "freq_trees": 9,
+     "size_trees": 0,
+     "claims": 70
+    },
+    "accidental_damage": {
+     "freq_trees": 23,
+     "size_trees": 0,
+     "claims": 138
+    },
+    "flood": {
+     "freq_trees": 1,
+     "size_trees": 0,
+     "claims": 38
+    }
+   }
+  },
+  "fold3": {
+   "total": {
+    "trees": 11,
+    "balance": 1.0582396721824456
+   },
+   "glm": {
+    "balance": 1.0452440581938724
+   },
+   "peril": {
+    "theft": {
+     "trees": 5,
+     "load": 1.0
+    },
+    "escape_of_water": {
+     "trees": 13,
+     "load": 1.0
+    },
+    "accidental_damage": {
+     "trees": 16,
+     "load": 1.0
+    },
+    "flood": {
+     "trees": 1,
+     "load": 1.0721137145969368
+    }
+   },
+   "fs": {
+    "freq_trees": 82,
+    "gamma_trees": 387,
+    "lognorm_trees": [
+     598,
+     1
+    ],
+    "lognorm_calibration": 0.7951098893316157,
+    "claims": 392
+   },
+   "fs_peril": {
+    "theft": {
+     "freq_trees": 82,
+     "size_trees": 0,
+     "claims": 152
+    },
+    "escape_of_water": {
+     "freq_trees": 1,
+     "size_trees": 0,
+     "claims": 72
+    },
+    "accidental_damage": {
+     "freq_trees": 148,
+     "size_trees": 0,
+     "claims": 128
+    },
+    "flood": {
+     "freq_trees": 383,
+     "size_trees": 0,
+     "claims": 40
+    }
+   }
+  },
+  "fold4": {
+   "total": {
+    "trees": 22,
+    "balance": 1.037213600343107
+   },
+   "glm": {
+    "balance": 1.0607851960290446
+   },
+   "peril": {
+    "theft": {
+     "trees": 8,
+     "load": 1.0
+    },
+    "escape_of_water": {
+     "trees": 355,
+     "load": 1.0
+    },
+    "accidental_damage": {
+     "trees": 3,
+     "load": 1.0
+    },
+    "flood": {
+     "trees": 1,
+     "load": 1.0721137145969368
+    }
+   },
+   "fs": {
+    "freq_trees": 5,
+    "gamma_trees": 1,
+    "lognorm_trees": [
+     542,
+     1
+    ],
+    "lognorm_calibration": 0.7709076744802698,
+    "claims": 380
+   },
+   "fs_peril": {
+    "theft": {
+     "freq_trees": 78,
+     "size_trees": 0,
+     "claims": 144
+    },
+    "escape_of_water": {
+     "freq_trees": 1,
+     "size_trees": 0,
+     "claims": 67
+    },
+    "accidental_damage": {
+     "freq_trees": 1,
+     "size_trees": 0,
+     "claims": 128
+    },
+    "flood": {
+     "freq_trees": 3,
+     "size_trees": 0,
+     "claims": 41
+    }
+   }
+  }
+ }
+}

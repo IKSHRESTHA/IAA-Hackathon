@@ -1,0 +1,152 @@
+{
+ "summary": {
+  "target_year": 2025,
+  "train_rows": 707726,
+  "score_rows": 184155,
+  "features": [
+   "sum_insured",
+   "construction_type",
+   "occupancy",
+   "days_unoccupied",
+   "accidental_damage_cover",
+   "voluntary_excess",
+   "channel",
+   "payment_method",
+   "missed_payments_12m",
+   "credit_band",
+   "prior_claims_5y",
+   "region",
+   "flood_zone",
+   "distance_to_river_km",
+   "elevation_m",
+   "soil_type",
+   "property_type",
+   "roof_type",
+   "trees_within_5m",
+   "listed_building",
+   "bedrooms",
+   "energy_rating",
+   "property_age",
+   "si_per_bedroom",
+   "wx_wind_exposure_index",
+   "wx_freezing_days",
+   "wx_dry_summer_index",
+   "wx_wildfire_index",
+   "wx_rainfall_mm",
+   "wx_mean_temperature_c",
+   "wx_freezing_days_mean",
+   "wx_dry_summer_index_mean",
+   "wx_wildfire_index_mean",
+   "wx_rainfall_mm_mean",
+   "hist_pol_claims_1y",
+   "hist_pol_claims_3y",
+   "hist_pol_cost_3y",
+   "hist_pol_years_since_claim",
+   "hist_cust_claims_3y",
+   "hist_addr_claims_3y",
+   "hist_addr_weather_claims_3y",
+   "hist_pol_escape_of_water_3y",
+   "holds_motor",
+   "flood_zone_missing"
+  ],
+  "cap": 166146.495991,
+  "load": 1.0467017092603759,
+  "peril_loads": {
+   "storm": 1.0,
+   "flood": 1.0196120806411266,
+   "escape_of_water": 1.0,
+   "subsidence": 1.002904524244457,
+   "fire": 1.2003507058472715,
+   "accidental_damage": 1.0
+  },
+  "load_years": [
+   2021,
+   2022,
+   2023
+  ],
+  "severity_claims": 19695
+ },
+ "experts": {
+  "total": {
+   "trees": 255,
+   "balance": 1.0735755709777914
+  },
+  "glm": {
+   "balance": 1.0003348854560965
+  },
+  "peril": {
+   "storm": {
+    "trees": 208,
+    "balance": 1.0845183165645382,
+    "load": 1.0
+   },
+   "flood": {
+    "trees": 118,
+    "balance": 1.2388305802566275,
+    "load": 1.0196120806411266
+   },
+   "escape_of_water": {
+    "trees": 237,
+    "balance": 1.0749854760688613,
+    "load": 1.0
+   },
+   "subsidence": {
+    "trees": 78,
+    "balance": 1.2445670795425043,
+    "load": 1.002904524244457
+   },
+   "fire": {
+    "trees": 38,
+    "balance": 1.135994222599474,
+    "load": 1.2003507058472715
+   },
+   "accidental_damage": {
+    "trees": 67,
+    "balance": 1.1444988300310057,
+    "load": 1.0
+   }
+  },
+  "fs": {
+   "freq_trees": 725,
+   "gamma_trees": 109,
+   "lognorm_trees": [
+    110,
+    80
+   ],
+   "lognorm_calibration": 0.8823211621564505,
+   "claims": 19695
+  },
+  "fs_peril": {
+   "storm": {
+    "freq_trees": 476,
+    "size_trees": 66,
+    "claims": 5868
+   },
+   "flood": {
+    "freq_trees": 384,
+    "size_trees": 20,
+    "claims": 1689
+   },
+   "escape_of_water": {
+    "freq_trees": 507,
+    "size_trees": 79,
+    "claims": 7507
+   },
+   "subsidence": {
+    "freq_trees": 315,
+    "size_trees": 43,
+    "claims": 997
+   },
+   "fire": {
+    "freq_trees": 167,
+    "size_trees": 70,
+    "claims": 798
+   },
+   "accidental_damage": {
+    "freq_trees": 282,
+    "size_trees": 61,
+    "claims": 2836
+   }
+  }
+ }
+}
