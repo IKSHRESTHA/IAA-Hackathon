@@ -206,3 +206,18 @@ folder's data (README, "The 1st round's winning ensemble").
 * Real gains on unseen rows now need new information, not more probes of the same segments: a
   ridge correction with every allowed factor on top of the out-of-fold predictions loses across
   years at every penalty, and the end-of-cover pattern for motor new business rests on 30 claims.
+* v12 scored 0.17095 and v13 0.17172, both a little above forecast. Within the ten segments the
+  public ceiling is about 0.1718, and v12 is the best expected file for the final ranking; tick
+  v12 and v13 (v13 wins only if the true levels are as extreme as the public rows suggest).
+* Permutation test: real factors pass the both-years correction test as often as shuffled ones,
+  and shuffled buildings factors gain up to +0.006 by luck. Factor searches on two lumpy years
+  find noise; only gender clearly beats chance. Selecting factors for agreeing across the two
+  years and then scoring one of them is circular (it looked like +0.01 to +0.02 on buildings).
+* From here, extra public probes mostly fit the public sample's luck: each one can add a little
+  public score but nothing on the rows that decide the final ranking.
+* Two ranking changes with evidence outside the leaderboard (step 12, v14): the best file's
+  buildings and contents model uses this-year weather that 2025 puts far out of range, and its
+  refit without it ranks better in cross-validation; and the power-calibration scores, read
+  through step 11's levels, say motor prices are too compressed (true spread 1.1 to 1.2 times
+  wider). A mild 1.05 widening is free if that reading is wrong. Ranking changes like these move
+  the public score by less than its luck (about 0.0005), so the leaderboard cannot confirm them.

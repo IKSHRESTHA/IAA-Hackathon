@@ -10,3 +10,11 @@ Copied from the emerging-market pricing repository (`iaa-pricing-part2`), unchan
 * `best_gender_factors.json`: the gender factors that file applies (motor and contents).
 
 `09_rebase_to_best.py` keeps that file's level in every segment and changes only the ranking inside.
+* `best_no_year_weather_submission.csv`: `gbm_no_year_weather/gbm_full_prior_no_year_weather_submission.csv`,
+  never scored. The same model refitted without this-year weather and on the all-rows developed
+  prior, for buildings and contents (motor rows are identical to the best file). In the pricing
+  repository's policy-grouped 5-fold cross-validation it ranks better: buildings 0.0972 -> 0.0992,
+  contents 0.1072 -> 0.1092 (level fixed). `12_final_assembly.py` uses it for the best file's half
+  of the buildings and contents ranking.
+* `leaderboard_evidence.csv`: the pricing repository's scored files, summarised per segment for
+  `11_joint_levels.py`.

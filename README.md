@@ -20,6 +20,7 @@ submission is kept as a numbered version (see [Submissions](#submissions)):
 | 9. Best public levels, ensemble ranking (2nd round) | `09_rebase_to_best.py` | | `submissions/v<N>_best_levels_ranked_w<weight>.csv` + `reports/09_rebase/` |
 | 10. Segment level probes (2nd round) | `10_level_probe.py` | | `submissions/v<N>_level_<segment>_x<factor>.csv` |
 | 11. Every public score at once (2nd round) | `11_joint_levels.py` | | `submissions/v<N>_joint_levels_s<shrink>.csv` + `reports/11_joint/` |
+| 12. Final assembly (2nd round) | `12_final_assembly.py` | | `submissions/v<N>_final_<changes>.csv` |
 
 **File and column names are those of the case study** in every layer: `data/raw/` holds the
 competition files, `data/clean/` the same tables with errors fixed, and `data/features/` one
@@ -352,6 +353,43 @@ The order holds for a public share from 20% to 50%. For the final selection, tic
 v13 only raises the public number; if no file is ticked, Kaggle picks the best public ones, which
 would be v13.
 
+With v12 and v13 scored, the ten segments are worked out: the best public levels would score
+0.1718 (v13 has 0.17172) and v12 already sits at the best levels for unseen rows. Widening or
+narrowing the prior on the true levels does not explain the scores better (the evidence peaks at
+the current widths for a public share of 20%, 30% and 50%). If the true levels are as far out as
+the public rows say (prior twice as wide), v13 does as well as v12 on unseen rows; so the final
+selection ticks both.
+
+**Step 12: the ranking inside segments.** With the levels settled, two changes to the ranking are
+backed by evidence from outside the public leaderboard. `12_final_assembly.py` rebuilds v12's
+50/50 blend with them and puts every segment back at v12's total (without changes it reproduces
+v12 to 3e-15):
+
+* This-year weather. The best file's buildings and contents model splits on the weather of the
+  year, and 2025 lies far outside 2023-24 (rainfall anomaly -128 mm against +-3 mm). The pricing
+  repository's refit without it ranks better in its 5-fold cross-validation (buildings 0.0972 ->
+  0.0992, contents 0.1072 -> 0.1092), and our own ensemble, which never used it, already ranked
+  buildings better on 2024. The refit replaces the best file's half of the buildings and contents
+  blend (prices move 9% and 6% inside segments).
+* Motor spread. Read through step 11's levels, the two power-calibration scores say motor risk
+  differences are 1.1 to 1.2 times wider (log scale) than the best file shows. Against v12, a
+  motor widening of 1.05 inside each segment gains on unseen rows +0.0003 if the true widening is
+  1.1, +0.0005 if 1.2, and nothing either way if the best file's spread is right (v12's blend is a
+  little narrower than the best file). The pricing repository's 2024 back-test pointed the other
+  way (0.91), hence the mild 1.05 rather than the 1.2 that fits the scores best.
+
+v14 has both. Its public score can move either way by about 0.0005 from the luck of the public
+rows alone, so the leaderboard cannot confirm these changes; they rest on the cross-validation
+and on the spread reading. Only a drop of more than about 0.001 below v12 would argue against it.
+
+A permutation test closes the search for missing factors: correcting the out-of-fold predictions
+one factor at a time, real factors pass a both-years test no more often than the same factors
+shuffled at random (motor 8 of 45 against 7.5, buildings 7 of 37 against 10.7, contents 11 of
+38 against 12.2), and shuffled buildings factors gain up to +0.006 by luck alone. Only gender
+(already priced) and, at the edge, contents `works_from_home` beat chance. Factors chosen for
+agreeing across the two years and then scored on one of them looked strong (buildings +0.01 to
++0.02); chosen inside one year and scored on the other they lose (buildings -0.008 to -0.054).
+
 Tested in this round and not adopted: a ridge correction on top of the out-of-fold predictions
 with every allowed factor (fitted on one year, it loses on the other at every penalty: motor
 -0.0002 to -0.06; contents at best +0.0001); motor policies that end before the year end (new
@@ -397,8 +435,9 @@ its order, and every prediction finite and positive.
 | 2nd | v9 | `level_contents_new_x1p100`: v5, contents new business x1.10 | expected 0.1647: skip |
 | 2nd | v10 | `level_motor_renewal_x1p070`: v5, motor renewals x1.07 | public 0.16556 |
 | 2nd | v11 | `joint_levels_s100`: v5, every segment at its best level from all scores (step 11) | public 0.17036 (expected 0.1692) |
-| 2nd | v12 | `joint_levels_private`: v5, best levels for rows not yet scored (step 11) | expected public 0.1708; best expected final score |
-| 2nd | v13 | `joint_levels_public`: v5, best levels for the public rows (step 11) | expected public 0.1714; worse than v11 on unseen rows |
+| 2nd | v12 | `joint_levels_private`: v5, best levels for rows not yet scored (step 11) | public 0.17095 (expected 0.1708); best expected final score |
+| 2nd | v13 | `joint_levels_public`: v5, best levels for the public rows (step 11) | public 0.17172 (expected 0.1714); below v12 on unseen rows |
+| 2nd | v14 | `final_nowx_motor1p05`: v12's levels; buildings and contents ranked without this-year weather; motor spread x1.05 (step 12) | expected public near v12's; about +0.0006 over v12 on unseen rows |
 
 Public scores go into the register with `submissions.record_score(round_dir, "v4", 0.16198)`.
 
