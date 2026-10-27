@@ -19,6 +19,7 @@ submission is kept as a numbered version (see [Submissions](#submissions)):
 | 6-8. Ensemble on developed priors (2nd round) | `06_geo_priors.py`, `07_geo_experts.py`, `08_geo_ensemble.py` | | `data/prior/`, `data/experts/`, `submissions/v<N>_geo_ensemble_transfer.csv` + `reports/06_geo/` to `08_geo/` |
 | 9. Best public levels, ensemble ranking (2nd round) | `09_rebase_to_best.py` | | `submissions/v<N>_best_levels_ranked_w<weight>.csv` + `reports/09_rebase/` |
 | 10. Segment level probes (2nd round) | `10_level_probe.py` | | `submissions/v<N>_level_<segment>_x<factor>.csv` |
+| 11. Every public score at once (2nd round) | `11_joint_levels.py` | | `submissions/v<N>_joint_levels_s<shrink>.csv` + `reports/11_joint/` |
 
 **File and column names are those of the case study** in every layer: `data/raw/` holds the
 competition files, `data/clean/` the same tables with errors fixed, and `data/features/` one
@@ -308,8 +309,33 @@ one probe with a known score change pins it. `10_level_probe.py make` saves a pr
 
 The pricing repository's own probe (motor new business +6.2%: +0.00147) puts the best motor
 new-business level about 18% above the best file; with the null deviance off by 30% either way it
-stays between +11% and +21%. v7 applies +15% (expected public about 0.1672). v8 to v10 probe the
+stays between +11% and +21%. v7 applies +15% (expected public about 0.1671). v8 to v10 probe the
 next segments one at a time on the same base, so each score reads on its own.
+
+**Step 11: every public score at once.** Any scored file is a level probe if it differs from another
+scored file only by one factor per segment. The pricing repository's trio files (v1, v2, v6, v8a,
+v8b) are the same three experts with different new-business, gender and buildings factors, and its
+GBM-weight path (prior tilt to 65% GBM) blends those same experts. `11_joint_levels.py` puts these
+11 public scores, the best file's and v5's into one model that is linear in each segment's best
+level (prior: a line level, a new-business and a gender effect per line). It fits all 13 scores
+within 0.0001. Left out of the fit, the five path files are predicted with one constant miss
+(-0.0020 each, the trio's own ranking), so the levels explain the whole path.
+
+What it reads, as factors on v5: motor new business x1.18 overall, made of men x1.32 and women
+x1.01; motor renewals men x1.16 and women x0.88; contents new business x0.86; buildings x1.02. The
+gender split is the lever nobody had pushed: adding the gender factors gained 0.0034, about 4.6
+times what that step would gain if the factors were already right, and in the training data the
+male effect beyond the prior rose from +0.19 (2023) to +0.28 (2024). v11 puts every segment at its
+best level: expected public 0.1692 (+0.0039). Under every other reading tried (without v1 and v2,
+without the path, null deviance x0.8 or x1.25, family sd 3e-4 to 3e-3, a tight gender prior) its
+expected gain stays between +0.0026 and +0.0050. The same model expects v9 to lose 0.0007 and v8
+and v10 to change nothing, so those probes are not worth a submission.
+
+After each new public score: `submissions.record_score(...)`, then `python 11_joint_levels.py fit`
+(levels and the expected score of every unscored version) and `python 11_joint_levels.py make`
+(`--shrink 1.0` for the best levels, or `--set motor_m=1.08 motor_f=0.93` for a chosen probe). The
+pricing repository's files are summarised once in `data/reference/leaderboard_evidence.csv`
+(`python 11_joint_levels.py evidence --ref-repo <path>` rebuilds it).
 
 To try another combination without refitting the experts, run the ensemble step with fixed
 members; each run is saved as a new version:
@@ -338,10 +364,11 @@ its order, and every prediction finite and positive.
 | 2nd | v4 | `geo_ensemble_transfer`: steps 6-8 as they are now | forward 2024 0.1300 (plain mean); public 0.16198 |
 | 2nd | v5 | `best_levels_ranked_w50`: best public file's levels, 50/50 ranking (step 9) | 2024 ranking 0.1067 vs 0.1016; public 0.16529 |
 | 2nd | v6 | `best_levels_ranked_w25`: the same, 25/75 ranking (step 9) | 2024 ranking 0.1078 vs 0.1016 |
-| 2nd | v7 | `level_motor_new_x1p150`: v5, motor new business x1.15 (step 10) | expected public about 0.1672 |
-| 2nd | v8 | `level_buildings_new_x1p080`: v5, buildings new business x1.08 | probe |
-| 2nd | v9 | `level_contents_new_x1p100`: v5, contents new business x1.10 | probe |
-| 2nd | v10 | `level_motor_renewal_x1p070`: v5, motor renewals x1.07 | probe |
+| 2nd | v7 | `level_motor_new_x1p150`: v5, motor new business x1.15 (step 10) | expected public 0.1671 (step 11) |
+| 2nd | v8 | `level_buildings_new_x1p080`: v5, buildings new business x1.08 | expected 0.1652: skip |
+| 2nd | v9 | `level_contents_new_x1p100`: v5, contents new business x1.10 | expected 0.1646: skip |
+| 2nd | v10 | `level_motor_renewal_x1p070`: v5, motor renewals x1.07 | expected 0.1653: skip |
+| 2nd | v11 | `joint_levels_s100`: v5, every segment at its best level from all scores (step 11) | expected public 0.1692 |
 
 Public scores go into the register with `submissions.record_score(round_dir, "v4", 0.16198)`.
 

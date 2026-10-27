@@ -171,3 +171,28 @@ folder's data (README, "The 1st round's winning ensemble").
   10). The pricing repository's motor new-business probe (+6.2% gave +0.00147) puts the best motor
   new-business level about 18% above the best file (+11% to +21% with the null deviance off by
   30%): 2025's motor new business is riskier than any model fitted on 2023-24 says.
+
+## 9. Reading every public score at once (2nd round, step 11)
+
+* Thirteen scored files share their segment structure: the pricing repository's trio files (v1, v2,
+  v6, v8a, v8b: the same experts with different new-business, gender and buildings factors), its
+  GBM-weight path (blends of those experts), its best file and our v5. One model, linear in each
+  segment's best level, fits all thirteen within 0.0001. The five path files, left out, were
+  predicted with one constant miss (-0.0020), so levels explain the whole path from 0.16334 to
+  0.16458.
+* The reading, as factors on v5: motor new business men x1.32, women x1.01; motor renewals men
+  x1.16, women x0.88; contents new business x0.86; buildings x1.02. It holds within a few percent
+  without v1 and v2, without the path, with the null deviance x0.8 or x1.25, and with family terms
+  from 3e-4 to 3e-3. Only the contents gender split moves around, and contents has little leverage.
+* Gender is the lever that was under-used. Adding the gender factors gained 0.0034, about 4.6 times
+  what the step would gain if the factors were right. The male effect beyond the prior rose from
+  +0.19 (2023) to +0.28 (2024), and on its own 2024 back-test the best file still under-prices men
+  by about 15% in motor (contents: over-prices them by about 10%).
+* Tested and not adopted: an age-specific gender factor for motor (men 17-24 are +0.39 beyond the
+  model, 50-64 are -0.15) helps 2023 rows and hurts 2024 rows in cross-validation; only the young-
+  male part repeats in both years. Seasonality and the 2025 start dates (2025 new business starts in
+  January with 0.9 years on cover, against mid-year and 0.47 in 2023-24): motor claim frequency is
+  flat by month, home claims peak in December and January, worth a few percent at most, which the
+  levels absorb anyway.
+* Probes v8 to v10 are not worth a submission (expected -0.0001, -0.0007, 0.0000). v11, every
+  segment at its best level, is expected at 0.1692.
