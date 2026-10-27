@@ -378,9 +378,13 @@ v12 to 3e-15):
   little narrower than the best file). The pricing repository's 2024 back-test pointed the other
   way (0.91), hence the mild 1.05 rather than the 1.2 that fits the scores best.
 
-v14 has both. Its public score can move either way by about 0.0005 from the luck of the public
-rows alone, so the leaderboard cannot confirm these changes; they rest on the cross-validation
-and on the spread reading. Only a drop of more than about 0.001 below v12 would argue against it.
+v14 has both, and scored 0.17032, 0.00063 below v12. The luck of the public rows on that
+difference is larger than first stated: sd 0.00077, of which 0.00071 is buildings (a few large
+claims decide it), 0.00025 motor and 0.00013 contents. So -0.00063 is -0.8 sd: it neither confirms
+nor rules out the gain, and weighed with the cross-validation the expected gain on unseen rows
+falls from about +0.0006 to +0.0002 (sd 0.0004). The motor part alone has a luck sd of 0.00025,
+so v15 (v12 with only the motor spread) can read it; the weather part cannot be read on the
+public score at all.
 
 A permutation test closes the search for missing factors: correcting the out-of-fold predictions
 one factor at a time, real factors pass a both-years test no more often than the same factors
@@ -437,7 +441,8 @@ its order, and every prediction finite and positive.
 | 2nd | v11 | `joint_levels_s100`: v5, every segment at its best level from all scores (step 11) | public 0.17036 (expected 0.1692) |
 | 2nd | v12 | `joint_levels_private`: v5, best levels for rows not yet scored (step 11) | public 0.17095 (expected 0.1708); best expected final score |
 | 2nd | v13 | `joint_levels_public`: v5, best levels for the public rows (step 11) | public 0.17172 (expected 0.1714); below v12 on unseen rows |
-| 2nd | v14 | `final_nowx_motor1p05`: v12's levels; buildings and contents ranked without this-year weather; motor spread x1.05 (step 12) | expected public near v12's; about +0.0006 over v12 on unseen rows |
+| 2nd | v14 | `final_nowx_motor1p05`: v12's levels; buildings and contents ranked without this-year weather; motor spread x1.05 (step 12) | public 0.17032: within the public luck of v12 (sd 0.00077) |
+| 2nd | v15 | `final_motor1p05`: v12 with the motor spread x1.05 only (step 12) | the one part of v14 the public score can read (luck sd 0.00025) |
 
 Public scores go into the register with `submissions.record_score(round_dir, "v4", 0.16198)`.
 

@@ -221,3 +221,6 @@ folder's data (README, "The 1st round's winning ensemble").
   through step 11's levels, say motor prices are too compressed (true spread 1.1 to 1.2 times
   wider). A mild 1.05 widening is free if that reading is wrong. Ranking changes like these move
   the public score by less than its luck (about 0.0005), so the leaderboard cannot confirm them.
+* v14 scored 0.17032 (v12 0.17095). Public luck on a ranking change is dominated by buildings: sd
+  0.00071 for v14's buildings change alone, against 0.00025 for the motor spread. A buildings
+  ranking change can never be judged on the public score; a motor one barely can.
