@@ -331,9 +331,37 @@ without the path, null deviance x0.8 or x1.25, family sd 3e-4 to 3e-3, a tight g
 expected gain stays between +0.0026 and +0.0050. The same model expects v9 to lose 0.0007 and v8
 and v10 to change nothing, so those probes are not worth a submission.
 
+**Public luck, and what the final ranking rewards.** v11 scored 0.17036, above its expected 0.1692,
+and v8 and v10 gained a little where the model expected nothing. But the public score covers only
+a sample of the 2025 rows, and the final ranking scores the others. A segment's best level on the
+public sample differs from its best level on the other rows by that sample's luck, with sd
+sqrt(phi / (share x sum of mu^0.5)): at a 30% public share, 8% for motor new-business men, 13%
+for buildings new business and 24% for buildings renewals (phi from 2023-24: motor 1,748,
+buildings 3,843, contents 721). Step 11 now fits that luck separately, and reads the null
+deviance from the scores (about 140 per row, against the model's own 120). Two files follow:
+
+* v12, the best levels for rows not yet scored: expected public 0.1708, and on unseen rows
+  +0.0041 against v5 (v11: +0.0040). It keeps what is well clear of the luck (motor men about
+  x1.36, women x0.98 new business and x0.86 renewal, contents new business down) and pulls the
+  rest back towards v5.
+* v13, the best levels for the public rows: expected public 0.1714, but only +0.0035 on unseen
+  rows, below v11. It chases buildings renewals to x0.81 and motor renewal men to x1.40, both
+  inside the public luck.
+
+The order holds for a public share from 20% to 50%. For the final selection, tick v12 (and v11).
+v13 only raises the public number; if no file is ticked, Kaggle picks the best public ones, which
+would be v13.
+
+Tested in this round and not adopted: a ridge correction on top of the out-of-fold predictions
+with every allowed factor (fitted on one year, it loses on the other at every penalty: motor
+-0.0002 to -0.06; contents at best +0.0001); motor policies that end before the year end (new
+business: twice the expected cost, but on 30 claims, with no claim-driven pattern; renewals 0.84,
+worth under 0.0001).
+
 After each new public score: `submissions.record_score(...)`, then `python 11_joint_levels.py fit`
-(levels and the expected score of every unscored version) and `python 11_joint_levels.py make`
-(`--shrink 1.0` for the best levels, or `--set motor_m=1.08 motor_f=0.93` for a chosen probe). The
+(levels and the expected score of every version) and `python 11_joint_levels.py make` (levels for
+unseen rows; `--target public` for the public rows; `--set motor_m=1.08 motor_f=0.93` for a chosen
+probe; `--public-share` once the leaderboard page states the share). The
 pricing repository's files are summarised once in `data/reference/leaderboard_evidence.csv`
 (`python 11_joint_levels.py evidence --ref-repo <path>` rebuilds it).
 
@@ -365,10 +393,12 @@ its order, and every prediction finite and positive.
 | 2nd | v5 | `best_levels_ranked_w50`: best public file's levels, 50/50 ranking (step 9) | 2024 ranking 0.1067 vs 0.1016; public 0.16529 |
 | 2nd | v6 | `best_levels_ranked_w25`: the same, 25/75 ranking (step 9) | 2024 ranking 0.1078 vs 0.1016 |
 | 2nd | v7 | `level_motor_new_x1p150`: v5, motor new business x1.15 (step 10) | expected public 0.1671 (step 11) |
-| 2nd | v8 | `level_buildings_new_x1p080`: v5, buildings new business x1.08 | expected 0.1652: skip |
-| 2nd | v9 | `level_contents_new_x1p100`: v5, contents new business x1.10 | expected 0.1646: skip |
-| 2nd | v10 | `level_motor_renewal_x1p070`: v5, motor renewals x1.07 | expected 0.1653: skip |
-| 2nd | v11 | `joint_levels_s100`: v5, every segment at its best level from all scores (step 11) | expected public 0.1692 |
+| 2nd | v8 | `level_buildings_new_x1p080`: v5, buildings new business x1.08 | public 0.16552 |
+| 2nd | v9 | `level_contents_new_x1p100`: v5, contents new business x1.10 | expected 0.1647: skip |
+| 2nd | v10 | `level_motor_renewal_x1p070`: v5, motor renewals x1.07 | public 0.16556 |
+| 2nd | v11 | `joint_levels_s100`: v5, every segment at its best level from all scores (step 11) | public 0.17036 (expected 0.1692) |
+| 2nd | v12 | `joint_levels_private`: v5, best levels for rows not yet scored (step 11) | expected public 0.1708; best expected final score |
+| 2nd | v13 | `joint_levels_public`: v5, best levels for the public rows (step 11) | expected public 0.1714; worse than v11 on unseen rows |
 
 Public scores go into the register with `submissions.record_score(round_dir, "v4", 0.16198)`.
 

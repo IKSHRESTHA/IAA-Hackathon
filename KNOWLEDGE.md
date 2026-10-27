@@ -196,3 +196,13 @@ folder's data (README, "The 1st round's winning ensemble").
   levels absorb anyway.
 * Probes v8 to v10 are not worth a submission (expected -0.0001, -0.0007, 0.0000). v11, every
   segment at its best level, is expected at 0.1692.
+* Scores after step 11: v8 0.16552, v10 0.16556, v11 0.17036 (expected 0.1692). The level reading
+  works; v11 did better than expected because the true levels sit further out than the model said.
+* The public score is a sample of the 2025 rows. A segment's best level on it carries that sample's
+  luck: sd sqrt(phi / (share x sum of mu^0.5)), 8% for motor new-business men and 13% to 24% for
+  buildings at a 30% share. Chasing every public gain fits that luck: the best public levels
+  (v13, expected 0.1714) are expected to do worse on unseen rows than v11; the best levels for
+  unseen rows (v12, expected public 0.1708) do slightly better. Select v12 (and v11) for the final.
+* Real gains on unseen rows now need new information, not more probes of the same segments: a
+  ridge correction with every allowed factor on top of the out-of-fold predictions loses across
+  years at every penalty, and the end-of-cover pattern for motor new business rests on 30 claims.
