@@ -18,6 +18,7 @@ submission is kept as a numbered version (see [Submissions](#submissions)):
 | 5. LightGBM model (2nd round) | `05_lightgbm_model.py` | | `submissions/v<N>_transfer_lightgbm.csv` + `reports/05_model/` |
 | 6-8. Ensemble on developed priors (2nd round) | `06_geo_priors.py`, `07_geo_experts.py`, `08_geo_ensemble.py` | | `data/prior/`, `data/experts/`, `submissions/v<N>_geo_ensemble_transfer.csv` + `reports/06_geo/` to `08_geo/` |
 | 9. Best public levels, ensemble ranking (2nd round) | `09_rebase_to_best.py` | | `submissions/v<N>_best_levels_ranked_w<weight>.csv` + `reports/09_rebase/` |
+| 10. Segment level probes (2nd round) | `10_level_probe.py` | | `submissions/v<N>_level_<segment>_x<factor>.csv` |
 
 **File and column names are those of the case study** in every layer: `data/raw/` holds the
 competition files, `data/clean/` the same tables with errors fixed, and `data/features/` one
@@ -297,6 +298,19 @@ actual level and rows weighted to the 2025 mix, the ranking D^2 is 0.1016 for th
 for a 50/50 blend (v5), 0.1078 for 25/75 (v6) and 0.1080 for the ensemble alone. The reference
 files are in `data/reference/`.
 
+**Step 10: levels from probes.** v5 changed a quarter of the rows by more than 10% and scored
+exactly the best file's 0.16529, so the ranking inside segments hardly moves the public score; the
+levels of the big segments do. For Tweedie p = 1.5 the effect of a level is exact algebra: scaling a
+segment by c changes the public deviance by 4 [(c^-0.5 - 1) A + (c^0.5 - 1) B], with
+A = sum y mu^-0.5 and B = sum mu^0.5 over the segment's public rows, so the best level is A / B and
+one probe with a known score change pins it. `10_level_probe.py make` saves a probe, and
+`10_level_probe.py read` turns its score into the segment's best level.
+
+The pricing repository's own probe (motor new business +6.2%: +0.00147) puts the best motor
+new-business level about 18% above the best file; with the null deviance off by 30% either way it
+stays between +11% and +21%. v7 applies +15% (expected public about 0.1672). v8 to v10 probe the
+next segments one at a time on the same base, so each score reads on its own.
+
 To try another combination without refitting the experts, run the ensemble step with fixed
 members; each run is saved as a new version:
 
@@ -322,8 +336,12 @@ its order, and every prediction finite and positive.
 | 2nd | v2 | `transfer_lightgbm`: LightGBM on the developed prior (step 5) | forward 2024 0.1286 |
 | 2nd | v3 | `geo_ensemble_transfer`: first ensemble setup (slope fitted) | kept for comparison |
 | 2nd | v4 | `geo_ensemble_transfer`: steps 6-8 as they are now | forward 2024 0.1300 (plain mean); public 0.16198 |
-| 2nd | v5 | `best_levels_ranked_w50`: best public file's levels, 50/50 ranking (step 9) | 2024 ranking 0.1067 vs 0.1016 |
+| 2nd | v5 | `best_levels_ranked_w50`: best public file's levels, 50/50 ranking (step 9) | 2024 ranking 0.1067 vs 0.1016; public 0.16529 |
 | 2nd | v6 | `best_levels_ranked_w25`: the same, 25/75 ranking (step 9) | 2024 ranking 0.1078 vs 0.1016 |
+| 2nd | v7 | `level_motor_new_x1p150`: v5, motor new business x1.15 (step 10) | expected public about 0.1672 |
+| 2nd | v8 | `level_buildings_new_x1p080`: v5, buildings new business x1.08 | probe |
+| 2nd | v9 | `level_contents_new_x1p100`: v5, contents new business x1.10 | probe |
+| 2nd | v10 | `level_motor_renewal_x1p070`: v5, motor renewals x1.07 | probe |
 
 Public scores go into the register with `submissions.record_score(round_dir, "v4", 0.16198)`.
 

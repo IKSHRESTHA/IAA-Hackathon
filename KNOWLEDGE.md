@@ -165,3 +165,9 @@ folder's data (README, "The 1st round's winning ensemble").
 * What the back-test can judge is the ranking inside a segment. There the ensemble is clearly
   better (0.1080 against 0.1016, rows weighted to the 2025 mix), so step 9 keeps the best file's
   segment totals and blends only the ranking inside (v5 50/50, v6 25/75).
+* v5 (the best file's segment totals, half of the ranking replaced) scored exactly 0.16529: the
+  public score barely reacts to ranking inside segments, and strongly to segment levels.
+* For Tweedie p = 1.5 a segment's best level follows from one probe in closed form (README, step
+  10). The pricing repository's motor new-business probe (+6.2% gave +0.00147) puts the best motor
+  new-business level about 18% above the best file (+11% to +21% with the null deviance off by
+  30%): 2025's motor new business is riskier than any model fitted on 2023-24 says.
