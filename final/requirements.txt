@@ -1,8 +1,0 @@
-# Everything the pipeline and the write-up need (tested with Python 3.14; built with 3.13).
-# Install from the repository root:  python -m pip install -r final/requirements.txt
--r ../requirements.txt
-scipy==1.18.1
-scikit-learn==1.9.1
-glum==3.4.1
-PyYAML==6.0.3
-tabulate==0.10.0
