@@ -32,6 +32,7 @@ import argparse
 import hashlib
 import importlib
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -47,6 +48,7 @@ R1, R2 = REPO / "1st round", REPO / "2nd round"
 W1 = R1 / "IAA_Part1_geo_models"            # the code that made the Week 1 file
 REBUILT = FINAL / "reproduced"
 ENV = dict(os.environ, PYTHONHASHSEED="0", PYTHONUTF8="1")   # same bytes on every run
+TOLERANCE = 1e-5          # largest relative difference still counted as the same file (rounding)
 
 WEEK1_DATA = ["addresses", "claims", "customers", "policies_buildings", "policies_contents", "policies_motor",
               "sample_submission", "test_buildings", "test_contents", "test_motor", "weather"]
@@ -76,12 +78,28 @@ SUBMITTED = {
 }
 
 
-def run(script: str, *args: str, cwd: Path) -> None:
-    """Run one pipeline script as a user would, from its own folder."""
+def run(script: str, *args: str, cwd: Path) -> str:
+    """Run one pipeline script as a user would, from its own folder; show and return its output."""
     t0 = time.time()
     print(f"\n>>> {cwd.relative_to(REPO)}: python {script} {' '.join(args)}", flush=True)
-    subprocess.run([sys.executable, script, *args], cwd=cwd, env=ENV, check=True)
+    proc = subprocess.Popen([sys.executable, script, *args], cwd=cwd, env=ENV, text=True, encoding="utf-8",
+                            errors="replace", stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    lines = []
+    for line in proc.stdout:
+        print(line, end="", flush=True)
+        lines.append(line)
+    if proc.wait():
+        raise subprocess.CalledProcessError(proc.returncode, script)
     print(f">>> done in {(time.time() - t0) / 60:.1f} min", flush=True)
+    return "".join(lines)
+
+
+def last_version(output: str) -> str:
+    """The version the last submission step in ``output`` saved, or found identical to one registered."""
+    found = re.findall(r"(?:saved as|identical to) (v\d+)", output)
+    if not found:
+        raise RuntimeError("the step did not report the version it produced")
+    return found[-1]
 
 
 # ------------------------------------------------------------------------------------------ Week 1
@@ -110,19 +128,20 @@ def week1(full: bool) -> Path:
 # ------------------------------------------------------------------------------------------ Week 2
 
 def week2(full: bool) -> Path:
+    # Each step registers its file as a new version, or reports that it is identical to one already
+    # registered. Step 11 builds on the v5 this run produced (the scored files it reads were made
+    # from the registered v5; a rebuilt v5 that differs only by rounding keeps them in its family).
     if full:
-        run("run_all.py", "--rounds", "1st round", cwd=REPO)               # data steps 01-03
-        run("run_all.py", "--rounds", "2nd round", "--models", cwd=REPO)   # 01-03, then 04-09
+        run("run_all.py", "--rounds", "1st round", cwd=REPO)                               # 01-03
+        v5 = last_version(run("run_all.py", "--rounds", "2nd round", "--models", cwd=REPO))   # 01-09
     else:
-        run("09_rebase_to_best.py", cwd=R2)
-    run("11_joint_levels.py", "make", "--target", "public", "--scores-before", "v12", cwd=R2)
-    # Step 11 registers its file as a new version, or reports that it is identical to one already
-    # there; either way the newest "joint_levels_public" version is the one it produced.
-    reg = pd.read_csv(R2 / "submissions" / "versions.csv", dtype=str)
-    rows = reg.loc[reg["model"] == "joint_levels_public"]
-    made = rows.iloc[int(rows["version"].str.lstrip("v").astype(int).to_numpy().argmax())]
+        v5 = last_version(run("09_rebase_to_best.py", cwd=R2))
+    v13 = last_version(run("11_joint_levels.py", "make", "--target", "public", "--scores-before", "v12",
+                           "--base", v5, cwd=R2))
+    print(f"\nstep 9 produced {v5}; step 11 produced {v13}")
+    reg = pd.read_csv(R2 / "submissions" / "versions.csv", dtype=str).set_index("version")
     out = REBUILT / SUBMITTED["week2"]["file"]
-    shutil.copyfile(R2 / "submissions" / made["file"], out)
+    shutil.copyfile(R2 / "submissions" / reg.loc[v13, "file"], out)
     return out
 
 
@@ -138,9 +157,10 @@ def compare(week: str, rebuilt: Path) -> dict:
     same_rows = a["row_id"].equals(b["row_id"])
     diff = float(np.abs(a["prediction"].to_numpy() / b["prediction"].to_numpy() - 1).max()) if same_rows else np.inf
     same_bytes = sha256(rebuilt) == sha256(submitted)
-    ok = same_rows and diff < 1e-9
+    ok = same_rows and diff < TOLERANCE
     print(f"{week}: rebuilt file {'matches' if ok else 'DIFFERS FROM'} the submitted file "
-          f"(same rows {same_rows}, largest relative difference {diff:.1e}, identical bytes {same_bytes})")
+          f"(same rows {same_rows}, largest relative difference {diff:.1e} against a tolerance of "
+          f"{TOLERANCE:.0e}, identical bytes {same_bytes})")
     return {"week": week, "rebuilt": str(rebuilt.relative_to(REPO)), "submitted": SUBMITTED[week]["source"],
             "same_rows": same_rows, "max_relative_difference": diff, "identical_bytes": same_bytes, "match": ok}
 

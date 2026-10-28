@@ -244,7 +244,8 @@ Nothing went into the pipeline or a submission until I had reviewed the plan and
   noise, including apparent gains that an AI agent reports with confidence.
 * Every step is a script under git, and `final/pipeline.py` runs them in order. From the
   intermediate results in the repository it rebuilds the Week 2 file byte for byte and the Week 1
-  file to a relative difference of 3e-15, in about a minute.
+  file to a relative difference of 3e-15, in about a minute. A full rerun from the raw Week 2 data
+  on a fresh clone rebuilt the Week 2 file to within 9e-7.
 
 {{< pagebreak >}}
 

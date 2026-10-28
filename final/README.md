@@ -43,26 +43,34 @@ python final/pipeline.py
 It ends by comparing what it built with the files that were submitted:
 
 ```
-week1: rebuilt file matches the submitted file (same rows True, largest relative difference 2.7e-15, identical bytes False)
-week2: rebuilt file matches the submitted file (same rows True, largest relative difference 0.0e+00, identical bytes True)
+week1: rebuilt file matches the submitted file (same rows True, largest relative difference 2.7e-15 against a tolerance of 1e-05, identical bytes False)
+week2: rebuilt file matches the submitted file (same rows True, largest relative difference 0.0e+00 against a tolerance of 1e-05, identical bytes True)
 ```
 
 Week 2 comes out byte for byte, and step 11 also prints `identical to v13 ... no new version`.
 Week 1 differs only around the 15th significant digit, which is floating-point rounding.
-The rebuilt files go to `final/reproduced/`, with the comparison in `check.csv`.
+The rebuilt files go to `final/reproduced/`, with the comparison in `check.csv`. The first run on a
+new machine can take longer while Python loads and the system scans the compiled libraries.
 
 ### Full run (from the raw competition files)
 
 ```bash
-python final/pipeline.py --full --week 2     # Week 2 only
+python final/pipeline.py --full --week 2     # Week 2 only (about 80 minutes on 8 cores)
 python final/pipeline.py --full --week 1     # Week 1 only (about 2.5 hours on 2 cores)
 python final/pipeline.py --full              # both
 ```
 
 This reruns every stage in the tables below and replaces the intermediate results in the
-repository with fresh ones, so do it on a clean clone. A step whose output differs
-from a file already registered saves it as a new numbered version rather than overwriting
-anything, and the check at the end reports the difference.
+repository with fresh ones, so do it on a clean clone. A step whose output differs from a file
+already registered saves it as a new numbered version rather than overwriting anything. The check
+at the end passes when the largest relative difference from the submitted file is below 1e-5.
+
+I ran the Week 2 full run on a fresh clone. Steps 01 and 02 rebuilt their outputs byte for byte.
+The feature tests in step 03 moved in the fifth decimal of their standard errors, and none of the
+keep-or-drop decisions changed. The transfer LightGBM (v2) came out identical, the ensemble and v5
+matched to within 3e-15, and the final Week 2 file to within 9e-7, so steps 8, 9 and 11 saved new
+versions (v16, v17, v18) next to v4, v5 and v13. I did not rerun the Week 1 full run for this
+README. Its own folder documents it, and the quick run above checks its last stage.
 
 ## The pipeline
 
