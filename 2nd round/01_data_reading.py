@@ -13,6 +13,8 @@ Nothing is modified here. Usage: ``python 01_data_reading.py``
 """
 from __future__ import annotations
 
+import sys
+
 import pandas as pd
 
 import config as C

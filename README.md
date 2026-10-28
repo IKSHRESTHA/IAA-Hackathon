@@ -1,5 +1,9 @@
 # IAA Hackathon: clean data and a LightGBM price for both rounds
 
+The final submission is in [`final/`](final/README.md): the two prediction files, the write-up,
+and `final/pipeline.py`, which reruns the pipeline that produced them. Start there to reproduce
+the results.
+
 Data reading, cleaning, feature engineering and a LightGBM pricing model for the IAA AI-Assisted
 Hackathon 2026, one folder per round. Steps 1-3 build the data, each as a script that does the
 work and an executed notebook that shows the evidence. The model steps price 2025 with LightGBM
@@ -73,9 +77,9 @@ python run_all.py --models-only                  # the model steps only (no raw 
 ```
 
 or step by step inside a round's folder: `python 01_data_reading.py`, `python
-02_data_cleaning.py`, `python 03_feature_engineering.py`. The cleaned and model-ready tables are
-already included; to re-run the steps, first copy the case-study files into each round's
-`data/raw/` with their original names (listed in `data/raw/README.md`).
+02_data_cleaning.py`, `python 03_feature_engineering.py`. The case-study files, the cleaned and
+model-ready tables and the intermediate results are all included, so every step runs from a
+fresh clone.
 
 The round scripts expect the round folder to be the working directory. Use `run_all.py` from the
 repository root, or open a round folder in the terminal and run its scripts there. This keeps

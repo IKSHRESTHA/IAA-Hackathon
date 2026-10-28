@@ -275,8 +275,9 @@ stop probing the leaderboard.
 * Probe columns in feature selection, permutation tests on factor searches and the public-luck model
   are all there to stop me fitting noise, including apparent gains that an AI agent reports with
   confidence.
-* Every step is a script under git. The data steps give the same bytes on every run, and the Week 1
-  file rebuilds from cached expert predictions in a minute (largest relative difference 2e-15).
+* Every step is a script under git, and `final/pipeline.py` runs them in order. From the
+  intermediate results in the repository it rebuilds the Week 2 file byte for byte and the Week 1
+  file to a relative difference of 3e-15, in about a minute.
 
 {{< pagebreak >}}
 
@@ -297,6 +298,7 @@ print(ff.markdown(ff.table_levels()))
 ```
 
 **C. Files and how to reproduce.** The two prediction files, their checksums and sources are in
-`final/1_predictions/manifest.csv`. The code is at {{< var repo >}} (map in `final/README.md`).
-`python final/build_final.py` copies and checks the prediction files, writes a code snapshot from
-git, and re-renders this document.
+`final/1_predictions/manifest.csv`. The code and data are at {{< var repo >}}.
+`python final/pipeline.py` reruns the last stages of both pipelines from the intermediate results
+in the repository (about a minute) and checks the rebuilt files against the submitted ones;
+`--full` reruns every stage from the raw competition files. `final/README.md` lists the stages.

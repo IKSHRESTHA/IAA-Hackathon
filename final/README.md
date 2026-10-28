@@ -2,16 +2,101 @@
 
 Krishna Kumar Shrestha (solo team). Deadline 30 October 2026, 11:59:59 PM EDT.
 
+This folder holds the two prediction files I submitted, the write-up, and `pipeline.py`, which runs
+the pipeline that produced both files. The repository includes the competition data and every
+intermediate result, so a fresh clone can rebuild the files without downloading anything else.
+
 | Form item | Where |
 |---|---|
 | Week 1 predictions | `1_predictions/week1_part1_predictions.csv` (public 0.12851, private 0.13830) |
 | Week 2 predictions | `1_predictions/week2_part2_predictions.csv` (v13, public 0.17172) |
 | Write-up | `2_writeup/writeup.pdf`, pages 1-5 (page 6 is an appendix) |
-| Code | https://github.com/IKSHRESTHA/IAA-Hackathon, snapshot zip in `4_code/` |
+| Code | this repository, https://github.com/IKSHRESTHA/IAA-Hackathon |
 | Video | recorded separately |
 
-`1_predictions/manifest.csv` gives each prediction file's source in the repository, its scores and
-its SHA-256 checksum.
+`1_predictions/manifest.csv` gives each file's source in the repository, its scores and its SHA-256
+checksum.
+
+## Reproduce the two files
+
+Set up once (Python 3.13 or 3.14; the clone is about 1.1 GB because it holds the data):
+
+```bash
+git clone https://github.com/IKSHRESTHA/IAA-Hackathon.git
+cd IAA-Hackathon
+python -m pip install -r final/requirements.txt
+```
+
+Quarto 1.4 or later is only needed to render the write-up PDF. Add `--no-render` to any run below
+to skip it.
+
+### Quick run (about a minute)
+
+This starts from the intermediate results stored in the repository
+(the experts' predictions and the developed-market priors) and runs the last stages of both
+pipelines:
+
+```bash
+python final/pipeline.py
+```
+
+It ends by comparing what it built with the files that were submitted:
+
+```
+week1: rebuilt file matches the submitted file (same rows True, largest relative difference 2.7e-15, identical bytes False)
+week2: rebuilt file matches the submitted file (same rows True, largest relative difference 0.0e+00, identical bytes True)
+```
+
+Week 2 comes out byte for byte, and step 11 also prints `identical to v13 ... no new version`.
+Week 1 differs only around the 15th significant digit, which is floating-point rounding.
+The rebuilt files go to `final/reproduced/`, with the comparison in `check.csv`.
+
+### Full run (from the raw competition files)
+
+```bash
+python final/pipeline.py --full --week 2     # Week 2 only
+python final/pipeline.py --full --week 1     # Week 1 only (about 2.5 hours on 2 cores)
+python final/pipeline.py --full              # both
+```
+
+This reruns every stage in the tables below and replaces the intermediate results in the
+repository with fresh ones, so do it on a clean clone. A step whose output differs
+from a file already registered saves it as a new numbered version rather than overwriting
+anything, and the check at the end reports the difference.
+
+## The pipeline
+
+Week 1, developed market. The code that made the submitted file is in
+`1st round/IAA_Part1_geo_models/`, and `run_pipeline.py` there runs these stages:
+
+| Stage | Script | Output | Run |
+|---|---|---|---|
+| features | `scripts/build_features.py` | cleaned data, features, claims history known at 1 January | full |
+| experts | `scripts/experiments/run_experts.py`, `run_twopart.py`, `run_moe.py` | each expert's predictions for 2023 and 2024 (back-tests) and 2025 | full |
+| ensemble | `scripts/experiments/build_robust_submission.py` | geometric mean of six experts, recalibrated per line: the Week 1 file | full and quick |
+
+The quick run does the ensemble stage on `cache/experts7_<line>.parquet`, the experts' predictions
+as they were on 22 October, through `rebuild_from_cache.py`.
+
+Week 2, emerging market. The scripts sit in `1st round/` and `2nd round/`, and `run_all.py` at the
+root runs a round's steps in order:
+
+| Stage | Script | Output | Run |
+|---|---|---|---|
+| developed-market data | `1st round/01_data_reading.py` to `03_feature_engineering.py` | the developed market's features, which the prior is fitted on | full |
+| emerging-market data | `2nd round/01_data_reading.py` to `03_feature_engineering.py` | cleaned data and features | full |
+| developed prior | `04_developed_prior.py`, `05_lightgbm_model.py` | prior log rates; the transfer LightGBM (v2) | full |
+| ensemble on priors | `06_geo_priors.py`, `07_geo_experts.py`, `08_geo_ensemble.py` | experts' predictions and their ensemble (v4) | full |
+| rebase | `09_rebase_to_best.py` | v5: the best public file's segment totals, the ensemble's ranking inside | full and quick |
+| segment levels | `11_joint_levels.py make --target public --scores-before v12` | v13, the Week 2 file | full and quick |
+
+Two inputs come from outside the code, and the repository keeps them as files. The public
+leaderboard scores are recorded in `2nd round/submissions/versions.csv` and
+`2nd round/data/reference/leaderboard_evidence.csv`; step 11 reads the segment levels from them,
+and `--scores-before v12` limits it to the scores known when v13 was made. The best public file
+before this work (0.16529) and its back-test predictions came from my earlier repository
+(`iaa-pricing-part2`) and sit in `2nd round/data/reference/`; v5 takes its segment totals from
+that file.
 
 ## Why these two files
 
@@ -21,9 +106,8 @@ expert, so I kept the simpler one.
 
 For Week 2 I used v13 because it has the best public score. I also selected v12 (public 0.17095) on
 Kaggle for the final ranking. It is the best expected file on the rows not yet scored, and v13 only
-beats it if the true levels are as extreme as the public rows suggest. To submit v12 instead, point
-its `source` line in `build_final.py` at `2nd round/submissions/v12_joint_levels_private.csv` and
-rerun the script.
+beats it if the true levels are as extreme as the public rows suggest. `11_joint_levels.py make
+--scores-before v12` (without `--target public`) rebuilds v12 the same way.
 
 ## The approach in short
 
@@ -37,52 +121,31 @@ Week 2 is an emerging market with two years (2023-24, 9,258 claims), and 77% of 
 new business. I fit a model on the developed market using the factors both markets share and put it
 in the offset, so the local models only learn how this market differs. The back-test could rank
 risks but could not set segment levels, so I read the levels from the public scores with an exact
-Tweedie formula and modelled the luck of the public sample separately. v12 targets the rows not yet
-scored and v13 the public rows.
+Tweedie formula and modelled the luck of the public sample separately.
 
 The write-up has the numbers, decisions, use of AI, assumptions, limitations and guardrails.
 
-## The code
+## Where things are
 
-Each round folder runs the same steps, and `python run_all.py` at the repository root runs them all
-(Python 3.13, `pip install -r requirements.txt`; the competition files go in each round's
-`data/raw/`).
+```
+IAA-Hackathon/
+  final/          this folder
+  1st round/      developed market: steps 01-06, and IAA_Part1_geo_models/ (the Week 1 code)
+  2nd round/      emerging market: steps 01-12
+  run_all.py      runs a round's steps in order
+  pricing_lgbm.py, geo_experts.py, submissions.py    code shared by the rounds
+  README.md, KNOWLEDGE.md                             full technical notes and lessons learned
+```
 
-| Step | 1st round | 2nd round |
-|---|---|---|
-| Read, clean, build features | `01` to `03` scripts, each with a notebook | same |
-| Single LightGBM | `04_lightgbm_model.py` | `04_developed_prior.py`, `05_lightgbm_model.py` |
-| Expert ensemble | `05_geo_experts.py`, `06_geo_ensemble.py` | `06_geo_priors.py` to `08_geo_ensemble.py` |
-| Segment levels | | `09_rebase_to_best.py` to `12_final_assembly.py` |
-
-Shared code sits at the root: `pricing_lgbm.py`, `geo_experts.py` and `submissions.py`.
-
-The Week 1 file came from `1st round/IAA_Part1_geo_models/`. In that folder,
-`python rebuild_from_cache.py` rebuilds it from cached expert predictions in about a minute, and
-`python run_pipeline.py` reruns everything from the competition files (about 2.5 hours).
-
-The Week 2 file came from `2nd round/11_joint_levels.py make --target public`, on top of v5 from
-`09_rebase_to_best.py`. It was made on 26 October with the public scores up to v11. Running it now
-also reads the later scores, so it writes a new version rather than v13 itself.
-
-Every submission is saved as a numbered version in `<round>/submissions/` and never overwritten.
-`versions.csv` there records the script, date, evidence, public score and checksum of each one, and
-`<round>/reports/` holds the evidence behind every step.
-
-## Rebuilding this folder
-
-`python final/build_final.py` copies both prediction files, checks them against the sample
-submissions (same row ids in the same order, every prediction positive), writes the manifest and the
-code zip, and renders the write-up. Add `--no-render` to skip the PDF. Rendering needs Quarto and a
-Jupyter `python3` kernel with pandas, matplotlib and tabulate.
+Each round keeps every submission it made in `submissions/`, with a register (`versions.csv`:
+script, date, evidence, public score and checksum of each version), and the evidence behind each
+step in `reports/`.
 
 ```
 final/
-  README.md
-  build_final.py        builds everything below
-  _quarto.yml, _variables.yml
-  src/final_figures.py  figures and tables for the write-up
-  1_predictions/        the two prediction files and manifest.csv
-  2_writeup/            writeup.qmd and writeup.pdf
-  4_code/               code snapshot zip (no competition data)
+  pipeline.py, requirements.txt
+  _quarto.yml, _variables.yml, src/final_figures.py   the write-up's settings and figures
+  1_predictions/    the two submitted files and manifest.csv
+  2_writeup/        writeup.qmd and writeup.pdf
+  reproduced/       written by pipeline.py, not kept in git
 ```

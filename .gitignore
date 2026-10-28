@@ -1,0 +1,9 @@
+# Compiled Python files
+__pycache__/
+*.pyc
+
+# Made by a full Week 1 run (python final/pipeline.py --full): a copy of the competition files
+# and the original code's working files
+1st round/IAA_Part1_geo_models/data/week1/*.parquet
+1st round/IAA_Part1_geo_models/artifacts/
+1st round/IAA_Part1_geo_models/reports/

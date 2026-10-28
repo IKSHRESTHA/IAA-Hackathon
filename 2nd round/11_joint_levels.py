@@ -49,6 +49,8 @@ from the scores too: the fit is repeated over a grid and the value with the high
     make:      python 11_joint_levels.py make                     (levels for rows not yet scored)
                python 11_joint_levels.py make --target public     (levels for the public rows)
                python 11_joint_levels.py make --set motor_m=1.08 motor_f=0.93
+               python 11_joint_levels.py make --target public --scores-before v12
+                          (rebuilds v13: only the scores known before v12 and v13 were made)
     evidence:  python 11_joint_levels.py evidence --ref-repo "C:/Users/.../iaa-pricing-part2"
 
 A ``--set`` key names a segment or a group of segments by its parts: ``motor_new`` is both motor
@@ -315,7 +317,13 @@ def fit_levels(files, base_sum, segments, n_rows, public_sd, d0_center: float) -
 # =================================================================================================
 # Run
 # =================================================================================================
-def load_fit(base_version: str, public_share: float):
+def known_score(version: str, scores_before: str | None) -> bool:
+    """True when ``version``'s public score counts: all of them, or only those of versions made
+    before ``scores_before`` (so an old version can be rebuilt with the scores known then)."""
+    return scores_before is None or int(version.lstrip("v")) < int(scores_before.lstrip("v"))
+
+
+def load_fit(base_version: str, public_share: float, scores_before: str | None = None):
     """Everything the modes need: rows, segments, the base, the scored files and the fit."""
     meta = S10.rows_2025()
     base, base_name = S10.load_version(base_version)
@@ -334,7 +342,7 @@ def load_fit(base_version: str, public_share: float):
                               "noise_sd": float(r["noise_sd"]), "summary": g.set_index("segment").reindex(segments)})
     reg = register_files(meta, keys, segments, base)
     for r in reg:                                   # only exact relatives of the base enter the fit
-        if r["in_family"] and np.isfinite(r["public"]):
+        if r["in_family"] and np.isfinite(r["public"]) and known_score(r["version"], scores_before):
             files.append({"name": r["version"], "family": BASE, "public": float(r["public"]),
                           "noise_sd": ROUNDING_SD, "summary": r["summary"]})
     phi = line_dispersion(segments)
@@ -433,6 +441,8 @@ def main(argv=None) -> int:
     ap.add_argument("--public-share", type=float, default=PUBLIC_SHARE,
                     help="share of the 2025 rows behind the public score (the leaderboard page states it)")
     ap.add_argument("--ref-repo", type=Path, help="evidence: the pricing repository (iaa-pricing-part2)")
+    ap.add_argument("--scores-before", default=None, metavar="VERSION",
+                    help="use only the public scores of versions made before this one (v12 rebuilds v12 and v13)")
     a = ap.parse_args(argv)
     if a.mode == "evidence":
         if a.ref_repo is None:
@@ -444,7 +454,7 @@ def main(argv=None) -> int:
         ev.to_csv(EVIDENCE, index=False)
         print(f"{ev['file'].nunique()} scored files, {len(ev)} rows -> {EVIDENCE}")
         return 0
-    meta, keys, segments, base, base_name, base_sum, reg, fit = load_fit(a.base, a.public_share)
+    meta, keys, segments, base, base_name, base_sum, reg, fit = load_fit(a.base, a.public_share, a.scores_before)
     if a.mode == "fit":
         report(segments, base_sum, reg, fit, base_name)
         return 0
