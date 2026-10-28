@@ -24,7 +24,7 @@ Set up once (Python 3.13 or 3.14; the clone is about 1.1 GB because it holds the
 ```bash
 git clone https://github.com/IKSHRESTHA/IAA-Hackathon.git
 cd IAA-Hackathon
-python -m pip install -r final/requirements.txt
+python -m pip install -r requirements.txt
 ```
 
 Quarto 1.4 or later is only needed to render the write-up PDF. Add `--no-render` to any run below
@@ -145,13 +145,13 @@ IAA-Hackathon/
   README.md, KNOWLEDGE.md                             full technical notes and lessons learned
 ```
 
-Each round keeps every submission it made in `submissions/`, with a register (`versions.csv`:
-script, date, evidence, public score and checksum of each version), and the evidence behind each
-step in `reports/`.
+The 2nd round keeps every submission it made in `submissions/`, with a register (`versions.csv`:
+script, date, evidence, public score and checksum of each version). Each round keeps the evidence
+behind each step in `reports/`.
 
 ```
 final/
-  pipeline.py, requirements.txt
+  pipeline.py
   _quarto.yml, _variables.yml, src/final_figures.py   the write-up's settings and figures
   1_predictions/    the two submitted files and manifest.csv
   2_writeup/        writeup.qmd and writeup.pdf

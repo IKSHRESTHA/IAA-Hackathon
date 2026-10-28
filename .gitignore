@@ -7,3 +7,13 @@ __pycache__/
 1st round/IAA_Part1_geo_models/data/week1/*.parquet
 1st round/IAA_Part1_geo_models/artifacts/
 1st round/IAA_Part1_geo_models/reports/
+
+# Written again by the scripts on every run
+/submission_*.csv
+1st round/outputs/
+2nd round/outputs/
+1st round/IAA_Part1_geo_models/outputs/*.csv
+1st round/models/
+2nd round/models/
+1st round/data/experts/
+1st round/submissions/

@@ -12,13 +12,15 @@ From this folder, in order (or `python run_all.py` from the repository root):
 python 01_data_reading.py          # read and profile the files: reports/01_reading/
 python 02_data_cleaning.py         # fix what is provably wrong: data/clean/, reports/02_cleaning/
 python 03_feature_engineering.py   # build and test features: data/features/, reports/03_features/
-python 04_lightgbm_model.py        # one LightGBM per line: submissions/v1
-python 05_geo_experts.py           # the six experts on three fit sets (slow): data/experts/
-python 06_geo_ensemble.py          # their geometric mean, recalibrated: submissions/v2
+python 04_lightgbm_model.py        # one LightGBM per line: submissions/v1, reports/04_model/
+python 05_geo_experts.py           # the six experts on three fit sets (about 2.5 hours): data/experts/
+python 06_geo_ensemble.py          # their geometric mean, recalibrated: submissions/v2, reports/06_geo/
 ```
 
 `03_feature_engineering.py --reuse-tests` reuses the saved test results and takes about 5 minutes
 instead of most of an hour. The notebooks of steps 1 to 3 show the same work with its evidence.
+Steps 4 to 6 write their files (`submissions/`, `data/experts/`, `models/`) locally; git keeps only
+their reports.
 
 ## Data
 

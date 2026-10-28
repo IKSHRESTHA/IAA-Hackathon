@@ -16,7 +16,7 @@ for 2024 (pick3: 0.1380 and 0.1368).
 ## Rebuild both files in a minute
 
 ```bash
-python -m pip install -r requirements.txt     # or final/requirements.txt at the repository root
+python -m pip install -r requirements.txt     # or the repository root's requirements.txt
 python rebuild_from_cache.py
 ```
 

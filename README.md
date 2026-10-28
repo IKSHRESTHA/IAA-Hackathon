@@ -36,14 +36,16 @@ KNOWLEDGE.md        what I learned along the way, kept as the project's memory
 ```
 
 Each round folder has the same layout: `data/raw/` (the competition files), `data/clean/`,
-`data/features/` (one training and one 2025 table per line), `models/`, `submissions/` (every file
-made, with `versions.csv`), and `reports/`, which holds the evidence behind each step. The round's
-settings are in its `config.py`.
+`data/features/` (one training and one 2025 table per line) and `reports/`, which holds the
+evidence behind each step. The 2nd round also keeps `data/prior/`, `data/experts/` and
+`submissions/` (every file made, with `versions.csv`), because the final file is built from them.
+Fitted models and the 1st round's rebuild files are written on each run and not kept in git. The
+round's settings are in its `config.py`.
 
 ## Run it
 
 ```bash
-python -m pip install -r final/requirements.txt     # Python 3.13 or 3.14
+python -m pip install -r requirements.txt           # Python 3.13 or 3.14
 python final/pipeline.py                            # rebuild both submitted files (about a minute)
 python run_all.py                                   # data steps 01-03 of both rounds
 python run_all.py --models                          # the same, then the model steps
@@ -51,8 +53,9 @@ python run_all.py --rounds "2nd round" --models-only
 ```
 
 The round scripts expect their round folder as the working directory, and `run_all.py` takes care
-of that. The competition files, cleaned tables, features and intermediate results are all in the
-repository, so every step runs from a fresh clone. On this machine the 1st round's data steps took
+of that. The competition files, cleaned tables, features and the intermediate results the final files
+need are all in the repository, so every step runs from a fresh clone. The one exception is the
+1st round's step 6, which needs step 5's expert predictions first. On this machine the 1st round's data steps took
 about 50 minutes (most of it the feature tests on 2.4 million rows) and the 2nd round's data and
 model steps about 25. Fitting the Week 1 experts from scratch takes about 2.5 hours.
 
@@ -133,7 +136,8 @@ scored and v13 at the public rows. `KNOWLEDGE.md` and the write-up explain the r
 ## Submissions
 
 Every model step saves its 2025 file as the next version in its round's `submissions/` folder and
-never overwrites one. `versions.csv` there records the model, script, date, out-of-time evidence,
+never overwrites one. The 2nd round's folder is kept in git as the record of every file made and
+scored; the 1st round's rebuild files are made locally. `versions.csv` there records the model, script, date, out-of-time evidence,
 public score and a checksum for each version; `submissions/README.md` shows the same table. A run
 that reproduces an existing file adds no version. Every file is checked before it is saved: one row
 per sample row id, in its order, with every prediction finite and positive. Public scores go into
