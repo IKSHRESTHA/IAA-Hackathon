@@ -14,7 +14,6 @@ Usage:
     python run_all.py --models            # data steps, then the model steps
     python run_all.py --models-only       # model steps only (no raw files needed)
     python run_all.py --rounds "2nd round" --models-only
-    python run_all.py --notebooks         # also write and execute the notebooks
 """
 from __future__ import annotations
 
@@ -51,7 +50,6 @@ def main() -> int:
     ap.add_argument("--rounds", nargs="*", default=["1st round", "2nd round"])
     ap.add_argument("--models", action="store_true", help="run the model steps after the data steps")
     ap.add_argument("--models-only", action="store_true", help="run only the model steps")
-    ap.add_argument("--notebooks", action="store_true", help="also write and execute the notebooks")
     a = ap.parse_args()
     env = dict(os.environ, PYTHONHASHSEED="0", PYTHONUTF8="1")    # same bytes on every run
     for rnd in a.rounds:
@@ -68,8 +66,6 @@ def main() -> int:
             code = run(rnd, step, env)
             if code:
                 return code
-    if a.notebooks:
-        return subprocess.run([sys.executable, "make_notebooks.py", "--execute"], cwd=ROOT, env=env).returncode
     return 0
 
 

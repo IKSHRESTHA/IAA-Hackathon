@@ -1,7 +1,7 @@
 ---
 title: "Pricing a developed and an emerging insurance market"
 subtitle: "IAA AI-Assisted Hackathon 2026: final write-up"
-author: "{{< var team-name >}} · {{< var members >}}"
+author: "{{< var team-name >}} ({{< var members >}})"
 date: 2026-10-28
 date-format: "D MMMM YYYY"
 number-sections: true

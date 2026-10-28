@@ -1,6 +1,6 @@
 # IAA AI-Assisted Hackathon 2026: final submission
 
-Krishna Kumar Shrestha (solo team). Deadline 30 October 2026, 11:59:59 PM EDT.
+Team Actuarial Noob: Krishna Kumar Shrestha (solo). Deadline 30 October 2026, 11:59:59 PM EDT.
 
 This folder holds the two prediction files I submitted, the write-up, and `pipeline.py`, which runs
 the pipeline that produced both files. The repository includes the competition data and every

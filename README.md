@@ -30,8 +30,6 @@ run_all.py          runs a round's steps in order
 pricing_lgbm.py     LightGBM tools the model steps share (offset, trend, large losses, D²)
 geo_experts.py      the six experts and the per-line recalibration
 submissions.py      numbered submission files and their register
-make_notebooks.py   writes, and with --execute runs, the notebooks of steps 1-3
-fit_example.py      a short LightGBM example on the feature tables
 KNOWLEDGE.md        what I learned along the way, kept as the project's memory
 ```
 
@@ -145,8 +143,6 @@ the register with `submissions.record_score(round_dir, "v4", 0.16198)`.
 
 ## Using the feature tables
 
-* `python fit_example.py "2nd round"` (or `"1st round"`) fits one LightGBM Tweedie model per line and
-  writes a submission: a working starting point.
 * Training rows are in `data/features/policies_<line>.parquet`, rows to price in
   `data/features/test_<line>.parquet`.
 * Keys (`row_id`, `policy_id`, `customer_id`, `address_id`, `year`, `period_start`, `period_end`) are
