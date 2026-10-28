@@ -1,4 +1,4 @@
-"""Step 4 - the developed prior: a LightGBM fitted on the 1st round and applied to this round.
+"""Step 4: the developed prior: a LightGBM fitted on the 1st round and applied to this round.
 
 Two years of this market (20-50 thousand rows a line, 1-7 thousand claims) cannot pin down
 dozens of rating factors. The 1st round has four years and about a million rows a line, with the

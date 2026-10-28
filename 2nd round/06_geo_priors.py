@@ -1,4 +1,4 @@
-"""Step 6 - developed-market priors for every component of the ensemble's experts.
+"""Step 6: developed-market priors for every component of the ensemble's experts.
 
 Step 4 fitted one prior: the expected total cost. The experts of the 1st round's winning
 ensemble (``geo_experts.py``) also model claim frequency, claim size, and each peril on its own,

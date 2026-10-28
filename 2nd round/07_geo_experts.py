@@ -1,4 +1,4 @@
-"""Step 7 - the experts of the 1st round's winning ensemble, each on top of its developed prior.
+"""Step 7: the experts of the 1st round's winning ensemble, each on top of its developed prior.
 
 The six experts of ``geo_experts.py`` (total, glm, peril, fs_gamma, fs_lognorm, fs_peril) are
 fitted on this round's data with the matching developed-market prior in their offsets (step 4

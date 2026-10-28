@@ -1,4 +1,4 @@
-"""Step 12 - the final file: step 11's levels, with the ranking inside each segment improved.
+"""Step 12: the final file: step 11's levels, with the ranking inside each segment improved.
 
 v12 (step 11) sets the level of every segment. Its ranking inside a segment is v5's: a 50/50
 geometric blend of the best public file and step 8's ensemble. This step changes that ranking in

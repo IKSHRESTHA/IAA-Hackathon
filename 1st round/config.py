@@ -243,7 +243,7 @@ SI_UNIT_ERROR_RATIO = 100      # sum insured > 100 x the table median: recorded 
 SI_UNIT_SCALE = 1000           # ... so it is divided by 1,000 (genuine values stay below 10 x median)
 MIN_LICENCE_AGE = 17           # nobody can hold a licence before 17 (1st percentile of the data: 17)
 SUSPECT_CLAIM_RATIO = 5        # an open claim > 5 x the next largest of its peril: reserve entry error
-EXPOSURE_DAYS_IN_YEAR = 365    # the case study's exposure basis (a full 2024 row is 1 Jan - 30 Dec)
+EXPOSURE_DAYS_IN_YEAR = 365    # the case study's exposure basis (a full 2024 row is 1 Jan to 30 Dec)
 
 # --- columns that never become model features (reason in reports/03_features) -------------------
 LEAKAGE = {

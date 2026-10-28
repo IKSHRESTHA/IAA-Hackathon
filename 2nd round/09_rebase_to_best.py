@@ -1,4 +1,4 @@
-"""Step 9 - the best public file's levels, with the ensemble's ranking inside each segment.
+"""Step 9: the best public file's levels, with the ensemble's ranking inside each segment.
 
 The best known public score (0.16529, ``data/reference``) comes from one transfer LightGBM with
 new-business and gender factors that were settled with leaderboard probes. Step 8's ensemble ranks

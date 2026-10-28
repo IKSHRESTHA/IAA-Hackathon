@@ -1,19 +1,7 @@
-# 2nd round: case-study files
+# 2nd round: competition files
 
-Put the competition files here, with their original names (parquet):
+The Part 2 files as downloaded, under their original names: `addresses`, `claims`, `customers`,
+`expenses`, `policies_buildings`, `policies_contents`, `policies_motor`, `reference_policies`,
+`sample_submission`, `test_buildings`, `test_contents`, `test_motor` and `weather` (all parquet).
 
-* `addresses.parquet`
-* `claims.parquet`
-* `customers.parquet`
-* `expenses.parquet`
-* `policies_buildings.parquet`
-* `policies_contents.parquet`
-* `policies_motor.parquet`
-* `reference_policies.parquet`
-* `sample_submission.parquet`
-* `test_buildings.parquet`
-* `test_contents.parquet`
-* `test_motor.parquet`
-* `weather.parquet`
-
-Steps 1-3 read them from here; nothing in this folder is ever changed.
+Steps 1 to 3 read them from here. Nothing in this folder is ever changed.

@@ -1,4 +1,4 @@
-"""Step 10 - segment levels from leaderboard probes: make a probe, or read one.
+"""Step 10: segment levels from leaderboard probes: make a probe, or read one.
 
 Ranking inside a segment barely moves the public score (v5 changed 25% of rows by more than 10% and
 scored the same 0.16529 as the best file). The levels of the big segments do. For Tweedie p = 1.5

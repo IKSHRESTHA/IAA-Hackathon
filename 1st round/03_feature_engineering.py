@@ -1,4 +1,4 @@
-"""Step 3 - feature engineering and selection: one model-ready table per line.
+"""Step 3: feature engineering and selection: one model-ready table per line.
 
 1. **Join** each policy row with its customer, its address and the weather of its address and year.
 2. **Extract information** the raw columns hold only implicitly: the season on cover, property
@@ -90,7 +90,7 @@ def extract_features(df: pd.DataFrame, line: str) -> pd.DataFrame:
     new = {
         "start_month": s.dt.month.astype("int8"),
         "winter_fraction": winter_fraction(s, e).astype("float32"),
-        # The case study's policy year has 365 days: a full 2024 row runs 1 Jan - 30 Dec.
+        # The case study's policy year has 365 days: a full 2024 row runs 1 Jan to 30 Dec.
         "starts_after_jan1": (s > year_start).astype("int8"),
         "ends_before_year_end": (e < year_start + pd.Timedelta(days=364)).astype("int8"),
     }
@@ -291,7 +291,7 @@ PROBE_LEVELS = (2, 3, 5, 8, 12, 20, 30, 50, 100, 300)
 
 
 def make_probes(row_ids: pd.Series) -> pd.DataFrame:
-    """Random columns with no relation to claims - the yardstick of 'no value'. Each row's
+    """Random columns with no relation to claims: the yardstick of 'no value'. Each row's
     probe values come from a hash of its row_id, so they are the same in every fold."""
     h = np.array([int(hashlib.md5(f"probe:{r}".encode()).hexdigest()[:16], 16) for r in row_ids], dtype=np.uint64)
     cols = {}

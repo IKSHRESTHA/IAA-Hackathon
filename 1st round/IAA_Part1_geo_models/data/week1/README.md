@@ -1,17 +1,8 @@
-# Competition files
+# Competition files for the full Week 1 pipeline
 
-Put the 11 files of *IAA AI-Assisted Hackathon 2026 - Part 1* here, with their original names:
+`run_pipeline.py` reads the 11 Part 1 files from here, under their original names: `addresses`,
+`claims`, `customers`, `policies_buildings`, `policies_contents`, `policies_motor`,
+`sample_submission`, `test_buildings`, `test_contents`, `test_motor` and `weather` (parquet).
 
-* `addresses.parquet`
-* `claims.parquet`
-* `customers.parquet`
-* `policies_buildings.parquet`
-* `policies_contents.parquet`
-* `policies_motor.parquet`
-* `sample_submission.parquet`
-* `test_buildings.parquet`
-* `test_contents.parquet`
-* `test_motor.parquet`
-* `weather.parquet`
-
-Only the full pipeline (`run_pipeline.py`) needs them; `rebuild_from_cache.py` does not.
+They are the same files as in `1st round/data/raw/`, and `python final/pipeline.py --full --week 1`
+copies them here. `rebuild_from_cache.py` does not need them.

@@ -1,4 +1,4 @@
-"""Step 5 - the experts of the 1st round's winning ensemble, fitted on three fit sets.
+"""Step 5: the experts of the 1st round's winning ensemble, fitted on three fit sets.
 
 The method of the best 1st-round private score (IAA_Part1_geo_models, 0.13830), built on this
 folder's cleaned data and step-3 features with the shared code of ``geo_experts.py``:

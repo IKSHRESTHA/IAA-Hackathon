@@ -1,4 +1,4 @@
-"""Step 11 - every segment's best level, read from all the public scores at once.
+"""Step 11: every segment's best level, read from all the public scores at once.
 
 Step 10 reads one probe at a time. But any scored file is a probe of the segment levels, as long as
 it differs from another scored file only by one factor per segment (line x new business, and

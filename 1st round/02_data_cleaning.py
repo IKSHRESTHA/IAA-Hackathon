@@ -1,4 +1,4 @@
-"""Step 2 - clean the case-study tables: fix what is provably wrong, flag what is doubtful.
+"""Step 2: clean the case-study tables: fix what is provably wrong, flag what is doubtful.
 
 Principles
 ----------

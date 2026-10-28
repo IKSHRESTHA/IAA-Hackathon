@@ -1,4 +1,4 @@
-"""Step 1 - read the case-study files and understand them before changing anything.
+"""Step 1: read the case-study files and understand them before changing anything.
 
 * reads every file of ``data/raw`` with proper types (identifiers as text, real dates, booleans);
 * compares each file with the data dictionary (``config.DICTIONARY``): missing or extra columns;

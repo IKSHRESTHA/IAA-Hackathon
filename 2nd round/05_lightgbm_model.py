@@ -1,4 +1,4 @@
-"""Step 5 - the 2nd round's LightGBM model on top of the developed prior, and the 2025 submission.
+"""Step 5: the 2nd round's LightGBM model on top of the developed prior, and the 2025 submission.
 
 This is the transfer model of the pricing repository (iaa-pricing-part2), as a pure LightGBM:
 

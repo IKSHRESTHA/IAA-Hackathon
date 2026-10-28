@@ -1,4 +1,4 @@
-"""Step 4 - LightGBM model of the 1st round (developed market) and its 2025 submission.
+"""Step 4: LightGBM model of the 1st round (developed market) and its 2025 submission.
 
 One LightGBM Tweedie model per line, fitted on the model-ready tables of step 3
 (``data/features/policies_<line>`` and ``test_<line>``) with the shared tools of

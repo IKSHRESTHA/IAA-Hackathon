@@ -1,4 +1,4 @@
-"""Step 8 - the 1st round's winning ensemble for this round, and its 2025 submission.
+"""Step 8: the 1st round's winning ensemble for this round, and its 2025 submission.
 
 1. Members, per line, chosen by cross-validation. The 1st round's winner averaged six experts.
    Here some of them are weak (two years give few claims to learn claim sizes from), and a weak

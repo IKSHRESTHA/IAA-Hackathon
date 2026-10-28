@@ -1,4 +1,4 @@
-"""Step 6 - the 1st round's winning ensemble: the experts' geometric mean, recalibrated per line.
+"""Step 6: the 1st round's winning ensemble: the experts' geometric mean, recalibrated per line.
 
 For each line the expert predictions of step 5 are combined row by row by an equal-weight
 geometric mean. A Tweedie GLM with two parameters (``geo_experts.LinePool``) then sets the line's
