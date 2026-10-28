@@ -21,14 +21,15 @@ scores and SHA-256 checksum.
 
 ## Which files and why
 
-* **Week 1:** `submission_week1_v4_geo6.csv` (geometric mean of six experts, recalibrated per
-  line). Its private score, 0.13830, ties with `pick3_ens_geo7_moe.csv` (the same experts plus a
-  seventh); the simpler file is used.
-* **Week 2:** v13, the best public score. On Kaggle, v12 (public 0.17095) is also selected for the
-  final ranking: it is the best expected file on the rows not yet scored, and v13 wins only if the
-  true levels are as extreme as the public rows suggest (write-up, section 4). To submit v12
-  instead, change its `source` line in `build_final.py` to
-  `2nd round/submissions/v12_joint_levels_private.csv` and rerun the script.
+For Week 1 I used `submission_week1_v4_geo6.csv`, the geometric mean of six experts recalibrated
+per line. Its private score of 0.13830 ties with `pick3_ens_geo7_moe.csv`, which adds a seventh
+expert, so I kept the simpler one.
+
+For Week 2 I used v13 because it has the best public score. I also selected v12 (public 0.17095) on
+Kaggle for the final ranking. It is the best expected file on the rows not yet scored, and v13 only
+beats it if the true levels are as extreme as the public rows suggest (write-up, section 4). To
+submit v12 instead, point its `source` line in `build_final.py` at
+`2nd round/submissions/v12_joint_levels_private.csv` and rerun the script.
 
 ## Rebuild this folder
 
