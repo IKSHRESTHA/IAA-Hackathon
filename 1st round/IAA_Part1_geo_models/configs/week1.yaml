@@ -1,0 +1,153 @@
+# ---------------------------------------------------------------------------
+# Week 1 run configuration. Every modelling assumption that a reviewer may want
+# to challenge lives here (not in code), so changes are visible in version control.
+# ---------------------------------------------------------------------------
+run_name: week1
+seed: 20260515
+
+paths:
+  data_dir: data/week1          # the 11 competition parquet files
+  artifacts_dir: artifacts/week1
+  reports_dir: reports/week1
+  output_dir: outputs
+
+dates:
+  valuation_date: "2024-12-31"  # claims are valued at this date
+  prediction_year: 2025
+  train_years: [2021, 2022, 2023, 2024]
+
+metric:
+  tweedie_power: 1.5            # competition metric: Tweedie D^2, p = 1.5
+
+claims:
+  # Target = ultimate cost of non-repudiated claims, net of excess (already in
+  # paid/incurred) and net of recoveries.
+  floor_net_cost_at_zero: true  # recoveries cannot make a claim cost negative
+
+development:
+  lag_unit_days: 30.4375        # monthly reporting-lag buckets
+  max_lag_months: 47            # 4 loss years observed
+  tail_months: 120              # parametric tail horizon for long-tail perils
+  min_claims_per_peril: 150     # below this, pool the peril with its line
+  ibner_method: none            # none | ay_severity_ratio (set after review)
+  open_claim_repudiation: estimate  # none | estimate
+  # --- added by the reserving analysis (evidence: docs/reserving_analysis.md) ---
+  min_loss_date: "2021-01-01"   # Dec-2020 losses are a selected sample (all delays >= 37d): excluded
+  daily_lag_until_days: 60      # daily reverse hazards up to this lag, lag_unit_days buckets beyond
+  pattern_method: auto          # auto | npmle | npmle_tail | parametric (or per "line/peril" map)
+  tail_min_mass: 0.002          # auto: add a parametric tail only if >= 0.2% beyond the window ...
+  tail_max_ks: 0.03             # ... and the best-AIC fit is within 0.03 of the NPMLE body
+  cost_cap_quantile: 0.995      # per-peril cap on claim cost for the cost-weighted pattern
+  min_row_completeness: 1.0e-6  # floor (a 1-day row on the valuation date has F(0) = 0)
+  share_years: [2021, 2022]     # mature loss years for peril cost shares
+  mature_years: [2021, 2022]    # benchmark repudiation rates / IBNER test
+  immature_years: [2023, 2024]
+  repudiation_min_z: 2.0        # adopt an open-claim repudiation probability only if significant
+  ibner_min_z: 2.0              # adopt an IBNER factor only if significant (and method set)
+  suspect_ratio: 5.0            # as claims.prepare_claims
+  suspect_treatment: decimal_shift  # open suspect claims: incurred / 10^k, flagged for human review
+
+trend:
+  # Annual frequency/severity trend estimated from developed experience,
+  # projected from each experience year to the prediction year.
+  method: loglinear
+  max_abs_annual_rate: 0.15     # guardrail: escalate if exceeded
+  # --- added by the reserving analysis (evidence: docs/reserving_analysis.md) ---
+  years: [2021, 2022, 2023, 2024]
+  cost_cap_quantile: 0.995      # per-peril claim cap for severity trend (large losses excluded)
+  # Recommended annual rates (reserving analysis; lead to sign off). Projection
+  # factor from experience year y to 2025 = (1 + rate) ** (2025 - y).
+  recommended:
+    buildings: {frequency: 0.0, severity: 0.060}   # frequency left to weather features
+    contents:  {frequency: 0.014, severity: 0.034}  # contents frequency trend is not weather-driven
+    motor:
+      frequency: 0.0              # 2023 step down in own_damage/TPP: mix, not extrapolated
+      severity_by_peril: {own_damage: 0.035, third_party_prop: 0.076, theft: 0.034,
+                          glass_hail: 0.079, bodily_injury: 0.0}
+      bodily_injury_level_shift: {years: [2021, 2022], factor: 0.82}  # 2023+ severity regime
+
+features:
+  weather_prediction_year: use_if_available   # else address mean of train years
+  history_years: 3
+  rare_level_min_exposure: 200  # grouping threshold for categorical levels
+  # Annual sum-insured indexation (median year-on-year change on renewals, 2022-2025):
+  # training sums insured are restated in target-year money (review V5).
+  si_index: {buildings: 0.03, contents: 0.02}
+  credibility_k: 100            # claims for 50% credibility in high-cardinality encodings
+  # Never used as model inputs (governance: leakage, identifiers, protected proxies).
+  forbidden:
+    renewal_decision: "post-period outcome, absent from test files (target leakage)"
+    surname: "personal identifier; potential ethnicity proxy; no causal risk link"
+    date_of_birth: "replaced by age at row start; avoids direct PII"
+    row_id: "identifier"
+    policy_id: "identifier"
+    customer_id: "identifier"
+    address_id: "identifier"
+    claim_id: "identifier"
+    period_start: "used only to derive time features"
+    period_end: "used only to derive time features"
+    customer_service_contacts: "proven leakage: claim-driven in training (0 contacts on 0.2% of claim rows vs 67% of others); 2025 test matches the no-claim distribution"
+  # Allowed only if they pass the fairness/leakage review documented in docs/governance.md.
+  review_required:
+    email_domain: "non-risk marketing attribute; regulatory precedent of unfair proxy pricing"
+    marketing_segment: "assigned by marketing; may encode price-optimisation, not risk"
+    campaign_code: "acquisition attribute; not a risk characteristic"
+    branch_id: "servicing attribute; may proxy geography/demographics"
+    document_preference: "service attribute; weak risk rationale"
+    marketing_consent: "service attribute; weak risk rationale"
+    previous_insurer: "commercial attribute; volatile across markets"
+    written_premium: "output of the current tariff; circular if used to set the technical price"
+    discount_applied: "commercial decision, not risk"
+
+model:
+  gbm:
+    # Tuned on the 2024 temporal back-test (docs/model_development.md): shallow trees,
+    # large leaves and one-vs-rest categorical splits stop the model fitting noise in
+    # rare, heavy-tailed claims; training power = metric power (1.3/1.7 were worse).
+    objective: tweedie
+    tweedie_variance_power: 1.5
+    learning_rate: 0.03
+    num_leaves: 15
+    min_data_in_leaf: 2000
+    min_sum_hessian_in_leaf: 1.0
+    feature_fraction: 0.8
+    bagging_fraction: 0.8
+    bagging_freq: 1
+    lambda_l2: 10.0
+    max_bin: 255
+    cat_smooth: 200
+    cat_l2: 10
+    min_data_per_group: 1000
+    max_cat_to_onehot: 32
+    num_boost_round: 3000
+    early_stopping_rounds: 150
+    verbose: -1
+  # Per-line settings from the back-test learning curves (holdout 2024); n_trees is
+  # the curve optimum x ~1.15 because the final fit has four years of data, not three.
+  per_line:
+    buildings: {cap_quantile: 0.995, n_trees: 350}
+    contents:  {cap_quantile: 0.995, n_trees: 230}
+    motor:     {cap_quantile: 0.995, n_trees: 230}
+  glm:
+    alpha: 0.0005            # ridge strength (glum scaling)
+    l1_ratio: 0.0
+    n_bins: 10               # quantile bins for continuous factors
+  large_loss:
+    cap_quantile: 0.995      # per-line claim-level cap for training targets
+    reload: by_line          # excess-over-cap loaded back multiplicatively
+
+validation:
+  holdout_years: [2024]         # temporal back-test: train < year, score == year
+  n_bootstrap: 200
+  # Paired cluster bootstrap of holdout D^2: customer_id keeps a customer's rows on every
+  # line together (falls back to policy_id if customer ids are unavailable).
+  bootstrap_cluster: customer_id
+
+guardrails:
+  max_abs_loss_ratio_shift: 0.25  # |pred LR 2025 - developed LR 2024| / LR 2024
+  max_pp_shift_vs_history: 0.15   # |2025 predicted PP / developed 2021-24 PP (2025 level) - 1|
+  psi_warning: 0.10
+  psi_escalate: 0.25
+  min_validation_d2: 0.0          # a model worse than the constant baseline is rejected
+  max_line_ae_deviation: 0.05     # back-test A/E outside 1 +/- 5% => escalate
+  max_prediction_to_median_ratio: 200

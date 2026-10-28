@@ -1,0 +1,9 @@
+# Versions the models were built with (Python 3.13). Newer versions are likely to work.
+numpy==2.5.3
+pandas==3.0.5
+pyarrow==26.0.0
+scipy==1.18.1
+scikit-learn==1.9.1
+lightgbm==4.7.0
+glum==3.4.1
+PyYAML==6.0.3
