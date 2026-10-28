@@ -33,73 +33,82 @@ import final_figures as ff
 | | Week 1: developed market | Week 2: emerging market |
 |:-------|:----------------|:----------------|
 | Data | 2021-24, 163,150 claims; 626,639 rows to price | 2023-24, 9,258 claims; 209,063 rows to price |
-| Submitted file | geometric mean of six experts, recalibrated per line | v13: ensemble ranking, segment levels read from the leaderboard |
+| Submitted file | geometric mean of six experts, recalibrated per line | v13: tested ensemble ranking, segment levels set for the 2025 mix |
 | Public / private D² | 0.12851 / **0.13830** | **0.17172** / pending (v12, public 0.17095, also selected) |
 
-Both weeks are scored on the Tweedie deviance D² with power 1.5, pooled over the three lines. My
-first Week 2 file, a plain LightGBM, scored 0.12519. The work rests on three choices. I spent time
-on the target before building any model. In the new market I started from what the developed market
-already knew and let the local data correct it. And I kept a segment's level separate from the
-ranking inside it, because the 2025 book is too different from the training years for a back-test
-to say what the levels should be.
+Both weeks ask for the expected 2025 claim cost of every policy, scored by the Tweedie deviance D²
+with power 1.5 over all three lines. A D² of 0 is what you get by predicting the average for
+everyone, so every number below is a gain over that baseline. I ran both weeks the same way: get the
+target right first, test every idea on a year the model has not seen, and keep only what holds up.
+In the new market I started from what the developed market already knew and let the local data
+correct it.
 
-# Data and target
+# Modelling approach
 
-Both weeks go through the same scripts (read, clean, build features), and each one has an executed
-notebook next to it as evidence. Every fix is logged with the rows it changed. I dropped no rows and
-imputed nothing. The audit found customer ids that had lost their leading zeros (123,664 rows),
-exposure recorded in days or on a 360-day basis (13,880 and 595 rows in the two weeks), sums insured
-entered in units instead of thousands (3,527 and 349), a case reserve typed with an extra digit
-(11.9m instead of 1.19m), and impossible years licensed, which I restored from the same policy's
-other years (3,717 rows). The last one found, after Week 1 had been submitted, was 604 claims stored
-twice under a second id. They had inflated 2022 claim counts by 1.4%.
+## Data and target
 
-**Target.** The ultimate cost of the claims with a loss date inside the row's period, net of excess
-and recoveries, with repudiated claims left out. Claims are valued at 31 December 2024, so 2024 is
-not fully reported: only about half of its bodily-injury cost is in. Every model's offset is
+Both weeks go through the same scripts (read, clean, build features), each with an executed
+notebook as evidence. Every fix is logged with the rows it changed. I dropped no rows and imputed
+nothing. The audit found customer ids that had lost their leading zeros (123,664 rows), exposure
+recorded in days or on a 360-day basis (13,880 and 595 rows in the two weeks), sums insured entered
+in units instead of thousands (3,527 and 349), a case reserve typed with an extra digit (11.9m
+instead of 1.19m), and impossible years licensed, restored from the same policy's other years
+(3,717 rows). The last one found was 604 claims stored twice under a second id, which had inflated
+2022 claim counts by 1.4%.
+
+The target is the ultimate cost of the claims with a loss date inside the row's period, net of
+excess and recoveries, with repudiated claims left out. Claims are valued at 31 December 2024, so
+2024 is not fully reported: only about half of its bodily-injury cost is in. Every model's offset is
 log(exposure × share of claims reported), with the share taken from a reporting pattern per peril.
 Open claims are developed with the recovery ratio seen on closed ones, costs are trended to 2025 per
-peril, and costs above the 99.5% quantile are capped and added back as a load per line (1.02 to 1.06).
+peril, and costs above the 99.5% quantile are capped and added back as a load per line.
 
-**Feature selection.** A column stays only if it beats 20 random "probe" columns out of time, both
-on its own and inside a small LightGBM. The pass mark lets at most 1 in 20 noise columns through.
-Week 1 keeps 53, 44 and 49 features (motor, buildings, contents). Week 2 keeps only 28, 14 and 9,
-because two years of a small book cannot prove the weaker effects.
+## How every idea was tested
 
-# Week 1: six experts and a geometric mean
+No change went in on the strength of one number. Each one had to pass tests that copy how the model
+is used, which means fitting on earlier years and scoring a later one:
 
-For each line I trained six experts, each three times: on 2021-22 to price 2023, on 2021-23 to
-price 2024, and on all four years to price 2025. All of them are LightGBM with an exact log offset,
-except the GLM.
+| Test | Question it answers | Scale |
+|:-----------------|:---------------------|:-----------------------|
+| Out-of-time back-tests | Does it work on a year it has not seen? | Week 1: fit 2021-22, score 2023; fit 2021-23, score 2024. Week 2: fit 2023, score 2024 |
+| Customer-grouped 5-fold cross-validation | The same in Week 2, where one forward year is too little | every expert, setting and blend, 2023 and 2024 folds |
+| Random "probe" columns | Does a candidate feature carry signal or luck? | 278 candidate columns in Week 1 and 270 in Week 2: rules first, then 20 probes per column |
+| Settings and blend search | Which tree size, ridge and expert mix? | 42 model settings; all 63 expert combinations per line |
+| Permutation test | Does a factor search find more than shuffled data would? | 120 rating factors |
+| Kaggle public score | How does a file score on part of 2025? | 9 of the 15 Week 2 files I built |
 
-| Expert | What it models |
-|:-------|:----------------------------|
-| `total` | Tweedie GBM on capped total cost, times the line's large-loss load |
-| `glm` | Tweedie GLM on banded numeric factors and grouped categories |
-| `peril` | one Tweedie GBM per peril, with its own reporting share and load, summed |
-| `fs_gamma`, `fs_lognorm` | Poisson frequency × claim size (Gamma; or lognormal with a risk-specific variance) |
-| `fs_peril` | frequency × claim size for each peril, summed |
+Rules drop leakage, governance columns and constants first. The probe pass mark then lets at most
+1 in 20 noise columns through. Week 1 kept 146 of its 278 candidates; Week 2 kept 51 of 270, because two years of a small book cannot prove weaker effects.
+The features that survived make actuarial sense: a claim last year multiplies next year's frequency
+by 1.7 to 2.1 in the developed market.
 
-The predictions are combined row by row with an equal-weight geometric mean, and each line is then
-recalibrated with a two-parameter Tweedie GLM,
-$\log E = \log(\text{exposure}\cdot L) + b_0 + b_1 \log(\text{geo}/L)$, where $L$ is the line's mean
-rate. The GLM is fitted on the two back-test years; $b_1$ comes out at 1.04 for motor, 1.10 for
-buildings and 1.09 for contents.
+## Week 1: six experts and a geometric mean
 
-| Back-test D², all lines (calibration fitted on the other year) | 2023 | 2024 |
-|:----------------------------|------:|------:|
-| one LightGBM on total cost | 0.1364 | 0.1338 |
-| best single expert (`fs_peril`) | 0.1379 | 0.1365 |
-| geometric mean of the six, recalibrated | **0.1386** | **0.1375** |
+For each line I trained six experts on three fit sets (to price 2023, 2024 and 2025): a Tweedie GBM
+on total cost (the single-model baseline), a Tweedie GLM, one GBM per peril, and three
+frequency × claim-size models (Gamma claim size, lognormal claim size with a risk-specific
+variance, and frequency × claim size for each peril). Their predictions are combined row by row
+with an equal-weight geometric mean, then each line is recalibrated with a two-parameter Tweedie
+GLM, $\log E = \log(\text{exposure}\cdot L) + b_0 + b_1 \log(\text{geo}/L)$, where $L$ is the line's
+mean rate.
 
-The frequency × claim-size experts beat a single cost model in every line and year, and the six
-together beat each one of them. A seventh expert, a mixture of experts for claim size, gave the same
-private score, so I kept the simpler file. The table comes from the rebuilt pipeline. The file I
-submitted came from the 22 October code, which reported 0.1380 and 0.1367 and was written before the
-duplicate-claim and years-licensed fixes. Its 2025 predictions have a log correlation of 0.996 to
-0.998 with the rebuild.
+```{python}
+#| label: fig-week1
+#| fig-cap: "Week 1 back-tests, all lines pooled. The ensemble is best in both years; the recalibration was fitted on one year and scored on the other."
+#| fig-width: 6.6
+#| fig-height: 2.5
+ff.fig_week1_models(size=(6.6, 2.5));
+```
 
-# Week 2: adapting to the emerging market
+The ranking held across both years (@fig-week1). The frequency × claim-size experts beat the
+single LightGBM in every line and year, and the geometric mean beat each expert: 0.1386 and 0.1375
+against the baseline's 0.1364 and 0.1338. The recalibration ($b_1$ = 1.04, 1.10 and 1.09 for motor,
+buildings and contents), fitted on one year and scored on the other, kept or slightly raised the score. A seventh
+expert gave the same private score, so I kept the simpler file. The figure comes from the rebuilt
+pipeline. The submitted file came from the 22 October code, which reported 0.1380 and 0.1367, and
+its 2025 predictions have a log correlation of 0.996 to 0.998 with the rebuild.
+
+# Adaptation to the new market
 
 Week 2 differed from Week 1 in most of the ways that matter to a pricing model:
 
@@ -109,130 +118,90 @@ Week 2 differed from Week 1 in most of the ways that matter to a pricing model:
 | New business in the year priced | close to the training mix | 77% of 2025, against 12-15% of training rows |
 | Gender | not a rating factor | a permitted rating factor |
 | Weather of the year | inside the training range | 2025 far outside it (rainfall anomaly −128 mm against ±3 mm) |
-| Buildings experience | stable | a 2023 fire-cost spike; 2024 came in at 0.59 of 2023's prediction |
 
-**Transfer from the developed market.** I fit a LightGBM on every Week 1 row using only the factors
-that mean the same thing in both markets (30 for motor, 24 for buildings, 26 for contents), always
-with renewal count, and put its log rate into the offset of the Week 2 models. The local trees then
-only have to learn how this market differs, and 20 to 110 trees are enough. Each Week 1 expert is
-rebuilt the same way, on a prior for its own component (frequency, claim size, each peril). A peril
-with fewer than 50 claims (300 for claim sizes) uses its prior alone, re-levelled. I dropped the
-weather of the year.
-
-**Choices made by cross-validation.** Two years give only one forward test, so the tuning used five
-folds of customers over 2023-24. It picked one-split trees for motor and contents and a strong GLM
-ridge; a weak ridge overfits buildings to a D² below zero. It also picked a member set per line
-instead of all six experts (motor `total` + `fs_peril` + `glm`, buildings `fs_lognorm` + `peril`,
-contents `total` + `glm`), because two years hold too few claims to learn claim sizes. The
-recalibration slope stays at 1, since a slope fitted on one year did not carry to the other.
-New-business and gender factors are measured on out-of-fold predictions and shrunk towards no effect.
-
-| Forward test: fit on 2023, score 2024, all lines | D² |
-|:----------------------------|------:|
-| LightGBM on Week 2 data only | 0.1026 |
-| developed-market prior alone | 0.1259 |
-| LightGBM on top of the prior | 0.1277 |
-| ensemble on priors | **0.1300** |
-
-# What the leaderboard taught me
-
-The ensemble (v4) scored 0.16198 in public. My earlier single transfer LightGBM had scored 0.16529,
-even though the ensemble ranked the 2024 risks better. The gap came from the levels. The 2024
-back-test is 13% new business and 2025 is 77%, so the back-test can judge the ranking inside a
-segment but not the level of new business, buildings or gender.
-
-So I treated ranking and level as two separate problems. For the ranking, v5 keeps the earlier
-file's total in each of ten segments (line × new business × gender) and replaces the ranking inside
-them with a 50/50 geometric blend of that file and my ensemble. On 2024 rows weighted to the 2025
-mix, the blend ranks better (within-segment D² 0.1067 against 0.1016). v5 changed a quarter of the
-rows by more than 10% and still scored exactly 0.16529. That surprised me, and it settled the
-question: the public score hardly reacts to the ranking inside segments.
-
-**Levels.** For Tweedie p = 1.5, multiplying a segment's predictions by $c$ changes the deviance by
-exactly
-$$\Delta D = 4\left[(c^{-1/2}-1)A + (c^{1/2}-1)B\right], \qquad A=\textstyle\sum y\,\mu^{-1/2},\quad B=\sum \mu^{1/2},$$
-so the best level is $c^* = A/B$, and any scored file that differs from another only by segment
-factors is a measurement of it. I fit one model, linear in the ten best levels, to 13 public scores.
-It matches all of them within 0.0001, and when five were left out of the fit it predicted them up to
-one constant offset. It says motor needs a much wider gender split than any model of 2023-24 gave:
-new-business men about ×1.37 on v5, women about ×0.97 (@fig-levels).
-
-**Luck.** The public score covers only a sample of the 2025 rows, so a segment's best level on that
-sample is off by $\text{sd} = \sqrt{\phi / (\text{share}\cdot\sum\mu^{1/2})}$. At a 30% public share
-that is 8% for motor new-business men, 13% for buildings new business and 24% for buildings
-renewals. The model fits this luck as a separate term and gives two answers: the best levels for the
-public rows (v13), and the best levels for the rows not yet scored (v12), which pulls the noisy
-segments back towards v5.
+**Start from the developed market.** I fit a LightGBM on every Week 1 row using only the factors that
+mean the same thing in both markets (30 for motor, 24 for buildings, 26 for contents) and put its
+log rate into the offset of the Week 2 models. The local trees then only learn how this market
+differs. @fig-week2 shows why: with two years of data alone, buildings reached a D² of only 0.012;
+on top of the prior it reached 0.075, and all lines together went from 0.103 to 0.128.
 
 ```{python}
-#| label: fig-journey
-#| fig-cap: "Every scored Week 2 file, in the order made. Changing levels moved the public score; changing the ranking (v5, v14) hardly did."
+#| label: fig-week2
+#| fig-cap: "Week 2 forward test (fit on 2023, score 2024). The values are in appendix C."
 #| fig-width: 6.6
-#| fig-height: 2.4
-ff.fig_journey(size=(6.6, 2.4));
+#| fig-height: 2.2
+ff.fig_week2_transfer(size=(6.6, 2.2));
 ```
 
-```{python}
-#| label: fig-levels
-#| fig-cap: "Best level per segment. v12 targets the blue points, v13 the orange ones. They differ most where the public rows say least (buildings renewals, motor renewal men)."
-#| fig-width: 6.6
-#| fig-height: 3.0
-ff.fig_levels(size=(6.6, 3.0));
-```
+**Keep the local models simple.** Cross-validation chose one-split trees for motor and contents and
+a strong GLM ridge; a weak ridge overfit buildings to a D² below zero. Searching all 63 expert
+combinations per line showed that all six experts together lost to fewer (contents: 0.1071 against
+0.1087 for the total-cost model alone), because two years hold too few claims to learn claim sizes.
+Each line keeps its best set, which lifted the forward test from 0.1278 to 0.1300. A fitted
+recalibration slope changed the other year's D² by −0.0035 to +0.0008 with no steady sign, so the
+slope stays at 1. New-business and gender factors are measured on out-of-fold predictions and shrunk
+towards no effect. I dropped the weather of the year, since 2025 lies outside anything seen.
 
-v12 scored 0.17095 (expected 0.1708) and v13 0.17172 (expected 0.1714). Against v5, the model
-expects v12 to gain 0.0042 on unseen rows and v13 0.0037, with an sd of about 0.0015. I selected both
-on Kaggle. v12 is my best estimate for the final ranking; v13 only wins if the true levels are as
-extreme as the public rows suggest. The Week 2 file in this submission is v13, my best score. I also
-tried two last ranking changes: no this-year weather in the buildings and contents model, and a motor
-spread of ×1.05. That file, v14, scored 0.17032, which is 0.0006 below v12 against a public-luck sd of
-0.0008. The leaderboard cannot tell whether that is a real loss, so I did not select it.
+**Where the model was wrong.** The errors were mostly in levels. In the forward test buildings came
+in at 0.59 of the predicted cost, because 2023 had a fire-cost spike, and new business, which is
+only 13% of the 2024 rows, could not be checked at all. The ranking within a segment could be
+tested; the level of a segment under the 2025 mix could not.
 
-**What the new market changed.** I stopped learning everything from local data: the developed market
-supplies the relativities, and the emerging data corrects them. Simpler local models did better
-(one-split trees, a strong ridge, fewer experts, no fitted slope). The back-test was no longer
-enough, because 2025 is mostly new business, so I judged ranking and level on different evidence.
-And I treated the public leaderboard as a noisy measurement to model rather than a score to push up.
+**Checking against Kaggle, and setting segment levels.** Kaggle did two jobs. For model changes it
+was the last check: a new model went up only after it passed the tests above. The first such check
+showed that the ensemble (v4), although it ranked the 2024 risks better, scored below my earlier
+single transfer LightGBM (0.16198 against 0.16529), and the reason was the levels. So I kept the tested ranking inside
+each of ten segments (line × new business × gender) and set only the segment levels from outside
+evidence. v5 keeps the earlier file's segment totals with a 50/50 blend of rankings, which on 2024
+rows reweighted to the 2025 mix ranks better (within-segment D² 0.1067 against 0.1016). For the
+levels, the public score was the only evidence about 2025, which is its second job. Because it covers just part of 2025, I
+modelled its sampling noise (8% to 24% per segment) and built two files: v12 aims at the rows not yet
+scored and pulls noisy segments back, and v13 aims at the public rows (appendix B). v12 scored
+0.17095 and v13 0.17172. I selected both, and v13 is the file submitted here. Ranking-only changes
+moved the public score less than its noise (v14, 0.0006 below v12 against noise of 0.0008), so every
+ranking decision stayed with cross-validation.
 
 # Major decisions
 
 | Decision | Rejected | Evidence |
 |:-------------------|:-----------|:--------------|
 | Fix data errors with evidence; drop and impute nothing | dropping or imputing rows | cleaning log per round |
-| Geometric mean of experts, recalibrated per line (Week 1) | one LightGBM | +0.0022 (2023) and +0.0037 (2024) back-test D² |
-| Developed-market prior in the offset (Week 2) | Week 2-only models | +0.025 forward D² |
-| Members per line by cross-validation; slope fixed at 1 | all six experts; fitted slope | contents: all six 0.1071 against `total` alone 0.1087 |
-| Segment levels kept apart from ranking | trusting the back-test's levels | v4 0.16198 against v5 0.16529 |
-| Aim at unseen rows rather than the public sample | chasing the public score | public luck sd 8% to 24% per segment |
+| Keep a feature only if it beats random columns | keeping every plausible column | 146 of 278 kept (Week 1), 51 of 270 (Week 2) |
+| Geometric mean of experts, recalibrated per line | one LightGBM | +0.0022 (2023) and +0.0037 (2024) back-test D² |
+| Developed-market prior in the offset | Week 2-only models | +0.025 forward D² |
+| Simple local models, members per line by cross-validation | all six experts, fitted slope | contents: all six 0.1071 against `total` alone 0.1087 |
+| Ranking from tests, segment levels from 2025 evidence | trusting the back-test's levels | v4 0.16198 against v5 0.16529 |
+| Aim at unseen rows as well as the public sample | chasing the public score alone | public noise 8% to 24% per segment |
 
 # Use of AI
 
-I worked alone, with an AI coding agent (Claude Code in VS Code) at every step. The agent wrote and
-ran most of the code and drafted this write-up. I set the questions and decided what got built.
+I worked alone, with an AI coding agent (Claude Code in VS Code) at every step. It wrote and ran most
+of the code and drafted this write-up. I set the questions, checked the evidence and decided what
+was built.
 
-Most of the work was a long run of prompts that proposed ideas and tested them: the developed-market
-prior, the expert ensembles, the segment-level probes, the public-luck model. Each idea became a
-script and had to hold up out of time before it counted.
+Most of the work was a long run of prompts, each asking the agent to try one idea and test it: the
+developed-market prior, the expert ensembles, the member search, the permutation test. An idea
+counted only if it held up in the tests of section 1.2.
 
-The prompts carried context that pointed the agent somewhere specific: the case study, the question
-to answer, and what had already failed and why, which I kept in `KNOWLEDGE.md`. That kept it from
-starting over or retrying dead ends.
+The AI model itself never changed during the project; its memory did. `KNOWLEDGE.md` records every
+idea tried, its test result and why it was kept or dropped, and the submission register does the
+same for every file. Each new task started by giving the agent that record and the question to
+answer, and each finished test was written back. This loop of trying, testing, writing it down and
+reusing it is the basic idea behind memory-based agent methods such as Memento (Zhou et al., 2025),
+done by hand: I chose which past results the agent saw, where Memento learns that choice. It kept
+the agent from starting over or repeating dead ends between sessions.
 
-I used different skills for different jobs. Two project skills in the repository
-(`.claude/skills/data-scientist` and `ml-engineer`) set how the agent writes code and runs an
-analysis: frame the problem first, test out of time, distrust its own gains, and keep the code
+Two project skills in the repository (`.claude/skills/data-scientist` and `ml-engineer`) set how the
+agent works: frame the problem first, test out of time, distrust its own gains, and keep the code
 reproducible and under version control.
 
-I did not accept a result from the same run that produced it. Each idea was questioned separately,
+I did not accept a result from the same run that produced it. Each idea was questioned on its own,
 so the agent had to check its own work, and this caught real problems. Factor searches looked strong
-when the same two years both chose and scored the factors; a permutation test then showed that real
-factors pass no more often than shuffled ones, and only gender survived. A later review found a sign
-error in the Week 1 contents frequency trend. It is documented, left in the code that reproduces the
-submitted file, and fixed in the rebuild.
-
-Nothing went into the pipeline or a submission until I had reviewed the plan and its evidence. I
-chose the target definition, what counted as evidence, which files to submit and select, and when to
-stop probing the leaderboard.
+when the same two years both chose and scored the factors; the permutation test then showed real
+factors pass no more often than shuffled ones (motor 8 of 45 against 7.5 expected by chance), and
+only gender survived. A later review found a sign error in the Week 1 contents frequency trend,
+which is documented, left in the code that reproduces the submitted file, and fixed in the rebuild.
+Nothing went into the pipeline or a submission until I had reviewed the plan and its evidence.
 
 # Assumptions
 
@@ -240,7 +209,7 @@ stop probing the leaderboard.
   buildings severity 6%, contents frequency 1.4% and severity 3.4%). Reporting patterns are stable,
   and open claims develop the way closed ones did.
 * For factors defined the same way in both markets, the developed market's relativities are a
-  reasonable starting point. The emerging market differs in level and in a few effects that the local
+  reasonable starting point; the emerging market differs in level and in a few effects the local
   models can learn.
 * The public leaderboard rows are a random sample of 2025, about 30%. The order of v12 and v13 holds
   for any share from 20% to 50%.
@@ -249,32 +218,30 @@ stop probing the leaderboard.
 # Limitations
 
 * Buildings is the part I trust least. There are only two years of emerging-market data, a few large
-  claims decide the buildings public score, and its levels carry 8% to 10% uncertainty.
-* The Week 2 levels rest partly on the public leaderboard. The competition allows that, but in real
-  pricing it would mean calibrating on a sample of the book's own outcomes, and the bands in
-  @fig-levels are wide.
-* Back-tests cannot judge new-business levels, and ranking changes such as v14 are smaller than the
-  noise in the public score.
-* The submitted Week 1 file still has the contents trend sign error. The per-line recalibration
-  absorbs most of it (the intercept is about +10%), but the contents relativities may be slightly off.
+  claims decide its results, and its segment levels carry 8% to 10% uncertainty.
+* The Week 2 segment levels rest partly on public scores. The competition allows that, but in real
+  pricing it would mean calibrating on a sample of the book's own outcomes.
+* The Week 2 expert sets were chosen on folds that include 2024, so their forward-test gain is a
+  little optimistic.
+* The submitted Week 1 file keeps the contents trend sign error. The per-line recalibration absorbs
+  most of it (the intercept is about +10%), but contents relativities may be slightly off.
 
 # Guardrails
 
 * Columns driven by the outcome are excluded: `renewal_decision`, and `customer_service_contacts`,
   which is zero on 0.2% of rows with a claim against 67% of rows without one. Claims history is built
-  as it was known on 1 January of each year, so no feature looks ahead.
+  as known on 1 January of each year, so no feature looks ahead.
 * The written premium is excluded, because a model using it would copy the old tariff. So are
-  marketing and service fields and personal data such as surname. Gender is used only where it is
+  marketing and service fields and personal data such as surname. Gender is used only where
   permitted, and its factor moves price between men and women without changing a line's total.
-* Every file is tested out of time before it is submitted, then registered as a new numbered version
-  with its evidence, description and checksum. Versions are never overwritten.
-* A file is saved only if it has one row per sample row id, in the sample's order, with every
-  prediction finite and positive. The Week 1 code adds block and escalate rules: a back-test D² at
-  or below zero blocks the file; an A/E outside 1 ± 5%, feature drift with a PSI of 0.25 or more, or
-  a pure-premium shift of more than 15% against history goes to actuarial sign-off.
-* Probe columns in feature selection, permutation tests on factor searches and the public-luck model
-  are all there to stop me fitting noise, including apparent gains that an AI agent reports with
-  confidence.
+* Every model change is tested out of time before its file is submitted. Every file is registered
+  as a new numbered version with its evidence, description and checksum, and never overwritten.
+* A file is saved only if it has one row per sample row id, in order, with every prediction finite
+  and positive. The Week 1 code adds block and escalate rules: a back-test D² at or below zero
+  blocks the file; an A/E outside 1 ± 5%, feature drift with a PSI of 0.25 or more, or a pure-premium
+  shift above 15% against history goes to actuarial sign-off.
+* Probe columns, permutation tests and the public-noise model are all there to stop me fitting
+  noise, including apparent gains that an AI agent reports with confidence.
 * Every step is a script under git, and `final/pipeline.py` runs them in order. From the
   intermediate results in the repository it rebuilds the Week 2 file byte for byte and the Week 1
   file to a relative difference of 3e-15, in about a minute.
@@ -283,22 +250,48 @@ stop probing the leaderboard.
 
 # Appendix (outside the five graded pages) {.unnumbered}
 
-**A. Week 2 submission register** (from `2nd round/submissions/versions.csv`).
+**A. Experiment log: every Week 2 file** (from `2nd round/submissions/versions.csv`).
 
 ```{python}
 #| output: asis
 print(ff.markdown(ff.table_register()))
 ```
 
-**B. Segment levels** (from `2nd round/reports/11_joint/levels.csv`; factors on v5).
+**B. Setting segment levels from public scores.** For Tweedie p = 1.5, multiplying a segment's
+predictions by $c$ changes the deviance by exactly
+$$\Delta D = 4\left[(c^{-1/2}-1)A + (c^{1/2}-1)B\right], \qquad A=\textstyle\sum y\,\mu^{-1/2},\quad B=\sum \mu^{1/2},$$
+so the best level is $c^* = A/B$, and any scored file that differs from another only by segment
+factors measures it. `11_joint_levels.py` fits one model, linear in the ten best levels, to 13
+public scores (all within 0.0001). The public rows are a sample, so a segment's best level on them
+is off by $\text{sd} = \sqrt{\phi / (\text{share}\cdot\sum\mu^{1/2})}$, which the model fits as a
+separate term.
+
+```{python}
+#| label: fig-levels
+#| fig-cap: "Best level per segment. v12 targets the blue points, v13 the orange ones. They differ most where the public rows say least."
+#| fig-width: 6.6
+#| fig-height: 3.0
+ff.fig_levels(size=(6.6, 3.0));
+```
 
 ```{python}
 #| output: asis
 print(ff.markdown(ff.table_levels()))
 ```
 
-**C. Files and how to reproduce.** The two prediction files, their checksums and sources are in
+**C. Week 2 forward test per line** (from `2nd round/reports/05_model/holdout.csv`; D², fit 2023,
+score 2024).
+
+```{python}
+#| output: asis
+print(ff.markdown(ff.table_week2_transfer()))
+```
+
+**D. Files and how to reproduce.** The two prediction files, their checksums and sources are in
 `final/1_predictions/manifest.csv`. The code and data are at {{< var repo >}}.
 `python final/pipeline.py` reruns the last stages of both pipelines from the intermediate results
 in the repository (about a minute) and checks the rebuilt files against the submitted ones;
 `--full` reruns every stage from the raw competition files. `final/README.md` lists the stages.
+
+**Reference.** Zhou, H. et al. (2025). Memento: Fine-tuning LLM Agents without Fine-tuning LLMs.
+arXiv:2508.16153.

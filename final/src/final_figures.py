@@ -1,8 +1,9 @@
-"""Figures and tables for the write-up and the video slides.
+"""Figures and tables for the write-up.
 
-Everything is read from the repository's own registers and reports, so the documents show the
-same numbers the pipeline wrote. Colors follow a colorblind-checked palette (blue / orange,
-validated for adjacent-pair CVD separation and 3:1 contrast on the light surface).
+Everything is read from the pipeline's own reports and registers, so the write-up shows the
+numbers the pipeline wrote. Colors come from a colorblind-checked palette (blue, orange, aqua:
+every pair passes the CVD and normal-vision checks; aqua is below 3:1 contrast, so each series
+also has its own marker shape and the numbers are in a table).
 """
 from __future__ import annotations
 
@@ -18,7 +19,27 @@ R1, R2 = REPO / "1st round", REPO / "2nd round"
 
 SURFACE, INK, INK2, MUTED = "#fcfcfb", "#0b0b0b", "#52514e", "#898781"
 GRID, AXIS = "#e1e0d9", "#c3c2b7"
-BLUE, ORANGE = "#2a78d6", "#eb6834"
+BLUE, ORANGE, AQUA = "#2a78d6", "#eb6834", "#1baf7a"
+
+# Week 1 models in 1st round/reports/06_geo/scores.csv, weakest first.
+WEEK1_MODELS = [
+    ("glm", "GLM"),
+    ("peril", "one GBM per peril"),
+    ("total", "single LightGBM (baseline)"),
+    ("fs_gamma", "frequency × Gamma claim size"),
+    ("fs_lognorm", "frequency × lognormal claim size"),
+    ("fs_peril", "frequency × claim size, per peril"),
+    ("geo", "geometric mean of the six"),
+    ("recalibrated geo (fit on the other year)", "geometric mean, recalibrated"),
+]
+
+# Week 2 approaches in 2nd round/reports/05_model/holdout.csv: (key, label, color, marker).
+WEEK2_APPROACHES = [
+    ("transfer LightGBM", "LightGBM on the developed prior", BLUE, "o"),
+    ("developed prior alone", "developed prior alone", ORANGE, "D"),
+    ("LightGBM without prior", "LightGBM on Week 2 data only", AQUA, "s"),
+]
+WEEK2_LINES = [("all lines", "All lines"), ("motor", "Motor"), ("buildings", "Buildings"), ("contents", "Contents")]
 
 SEGMENT_NAMES = {
     "motor_new_m": "Motor, new business, men",
@@ -31,19 +52,6 @@ SEGMENT_NAMES = {
     "contents_new_m": "Contents, new business, men",
     "contents_renewal_f": "Contents, renewals, women",
     "contents_renewal_m": "Contents, renewals, men",
-}
-
-# Short tags for the scored Week 2 files, in the order they were made.
-STEP_TAGS = {
-    "v1": "starter\nLightGBM",
-    "v4": "ensemble\non priors",
-    "v5": "best levels,\nnew ranking",
-    "v8": "probe:\nbuildings",
-    "v10": "probe:\nmotor ren.",
-    "v11": "joint\nlevels",
-    "v12": "levels for\nunseen rows",
-    "v13": "levels for\npublic rows",
-    "v14": "ranking\ntweaks",
 }
 
 
@@ -67,14 +75,22 @@ def use_style(scale: float = 1.0) -> None:
 
 # ---------------------------------------------------------------------------------------- data
 
+def week1_backtests() -> pd.DataFrame:
+    """Pooled back-test D² of every Week 1 model, one column per scored year."""
+    s = pd.read_csv(R1 / "reports" / "06_geo" / "scores.csv")
+    d = s.loc[s["line"] == "all lines"].pivot_table(index="model", columns="year", values="d2")
+    return d.loc[[k for k, _ in WEEK1_MODELS]]
+
+
+def week2_transfer() -> pd.DataFrame:
+    """Forward-test D² (fit 2023, score 2024) per line for the three Week 2 approaches."""
+    h = pd.read_csv(R2 / "reports" / "05_model" / "holdout.csv")
+    d = h.pivot_table(index="line", columns="model", values="d2")
+    return d.loc[[k for k, _ in WEEK2_LINES], [k for k, *_ in WEEK2_APPROACHES]]
+
+
 def week2_register() -> pd.DataFrame:
     return pd.read_csv(R2 / "submissions" / "versions.csv")
-
-
-def week2_scored() -> pd.DataFrame:
-    reg = week2_register().dropna(subset=["public_score"]).copy()
-    reg["n"] = reg["version"].str[1:].astype(int)
-    return reg.sort_values("n")
 
 
 def segment_levels() -> pd.DataFrame:
@@ -85,32 +101,41 @@ def segment_levels() -> pd.DataFrame:
 
 # -------------------------------------------------------------------------------------- figures
 
-def fig_journey(size=(6.6, 2.55), scale: float = 1.0):
-    """Public score of every scored Week 2 file, in the order made; the two final picks in blue."""
+def fig_week1_models(size=(6.6, 2.5), scale: float = 1.0):
+    """Every Week 1 model on both back-test years; the gap between the dots is the year-to-year change."""
     use_style(scale)
-    df = week2_scored()
-    x = range(len(df))
+    d = week1_backtests()
+    y = list(range(len(d)))
     fig, ax = plt.subplots(figsize=size, layout="constrained")
-    ax.plot(list(x), df["public_score"], color=AXIS, lw=1.6, zorder=1)
-    picks = df["version"].isin(["v12", "v13"]).to_numpy()
-    ax.scatter([i for i, p in zip(x, picks) if not p], df.loc[~picks, "public_score"], s=42 * scale,
-               color=MUTED, edgecolor=SURFACE, linewidth=1.5, zorder=2)
-    ax.scatter([i for i, p in zip(x, picks) if p], df.loc[picks, "public_score"], s=58 * scale,
-               color=BLUE, edgecolor=SURFACE, linewidth=1.5, zorder=3)
-    labels = {"v1": (0, -13), "v4": (0, -13), "v5": (0, 8), "v12": (-4, -14), "v13": (0, 8),
-              "v14": (0, -14)}
-    for i, (v, s) in enumerate(zip(df["version"], df["public_score"])):
-        if v in labels:
-            dx, dy = labels[v]
-            ax.annotate(f"{s:.5f}", (i, s), xytext=(dx, dy), textcoords="offset points", ha="center",
-                        fontsize=7.6 * scale, color=INK if v in ("v12", "v13") else INK2,
-                        fontweight="bold" if v == "v13" else "normal")
-    ax.set_xticks(list(x), [f"{v}\n{STEP_TAGS.get(v, '')}" for v in df["version"]], fontsize=7.2 * scale)
-    ax.set_ylim(0.118, 0.178)
-    ax.set_xlim(-0.5, len(df) - 0.5)
-    ax.grid(axis="x", visible=False)
-    ax.set_ylabel("Public D² (Tweedie, p = 1.5)")
-    ax.set_title("Week 2 public score of every scored file, in the order made (blue: the two final picks)")
+    ax.hlines(y, d[2023], d[2024], color=AXIS, lw=1.2, zorder=1)
+    ax.scatter(d[2023], y, s=40 * scale, color=BLUE, edgecolor=SURFACE, linewidth=1.5, zorder=3,
+               label="scored on 2023 (fitted on 2021-22)")
+    ax.scatter(d[2024], y, s=36 * scale, marker="D", color=ORANGE, edgecolor=SURFACE, linewidth=1.5, zorder=3,
+               label="scored on 2024 (fitted on 2021-23)")
+    ax.set_yticks(y, [label for _, label in WEEK1_MODELS])
+    ax.grid(axis="y", visible=False)
+    ax.set_xlabel("Back-test D², all lines (0 = predicting the average for everyone)")
+    ax.set_title("Week 1: every model scored on a year it had not seen")
+    fig.legend(loc="outside lower center", ncols=2, handletextpad=0.3, columnspacing=2.0)
+    return fig
+
+
+def fig_week2_transfer(size=(6.6, 2.2), scale: float = 1.0):
+    """The three Week 2 approaches on the forward test, per line."""
+    use_style(scale)
+    d = week2_transfer()
+    y = list(range(len(d)))[::-1]
+    fig, ax = plt.subplots(figsize=size, layout="constrained")
+    for (key, label, color, marker), dy in zip(WEEK2_APPROACHES, (0.2, 0.0, -0.2)):   # dodge close values
+        ax.scatter(d[key], [v + dy for v in y], s=40 * scale, marker=marker, color=color, edgecolor=SURFACE,
+                   linewidth=1.5, zorder=3, label=label)
+    ax.set_yticks(y, [label for _, label in WEEK2_LINES])
+    ax.grid(axis="y", visible=False)
+    ax.set_xlim(0, None)
+    ax.set_ylim(-0.6, len(y) - 0.4)
+    ax.set_xlabel("Forward-test D²: fitted on 2023, scored on 2024")
+    ax.set_title("Week 2: the developed-market prior against two years of local data")
+    fig.legend(loc="outside lower center", ncols=3, handletextpad=0.3, columnspacing=1.6)
     return fig
 
 
@@ -166,6 +191,14 @@ def table_register() -> pd.DataFrame:
     })
 
 
+def table_week2_transfer() -> pd.DataFrame:
+    d = week2_transfer()
+    out = pd.DataFrame({"Line": [label for _, label in WEEK2_LINES]})
+    for key, label, *_ in WEEK2_APPROACHES:
+        out[label] = d[key].map("{:.4f}".format).to_numpy()
+    return out
+
+
 def table_levels() -> pd.DataFrame:
     lv = segment_levels()
     return pd.DataFrame({
@@ -182,10 +215,13 @@ def markdown(df: pd.DataFrame) -> str:
     return df.to_markdown(index=False, disable_numparse=True)
 
 
-if __name__ == "__main__":  # quick preview: python final/src/final_figures.py
-    out = FINAL / "src" / "_preview"
-    out.mkdir(exist_ok=True)
-    fig_journey().savefig(out / "journey.png", dpi=200)
+if __name__ == "__main__":  # quick preview: python final/src/final_figures.py <folder>
+    import sys
+    out = Path(sys.argv[1]) if len(sys.argv) > 1 else FINAL / "reproduced"
+    out.mkdir(parents=True, exist_ok=True)
+    fig_week1_models().savefig(out / "week1_models.png", dpi=200)
+    fig_week2_transfer().savefig(out / "week2_transfer.png", dpi=200)
     fig_levels().savefig(out / "levels.png", dpi=200)
-    print(markdown(table_levels()))
+    print(week1_backtests().round(4))
+    print(markdown(table_week2_transfer()))
     print(f"previews in {out}")
