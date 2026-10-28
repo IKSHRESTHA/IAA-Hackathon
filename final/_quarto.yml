@@ -1,0 +1,11 @@
+project:
+  type: default
+  execute-dir: project          # code chunks run from final/, so `src/` is importable
+  render:
+    - 2_writeup/writeup.qmd
+
+jupyter: python3
+
+execute:
+  echo: false
+  warning: false
