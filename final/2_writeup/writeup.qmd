@@ -297,6 +297,6 @@ print(ff.markdown(ff.table_levels()))
 ```
 
 **C. Files and how to reproduce.** The two prediction files, their checksums and sources are in
-`final/1_predictions/manifest.csv`. The code is at {{< var repo >}} (map in `final/4_code/README.md`).
+`final/1_predictions/manifest.csv`. The code is at {{< var repo >}} (map in `final/README.md`).
 `python final/build_final.py` copies and checks the prediction files, writes a code snapshot from
 git, and re-renders this document.
