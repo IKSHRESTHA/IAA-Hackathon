@@ -196,6 +196,27 @@ sign-off for material level or fairness changes. Monitoring should continue afte
 with feature drift, prediction drift, delayed realized-loss D², data-quality rates, calibration,
 segment performance and operational failures.
 
+# Model diagnostics
+
+`final/diagnostics.py` checks the final models for sense and calibration. Each model it refits
+matches what the pipeline stored (within 2e-15), and the SHAP values add up to the predictions.
+
+![Out-of-time predictions in ten bands of predicted cost, each band's cost per year on cover relative to the average.](../3_diagnostics/lift.png){#fig-lift width=68%}
+
+Sorted into ten bands of predicted cost (@fig-lift), Week 1's ensemble keeps actual over expected
+between 0.87 and 1.04 in every band of its 2024 back-test, and its top band costs 23 times the
+bottom one. Week 2's ensemble also ranks well (18 times on the 2024 forward test), but claims there
+came in 14% below its prediction, mostly in buildings after the 2023 fire-cost spike. Out of fold,
+motor new-business men came in at 1.34 times the model, the same direction as the gender levels read
+from the leaderboard.
+
+SHAP values [@lundberg2017; @lundberg2020], from LightGBM's exact TreeSHAP, give drivers that make
+actuarial sense (appendix F). In Week 1 and in the developed prior, more no-claims years, a higher
+voluntary excess and an older car lower motor cost, while higher mileage and prior claims raise it;
+sums insured, flood zone, elevation and property age drive the home lines. On top of the prior, the
+Week 2 model's largest correction is gender, and it softens the no-claims discount. The GLM's
+relativities stay close to the prior, as its strong ridge intends (motor men against women 1.12).
+
 # Major decisions
 
 | Decision | Rejected | Evidence |
@@ -229,9 +250,8 @@ done by hand: I chose which past results the agent saw, where Memento learns tha
 the agent from starting over or repeating dead ends between sessions.
 
 Two project skills in the repository (`.claude/skills/data-scientist` and `ml-engineer`) set how the
-agent works: frame the problem first, test out of time, distrust its own gains, preserve the
-training and serving feature path, validate failure modes and keep the code reproducible and under
-version control.
+agent works: frame the problem first, test out of time, distrust its own gains, and keep the code
+reproducible and under version control.
 
 I did not accept a result from the same run that produced it. Each idea was questioned on its own,
 so the agent had to check its own work, and this caught real problems. Factor searches looked strong
@@ -251,7 +271,6 @@ Nothing went into the pipeline or a candidate file until I had reviewed the plan
   models can learn.
 * The public leaderboard rows are a random sample of 2025, about 30%. The order of v12 and v13 holds
   for any share from 20% to 50%.
-* Gender is a permitted rating factor in the emerging market, as the case study states.
 
 # Limitations
 
@@ -280,10 +299,9 @@ Nothing went into the pipeline or a candidate file until I had reviewed the plan
   shift above 15% against history goes to actuarial sign-off.
 * Probe columns, permutation tests and the public-noise model are all there to stop me fitting
   noise, including apparent gains that an AI agent reports with confidence.
-* Every step is a script under git, and `final/pipeline.py` runs them in order. From the
-  intermediate results in the repository it rebuilds the Week 2 file byte for byte and the Week 1
-  file to a relative difference of 3e-15, in about a minute. A full rerun from the raw Week 2 data
-  on a fresh clone rebuilt the Week 2 file to within 9e-7.
+* Every step is a script under git, and `final/pipeline.py` runs them in order. From the stored
+  intermediate results it rebuilds the Week 2 file byte for byte and the Week 1 file to 3e-15, and
+  full reruns from the raw data on a fresh clone matched both files (9e-7 and 3e-12).
 
 {{< pagebreak >}}
 
@@ -351,4 +369,13 @@ ff.fig_week1_models(size=(6.6, 2.5));
 #| fig-height: 2.2
 ff.fig_week2_transfer(size=(6.6, 2.2));
 ```
+
+**F. Diagnostics** (from `final/3_diagnostics/`, written by `final/diagnostics.py`; mean absolute SHAP
+value per feature on the 2025 rows, on the log scale, so 0.1 means about 10% of expected cost).
+
+![Week 1 total-cost GBM expert.](../3_diagnostics/shap_week1.png){width=100%}
+
+![Week 2 developed-market prior.](../3_diagnostics/shap_prior.png){width=100%}
+
+![Week 2 LightGBM on top of the prior.](../3_diagnostics/shap_transfer.png){width=100%}
 

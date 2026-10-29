@@ -112,6 +112,31 @@ before this work (0.16529) and its back-test predictions came from my earlier re
 (`iaa-pricing-part2`) and sit in `2nd round/data/reference/`; v5 takes its segment totals from
 that file.
 
+## Model diagnostics
+
+```bash
+python final/diagnostics.py                  # about 25 minutes the first time, a few minutes after
+python final/diagnostics.py --parts lift glm # only some parts: lift, shap, glm, week1
+```
+
+It writes `final/3_diagnostics/`: `report.md`, the tables behind it and the charts. Each model it
+refits is checked against what the pipeline stored, and all of them match: the Week 2 prior exactly,
+the GLMs to 2e-15, and the Week 1 total-cost expert to 7e-16. The Week 1 code kept its experts'
+predictions but not their trees, so the script refits that expert with the Week 1 code's own
+functions and saves the trees in `3_diagnostics/week1_models/` (not kept in git) for later runs.
+
+* Calibration and lift. Out-of-time predictions in ten bands of predicted cost. Week 1's ensemble
+  keeps actual over expected between 0.87 and 1.04 in every band of its 2024 back-test, and its top
+  band costs 23 times the bottom one. Week 2's ensemble ranks well (18 times on the 2024 forward
+  test), but claims there came in 14% below its prediction, mostly in buildings.
+* A/E by segment, Week 2. Out of fold, motor new-business men came in at 1.34 times the model, the
+  same direction as the gender levels read from the leaderboard.
+* SHAP, from LightGBM's exact TreeSHAP, for the Week 1 total-cost expert, the Week 2 developed prior
+  and the Week 2 model on top of it. The drivers make actuarial sense: more no-claims years and a
+  higher excess lower motor cost, mileage and prior claims raise it, and sums insured, flood zone,
+  elevation and property age drive the home lines. The Week 2 model's largest correction is gender.
+* GLM relativities, Week 2: every factor level with the exposure behind it.
+
 ## Why these two files
 
 For Week 1 I used `submission_week1_v4_geo6.csv`, the geometric mean of six experts recalibrated
@@ -161,5 +186,7 @@ final/
   _quarto.yml, _variables.yml, src/final_figures.py   the write-up's settings and figures
   1_predictions/    the two submitted files and manifest.csv
   2_writeup/        writeup.qmd and writeup.pdf
+  diagnostics.py    calibration, lift, SHAP and GLM relativities of the final models
+  3_diagnostics/    what diagnostics.py and the governance scripts write
   reproduced/       written by pipeline.py, not kept in git
 ```
