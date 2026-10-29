@@ -33,7 +33,7 @@ import final_figures as ff
 | | Week 1: developed market | Week 2: emerging market |
 |:-------|:----------------|:----------------|
 | Data | 2021-24, 163,150 claims; 626,639 rows to price | 2023-24, 9,258 claims; 209,063 rows to price |
-| Submitted file | geometric mean of six experts, recalibrated per line | v13: tested ensemble ranking, segment levels set for the 2025 mix |
+| Main competition candidate | geometric mean of six experts, recalibrated per line | v13: tested ensemble ranking, segment levels set for the 2025 mix |
 | Public / private D² | 0.12851 / **0.13830** | **0.17172** / pending (v12, public 0.17095, also selected) |
 
 Both weeks ask for the expected 2025 claim cost of every policy, scored by the Tweedie deviance D²
@@ -82,6 +82,13 @@ Rules drop leakage, governance columns and constants first. The probe pass mark 
 The features that survived make actuarial sense: a claim last year multiplies next year's frequency
 by 1.7 to 2.1 in the developed market.
 
+The same principle was used after the competition files had been built. I first froze the existing
+files and recorded their hashes, row counts, prediction ranges, package versions and Git state in a
+baseline manifest. I then ran an automated as-of audit: claim dates, policy dates, duplicate claim
+and policy-row identifiers, target columns in test data, completeness values and selected claims
+history were checked independently of model training. The audit passed, and the original files were
+reproduced before any new candidate was allowed to overwrite nothing.
+
 ## Week 1: six experts and a geometric mean
 
 For each line I trained six experts on three fit sets (to price 2023, 2024 and 2025): a Tweedie GBM
@@ -95,9 +102,9 @@ mean rate.
 ```{python}
 #| label: fig-week1
 #| fig-cap: "Week 1 back-tests, all lines pooled. The ensemble is best in both years; the recalibration was fitted on one year and scored on the other."
-#| fig-width: 6.6
-#| fig-height: 2.5
-ff.fig_week1_models(size=(6.6, 2.5));
+#| fig-width: 5.8
+#| fig-height: 1.8
+ff.fig_week1_models(size=(5.8, 1.8));
 ```
 
 The ranking held across both years (@fig-week1). The frequency × claim-size experts beat the
@@ -105,7 +112,7 @@ single LightGBM in every line and year, and the geometric mean beat each expert:
 against the baseline's 0.1364 and 0.1338. The recalibration ($b_1$ = 1.04, 1.10 and 1.09 for motor,
 buildings and contents), fitted on one year and scored on the other, kept or slightly raised the score. A seventh
 expert gave the same private score, so I kept the simpler file. The figure comes from the rebuilt
-pipeline. The submitted file came from the 22 October code, which reported 0.1380 and 0.1367, and
+pipeline. The original competition candidate came from the 22 October code, which reported 0.1380 and 0.1367, and
 its 2025 predictions have a log correlation of 0.996 to 0.998 with the rebuild.
 
 # Adaptation to the new market
@@ -128,9 +135,9 @@ on top of the prior it reached 0.075, and all lines together went from 0.103 to 
 ```{python}
 #| label: fig-week2
 #| fig-cap: "Week 2 forward test (fit on 2023, score 2024). The values are in appendix C."
-#| fig-width: 6.6
-#| fig-height: 2.2
-ff.fig_week2_transfer(size=(6.6, 2.2));
+#| fig-width: 5.8
+#| fig-height: 1.6
+ff.fig_week2_transfer(size=(5.8, 1.6));
 ```
 
 **Keep the local models simple.** Cross-validation chose one-split trees for motor and contents and
@@ -157,9 +164,103 @@ rows reweighted to the 2025 mix ranks better (within-segment D² 0.1067 against 
 levels, the public score was the only evidence about 2025, which is its second job. Because it covers just part of 2025, I
 modelled its sampling noise (8% to 24% per segment) and built two files: v12 aims at the rows not yet
 scored and pulls noisy segments back, and v13 aims at the public rows (appendix B). v12 scored
-0.17095 and v13 0.17172. I selected both, and v13 is the file submitted here. Ranking-only changes
+0.17095 and v13 0.17172. I retained both as candidate files, with v13 as the public-score candidate. Ranking-only changes
 moved the public score less than its noise (v14, 0.0006 below v12 against noise of 0.0008), so every
 ranking decision stayed with cross-validation.
+
+# Model governance and iterative development
+
+The project used a controlled sequence of model candidates. Each candidate was saved separately so
+that model-governance improvements could be tested without destroying earlier results. This made it
+possible to compare a leaderboard-oriented candidate with alternatives built using stricter
+modeling and governance principles.
+
+## Best-practice candidate
+
+The first governed candidate started from the validated transfer ensemble rather than from the
+public leaderboard. It removed the explicit gender relativity for motor and contents, did not read
+public segment levels, and preserved the validated line-level portfolio totals. The resulting file
+(`week2_part2_best_practice_no_gender.csv`) was checked for 209,063 rows, sample order, unique ids,
+finite values and strictly positive predictions. It was intentionally kept separate from v13.
+
+This was a controlled governance experiment, not a claim that gender can never be used. The case
+study permits it, but removing it is a defensible fairness and proxy-risk choice until a formal
+fairness analysis has measured whether it is justified. The feature-governance report also flags
+the remaining `dq_` feature limitation: removing a feature from a final adjustment is not the same
+as fully retraining every expert without it.
+
+## Four-model experiment
+
+The next candidate tested four model families across motor, buildings and contents:
+
+1. the stored transfer GBM expert;
+2. the stored transfer GLM expert;
+3. a spline-based Tweedie generalized additive model;
+4. a weighted random-forest regressor.
+
+The GBM and GLM inherit the developed-market transfer priors described above. The new GAM and
+random forest were deliberately tested as independent emerging-market challengers rather than
+being given an unverified prior. Each line used the 2023-to-2024 forward split. The GAM used a
+Tweedie log-link model with spline transformations and tested three regularization strengths. The
+random forest used fixed, documented seed and tree controls. Predictions were combined in log space,
+with non-negative weights summing to one, and the weights were selected using only forward
+validation and the competition Tweedie D² metric.
+
+The first implementation exposed two real engineering errors: nullable pandas values were being
+passed into scikit-learn, and converting the entire feature matrix to object before type detection
+made every feature appear categorical. A further metric review found that the new models were being
+compared on an inconsistent reported-versus-ultimate cost basis and that log-MSE did not match the
+competition objective. These issues were corrected, the run was repeated, and the corrected
+diagnostic report replaced the earlier one. This is why code review, reproducibility and rerunning
+after a plausible result are essential in AI-assisted modeling.
+
+The corrected forward D² results were:
+
+| Line | Transfer GBM | Transfer GLM | Spline GAM | Random forest | Selected blend |
+|:-----|-------------:|-------------:|------------:|--------------:|----------------:|
+| Motor | 0.0855 | 0.0855 | 0.0742 | 0.0586 | **0.0867** |
+| Buildings | 0.0708 | 0.0718 | 0.0488 | -0.0160 | **0.1097** |
+| Contents | 0.0981 | 0.0973 | 0.0745 | 0.0466 | **0.0999** |
+
+The validation-selected weights were GBM/GLM only: motor 60/40, buildings 10/90 and contents
+60/40. GAM and random forest received zero weight because forcing all four models into a blend
+would have reduced forward validation performance. The file `2nd round/submissions/v16_four_model_ensemble.csv` is therefore the strongest
+non-leaderboard-controlled candidate supported by the available forward evidence, not a claim that
+model diversity is valuable regardless of evidence. Its metadata, component scores and weights are
+in `final/3_diagnostics/four_model_ensemble.json`.
+
+The candidate passed structural checks: 209,063 rows, exact sample order, unique row ids, finite
+predictions and strictly positive predictions. Its SHA-256 checksum is
+`8f0bfd374b6bf9a7462068ad6b0fc4af0934f6b8444a993d3cd2d6ea2a950bf4`. No public leaderboard score,
+public segment level, gender adjustment or post-hoc leaderboard calibration was used.
+
+## Governance, monitoring and human intervention
+
+The workflow treats the AI agent as an implementation and review assistant, not as the decision
+maker. Human intervention occurred at every consequential gate:
+
+* deciding the target, valuation date, fairness posture and whether a leaderboard input was allowed;
+* approving the ordered plan before implementation;
+* reviewing the baseline and leakage results;
+* challenging implausible metrics and requiring the reported-cost/Tweedie-D² correction;
+* deciding that weaker GAM and random-forest candidates must receive zero weight;
+* keeping v13, the no-gender candidate and v16 as separate reversible artifacts;
+* reviewing checksums, row order, positivity, reproducibility and documentation before use.
+
+The governance outputs include a baseline manifest, leakage audit, feature-governance report,
+tail-sensitivity analysis, validation summary, population-drift report, bootstrap uncertainty
+report and four-model validation metadata. The intended production-style controls are: fail closed
+on schema or target leakage, require one prediction per sample id, block non-finite or non-positive
+prices, inspect A/E and drift thresholds, retain the previous artifact for rollback, and require
+actuarial sign-off for material level or fairness changes. Monitoring should continue after the
+competition with feature drift, prediction drift, delayed realized-loss D², data-quality rates,
+calibration, segment performance and operational failures.
+
+The evidence is deliberately asymmetric: all structural and local-validation checks passed, but
+there is no private 2025 score yet for v16. The latest candidate is therefore the strongest
+non-leaderboard-controlled candidate supported by the available forward evidence, not a guaranteed
+winner on unseen data. The final choice should compare it with v12, v13 and the no-gender
+candidate before external submission.
 
 # Major decisions
 
@@ -170,14 +271,17 @@ ranking decision stayed with cross-validation.
 | Geometric mean of experts, recalibrated per line | one LightGBM | +0.0022 (2023) and +0.0037 (2024) back-test D² |
 | Developed-market prior in the offset | Week 2-only models | +0.025 forward D² |
 | Simple local models, members per line by cross-validation | all six experts, fitted slope | contents: all six 0.1071 against `total` alone 0.1087 |
+| Keep four-model challengers only if they improve Tweedie D² | forcing GAM and random forest into every blend | GAM/RF underperformed on every line and received zero weight |
+| Freeze and separately version governed candidates | overwriting the public-score submission | v13, no-gender and v16 remain independently reproducible |
 | Ranking from tests, segment levels from 2025 evidence | trusting the back-test's levels | v4 0.16198 against v5 0.16529 |
 | Aim at unseen rows as well as the public sample | chasing the public score alone | public noise 8% to 24% per segment |
 
 # Use of AI
 
-I worked alone, with an AI coding agent (Claude Code in VS Code) at every step. It wrote and ran most
-of the code and drafted this write-up. I set the questions, checked the evidence and decided what
-was built.
+I worked alone, with an AI coding agent in VS Code at every step. It wrote and ran most of the code
+and drafted parts of this write-up. I set the questions, checked the evidence and decided what was
+built. AI assistance accelerated implementation, search, test construction and documentation; it
+did not replace actuarial judgment or approval.
 
 Most of the work was a long run of prompts, each asking the agent to try one idea and test it: the
 developed-market prior, the expert ensembles, the member search, the permutation test. An idea
@@ -192,8 +296,9 @@ done by hand: I chose which past results the agent saw, where Memento learns tha
 the agent from starting over or repeating dead ends between sessions.
 
 Two project skills in the repository (`.claude/skills/data-scientist` and `ml-engineer`) set how the
-agent works: frame the problem first, test out of time, distrust its own gains, and keep the code
-reproducible and under version control.
+agent works: frame the problem first, test out of time, distrust its own gains, preserve the
+training and serving feature path, validate failure modes and keep the code reproducible and under
+version control.
 
 I did not accept a result from the same run that produced it. Each idea was questioned on its own,
 so the agent had to check its own work, and this caught real problems. Factor searches looked strong
@@ -201,7 +306,10 @@ when the same two years both chose and scored the factors; the permutation test 
 factors pass no more often than shuffled ones (motor 8 of 45 against 7.5 expected by chance), and
 only gender survived. A later review found a sign error in the Week 1 contents frequency trend,
 which is documented, left in the code that reproduces the submitted file, and fixed in the rebuild.
-Nothing went into the pipeline or a submission until I had reviewed the plan and its evidence.
+Nothing went into the pipeline or a candidate file until I had reviewed the plan and its evidence.
+When the first four-model run produced a superficially valid file but suspicious diagnostics, the
+work was not accepted: I reviewed the implementation, corrected the feature typing and metric
+basis, reran the full candidate and only then registered the output.
 
 # Assumptions
 
@@ -223,7 +331,7 @@ Nothing went into the pipeline or a submission until I had reviewed the plan and
   pricing it would mean calibrating on a sample of the book's own outcomes.
 * The Week 2 expert sets were chosen on folds that include 2024, so their forward-test gain is a
   little optimistic.
-* The submitted Week 1 file keeps the contents trend sign error. The per-line recalibration absorbs
+* The original Week 1 candidate keeps the contents trend sign error. The per-line recalibration absorbs
   most of it (the intercept is about +10%), but contents relativities may be slightly off.
 
 # Guardrails
@@ -234,7 +342,7 @@ Nothing went into the pipeline or a submission until I had reviewed the plan and
 * The written premium is excluded, because a model using it would copy the old tariff. So are
   marketing and service fields and personal data such as surname. Gender is used only where
   permitted, and its factor moves price between men and women without changing a line's total.
-* Every model change is tested out of time before its file is submitted. Every file is registered
+* Every model change is tested out of time before its candidate file is accepted. Every file is registered
   as a new numbered version with its evidence, description and checksum, and never overwritten.
 * A file is saved only if it has one row per sample row id, in order, with every prediction finite
   and positive. The Week 1 code adds block and escalate rules: a back-test D² at or below zero
@@ -291,8 +399,27 @@ print(ff.markdown(ff.table_week2_transfer()))
 **D. Files and how to reproduce.** The two prediction files, their checksums and sources are in
 `final/1_predictions/manifest.csv`. The code and data are at {{< var repo >}}.
 `python final/pipeline.py` reruns the last stages of both pipelines from the intermediate results
-in the repository (about a minute) and checks the rebuilt files against the submitted ones;
+in the repository (about a minute) and checks the rebuilt files against the registered baseline files;
 `--full` reruns every stage from the raw competition files. `final/README.md` lists the stages.
+
+**E. Larger model-comparison figures.** The main text uses compact versions to keep the five
+graded pages focused on the method and evidence. These larger versions are provided for clarity.
+
+```{python}
+#| label: fig-week1-large
+#| fig-cap: "Larger version of the Week 1 back-tests."
+#| fig-width: 6.6
+#| fig-height: 2.5
+ff.fig_week1_models(size=(6.6, 2.5));
+```
+
+```{python}
+#| label: fig-week2-large
+#| fig-cap: "Larger version of the Week 2 transfer comparison."
+#| fig-width: 6.6
+#| fig-height: 2.2
+ff.fig_week2_transfer(size=(6.6, 2.2));
+```
 
 **Reference.** Zhou, H. et al. (2025). Memento: Fine-tuning LLM Agents without Fine-tuning LLMs.
 arXiv:2508.16153.
