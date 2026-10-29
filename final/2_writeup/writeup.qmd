@@ -5,8 +5,10 @@ author: "{{< var team-name >}} ({{< var members >}})"
 date: 2026-10-28
 date-format: "D MMMM YYYY"
 number-sections: true
+bibliography: references.bib
 format:
   typst:
+    bibliographystyle: harvard-cite-them-right
     papersize: us-letter
     margin:
       x: 0.75in
@@ -17,10 +19,8 @@ format:
     fig-dpi: 300
     include-in-header:
       - text: |
-          #show table: t => {
-            set par(justify: false)
-            block(breakable: false, t)
-          }
+          #set bibliography(title: [References])
+          #show table: set par(justify: false)
 ---
 
 ```{python}
@@ -36,8 +36,9 @@ import final_figures as ff
 | Main competition candidate | geometric mean of six experts, recalibrated per line | v13: tested ensemble ranking, segment levels set for the 2025 mix |
 | Public / private D² | 0.12851 / **0.13830** | **0.17172** / pending (v12, public 0.17095, also selected) |
 
-Both weeks ask for the expected 2025 claim cost of every policy, scored by the Tweedie deviance D²
-with power 1.5 over all three lines. A D² of 0 is what you get by predicting the average for
+Both weeks of the hackathon [@kaggle2026part1; @kaggle2026part2] ask for the expected 2025 claim
+cost of every policy, scored by the Tweedie deviance D²
+with power 1.5 [@tweedie1984; @smyth2002] over all three lines. A D² of 0 is what you get by predicting the average for
 everyone, so every number below is a gain over that baseline. I ran both weeks the same way: get the
 target right first, test every idea on a year the model has not seen, and keep only what holds up.
 In the new market I started from what the developed market already knew and let the local data
@@ -92,10 +93,12 @@ reproduced before any new candidate was allowed to overwrite nothing.
 ## Week 1: six experts and a geometric mean
 
 For each line I trained six experts on three fit sets (to price 2023, 2024 and 2025): a Tweedie GBM
-on total cost (the single-model baseline), a Tweedie GLM, one GBM per peril, and three
+on total cost (the single-model baseline), a Tweedie GLM
+[@ohlsson2010; @goldburd2020], one GBM per peril, and three
 frequency × claim-size models (Gamma claim size, lognormal claim size with a risk-specific
-variance, and frequency × claim size for each peril). Their predictions are combined row by row
-with an equal-weight geometric mean, then each line is recalibrated with a two-parameter Tweedie
+variance, and frequency × claim size for each peril). All the GBMs are LightGBM models
+[@ke2017lightgbm]. Their predictions are combined row by row
+with an equal-weight geometric mean, a log-linear pool [@genest1986], then each line is recalibrated with a two-parameter Tweedie
 GLM, $\log E = \log(\text{exposure}\cdot L) + b_0 + b_1 \log(\text{geo}/L)$, where $L$ is the line's
 mean rate.
 
@@ -128,7 +131,7 @@ Week 2 differed from Week 1 in most of the ways that matter to a pricing model:
 
 **Start from the developed market.** I fit a LightGBM on every Week 1 row using only the factors that
 mean the same thing in both markets (30 for motor, 24 for buildings, 26 for contents) and put its
-log rate into the offset of the Week 2 models. The local trees then only learn how this market
+log rate into the offset of the Week 2 models [@wuthrich2023]. The local trees then only learn how this market
 differs. @fig-week2 shows why: with two years of data alone, buildings reached a D² of only 0.012;
 on top of the prior it reached 0.075, and all lines together went from 0.103 to 0.128.
 
@@ -147,7 +150,7 @@ combinations per line showed that all six experts together lost to fewer (conten
 Each line keeps its best set, which lifted the forward test from 0.1278 to 0.1300. A fitted
 recalibration slope changed the other year's D² by −0.0035 to +0.0008 with no steady sign, so the
 slope stays at 1. New-business and gender factors are measured on out-of-fold predictions and shrunk
-towards no effect. I dropped the weather of the year, since 2025 lies outside anything seen.
+towards no effect, as in credibility weighting [@buhlmann2005]. I dropped the weather of the year, since 2025 lies outside anything seen.
 
 **Where the model was wrong.** The errors were mostly in levels. In the forward test buildings came
 in at 0.59 of the predicted cost, because 2023 had a fire-cost spike, and new business, which is
@@ -185,7 +188,7 @@ finite values and strictly positive predictions. It was intentionally kept separ
 
 This was a controlled governance experiment, not a claim that gender can never be used. The case
 study permits it, but removing it is a defensible fairness and proxy-risk choice until a formal
-fairness analysis has measured whether it is justified. The feature-governance report also flags
+fairness analysis has measured whether it is justified [@lindholm2022]. The feature-governance report also flags
 the remaining `dq_` feature limitation: removing a feature from a final adjustment is not the same
 as fully retraining every expert without it.
 
@@ -195,8 +198,8 @@ The next candidate tested four model families across motor, buildings and conten
 
 1. the stored transfer GBM expert;
 2. the stored transfer GLM expert;
-3. a spline-based Tweedie generalized additive model;
-4. a weighted random-forest regressor.
+3. a spline-based Tweedie generalized additive model [@wood2017];
+4. a weighted random-forest regressor [@breiman2001; @pedregosa2011].
 
 The GBM and GLM inherit the developed-market transfer priors described above. The new GAM and
 random forest were deliberately tested as independent emerging-market challengers rather than
@@ -248,8 +251,8 @@ maker. Human intervention occurred at every consequential gate:
 * reviewing checksums, row order, positivity, reproducibility and documentation before use.
 
 The governance outputs include a baseline manifest, leakage audit, feature-governance report,
-tail-sensitivity analysis, validation summary, population-drift report, bootstrap uncertainty
-report and four-model validation metadata. The intended production-style controls are: fail closed
+tail-sensitivity analysis, validation summary, population-drift report [@siddiqi2006], bootstrap
+uncertainty report [@efron1993] and four-model validation metadata. The intended production-style controls are: fail closed
 on schema or target leakage, require one prediction per sample id, block non-finite or non-positive
 prices, inspect A/E and drift thresholds, retain the previous artifact for rollback, and require
 actuarial sign-off for material level or fairness changes. Monitoring should continue after the
@@ -278,7 +281,7 @@ candidate before external submission.
 
 # Use of AI
 
-I worked alone, with an AI coding agent in VS Code at every step. It wrote and ran most of the code
+I worked alone, with an AI coding agent, Claude Code [@claudecode], in VS Code at every step. It wrote and ran most of the code
 and drafted parts of this write-up. I set the questions, checked the evidence and decided what was
 built. AI assistance accelerated implementation, search, test construction and documentation; it
 did not replace actuarial judgment or approval.
@@ -291,7 +294,7 @@ The AI model itself never changed during the project; its memory did. `KNOWLEDGE
 idea tried, its test result and why it was kept or dropped, and the submission register does the
 same for every file. Each new task started by giving the agent that record and the question to
 answer, and each finished test was written back. This loop of trying, testing, writing it down and
-reusing it is the basic idea behind memory-based agent methods such as Memento (Zhou et al., 2025),
+reusing it is the basic idea behind memory-based agent methods such as Memento [@zhou2025memento],
 done by hand: I chose which past results the agent saw, where Memento learns that choice. It kept
 the agent from starting over or repeating dead ends between sessions.
 
@@ -302,7 +305,7 @@ version control.
 
 I did not accept a result from the same run that produced it. Each idea was questioned on its own,
 so the agent had to check its own work, and this caught real problems. Factor searches looked strong
-when the same two years both chose and scored the factors; the permutation test then showed real
+when the same two years both chose and scored the factors; the permutation test [@good2005] then showed real
 factors pass no more often than shuffled ones (motor 8 of 45 against 7.5 expected by chance), and
 only gender survived. A later review found a sign error in the Week 1 contents frequency trend,
 which is documented, left in the code that reproduces the submitted file, and fixed in the rebuild.
@@ -401,6 +404,7 @@ print(ff.markdown(ff.table_week2_transfer()))
 `python final/pipeline.py` reruns the last stages of both pipelines from the intermediate results
 in the repository (about a minute) and checks the rebuilt files against the registered baseline files;
 `--full` reruns every stage from the raw competition files. `final/README.md` lists the stages.
+The GLMs are fitted with glum [@glum] and this document is built with Quarto [@quarto].
 
 **E. Larger model-comparison figures.** The main text uses compact versions to keep the five
 graded pages focused on the method and evidence. These larger versions are provided for clarity.
@@ -421,5 +425,3 @@ ff.fig_week1_models(size=(6.6, 2.5));
 ff.fig_week2_transfer(size=(6.6, 2.2));
 ```
 
-**Reference.** Zhou, H. et al. (2025). Memento: Fine-tuning LLM Agents without Fine-tuning LLMs.
-arXiv:2508.16153.
