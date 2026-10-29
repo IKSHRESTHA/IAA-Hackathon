@@ -88,7 +88,7 @@ files and recorded their hashes, row counts, prediction ranges, package versions
 baseline manifest. I then ran an automated as-of audit: claim dates, policy dates, duplicate claim
 and policy-row identifiers, target columns in test data, completeness values and selected claims
 history were checked independently of model training. The audit passed, and the original files were
-reproduced before any new candidate was allowed to overwrite nothing.
+reproduced before any new work began.
 
 ## Week 1: six experts and a geometric mean
 
@@ -171,73 +171,7 @@ scored and pulls noisy segments back, and v13 aims at the public rows (appendix 
 moved the public score less than its noise (v14, 0.0006 below v12 against noise of 0.0008), so every
 ranking decision stayed with cross-validation.
 
-# Model governance and iterative development
-
-The project used a controlled sequence of model candidates. Each candidate was saved separately so
-that model-governance improvements could be tested without destroying earlier results. This made it
-possible to compare a leaderboard-oriented candidate with alternatives built using stricter
-modeling and governance principles.
-
-## Best-practice candidate
-
-The first governed candidate started from the validated transfer ensemble rather than from the
-public leaderboard. It removed the explicit gender relativity for motor and contents, did not read
-public segment levels, and preserved the validated line-level portfolio totals. The resulting file
-(`week2_part2_best_practice_no_gender.csv`) was checked for 209,063 rows, sample order, unique ids,
-finite values and strictly positive predictions. It was intentionally kept separate from v13.
-
-This was a controlled governance experiment, not a claim that gender can never be used. The case
-study permits it, but removing it is a defensible fairness and proxy-risk choice until a formal
-fairness analysis has measured whether it is justified [@lindholm2022]. The feature-governance report also flags
-the remaining `dq_` feature limitation: removing a feature from a final adjustment is not the same
-as fully retraining every expert without it.
-
-## Four-model experiment
-
-The next candidate tested four model families across motor, buildings and contents:
-
-1. the stored transfer GBM expert;
-2. the stored transfer GLM expert;
-3. a spline-based Tweedie generalized additive model [@wood2017];
-4. a weighted random-forest regressor [@breiman2001; @pedregosa2011].
-
-The GBM and GLM inherit the developed-market transfer priors described above. The new GAM and
-random forest were deliberately tested as independent emerging-market challengers rather than
-being given an unverified prior. Each line used the 2023-to-2024 forward split. The GAM used a
-Tweedie log-link model with spline transformations and tested three regularization strengths. The
-random forest used fixed, documented seed and tree controls. Predictions were combined in log space,
-with non-negative weights summing to one, and the weights were selected using only forward
-validation and the competition Tweedie D² metric.
-
-The first implementation exposed two real engineering errors: nullable pandas values were being
-passed into scikit-learn, and converting the entire feature matrix to object before type detection
-made every feature appear categorical. A further metric review found that the new models were being
-compared on an inconsistent reported-versus-ultimate cost basis and that log-MSE did not match the
-competition objective. These issues were corrected, the run was repeated, and the corrected
-diagnostic report replaced the earlier one. This is why code review, reproducibility and rerunning
-after a plausible result are essential in AI-assisted modeling.
-
-The corrected forward D² results were:
-
-| Line | Transfer GBM | Transfer GLM | Spline GAM | Random forest | Selected blend |
-|:-----|-------------:|-------------:|------------:|--------------:|----------------:|
-| Motor | 0.0855 | 0.0855 | 0.0742 | 0.0586 | **0.0867** |
-| Buildings | 0.0708 | 0.0718 | 0.0488 | -0.0160 | **0.1097** |
-| Contents | 0.0981 | 0.0973 | 0.0745 | 0.0466 | **0.0999** |
-
-The validation-selected weights were GBM/GLM only: motor 60/40, buildings 10/90 and contents
-60/40. GAM and random forest received zero weight because forcing all four models into a blend
-would have reduced forward validation performance. The file `2nd round/submissions/v16_four_model_ensemble.csv` is therefore the strongest
-non-leaderboard-controlled candidate supported by the available forward evidence, not a claim that
-model diversity is valuable regardless of evidence. Its metadata, component scores and weights are
-in `final/3_diagnostics/four_model_ensemble.json`.
-
-The candidate passed structural checks: 209,063 rows, exact sample order, unique row ids, finite
-predictions and strictly positive predictions. Its SHA-256 checksum is
-`8f0bfd374b6bf9a7462068ad6b0fc4af0934f6b8444a993d3cd2d6ea2a950bf4`. No public leaderboard score,
-public segment level, gender adjustment or post-hoc leaderboard calibration was used.
-
-## Governance, monitoring and human intervention
+# Model governance and monitoring
 
 The workflow treats the AI agent as an implementation and review assistant, not as the decision
 maker. Human intervention occurred at every consequential gate:
@@ -245,25 +179,22 @@ maker. Human intervention occurred at every consequential gate:
 * deciding the target, valuation date, fairness posture and whether a leaderboard input was allowed;
 * approving the ordered plan before implementation;
 * reviewing the baseline and leakage results;
-* challenging implausible metrics and requiring the reported-cost/Tweedie-D² correction;
-* deciding that weaker GAM and random-forest candidates must receive zero weight;
-* keeping v13, the no-gender candidate and v16 as separate reversible artifacts;
+* challenging implausible metrics before any result was accepted;
+* keeping every candidate as a separate, numbered version, so each change can be reversed;
 * reviewing checksums, row order, positivity, reproducibility and documentation before use.
 
-The governance outputs include a baseline manifest, leakage audit, feature-governance report,
-tail-sensitivity analysis, validation summary, population-drift report [@siddiqi2006], bootstrap
-uncertainty report [@efron1993] and four-model validation metadata. The intended production-style controls are: fail closed
-on schema or target leakage, require one prediction per sample id, block non-finite or non-positive
-prices, inspect A/E and drift thresholds, retain the previous artifact for rollback, and require
-actuarial sign-off for material level or fairness changes. Monitoring should continue after the
-competition with feature drift, prediction drift, delayed realized-loss D², data-quality rates,
-calibration, segment performance and operational failures.
+Gender is used because the case study permits it as a rating factor. A discrimination-free variant
+[@lindholm2022] tested in earlier work cost 0.0027 on the public score, so this is a pricing-accuracy
+choice that a regulator could revisit.
 
-The evidence is deliberately asymmetric: all structural and local-validation checks passed, but
-there is no private 2025 score yet for v16. The latest candidate is therefore the strongest
-non-leaderboard-controlled candidate supported by the available forward evidence, not a guaranteed
-winner on unseen data. The final choice should compare it with v12, v13 and the no-gender
-candidate before external submission.
+The governance outputs include a baseline manifest, leakage audit, feature-governance report,
+tail-sensitivity analysis, validation summary, population-drift report [@siddiqi2006] and bootstrap
+uncertainty report [@efron1993]. The intended production-style controls are: fail closed on schema
+or target leakage, require one prediction per sample id, block non-finite or non-positive prices,
+inspect A/E and drift thresholds, retain the previous artifact for rollback, and require actuarial
+sign-off for material level or fairness changes. Monitoring should continue after the competition
+with feature drift, prediction drift, delayed realized-loss D², data-quality rates, calibration,
+segment performance and operational failures.
 
 # Major decisions
 
@@ -274,8 +205,7 @@ candidate before external submission.
 | Geometric mean of experts, recalibrated per line | one LightGBM | +0.0022 (2023) and +0.0037 (2024) back-test D² |
 | Developed-market prior in the offset | Week 2-only models | +0.025 forward D² |
 | Simple local models, members per line by cross-validation | all six experts, fitted slope | contents: all six 0.1071 against `total` alone 0.1087 |
-| Keep four-model challengers only if they improve Tweedie D² | forcing GAM and random forest into every blend | GAM/RF underperformed on every line and received zero weight |
-| Freeze and separately version governed candidates | overwriting the public-score submission | v13, no-gender and v16 remain independently reproducible |
+| Version every file and never overwrite one | overwriting earlier submissions | 15 Week 2 versions in the register, each with its evidence and checksum |
 | Ranking from tests, segment levels from 2025 evidence | trusting the back-test's levels | v4 0.16198 against v5 0.16529 |
 | Aim at unseen rows as well as the public sample | chasing the public score alone | public noise 8% to 24% per segment |
 
@@ -310,9 +240,6 @@ factors pass no more often than shuffled ones (motor 8 of 45 against 7.5 expecte
 only gender survived. A later review found a sign error in the Week 1 contents frequency trend,
 which is documented, left in the code that reproduces the submitted file, and fixed in the rebuild.
 Nothing went into the pipeline or a candidate file until I had reviewed the plan and its evidence.
-When the first four-model run produced a superficially valid file but suspicious diagnostics, the
-work was not accepted: I reviewed the implementation, corrected the feature typing and metric
-basis, reran the full candidate and only then registered the output.
 
 # Assumptions
 
