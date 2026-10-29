@@ -1,0 +1,64 @@
+{
+  "purpose": "Locked pre-change model baseline",
+  "python": "3.14.2 (tags/v3.14.2:df79316, Dec  5 2025, 17:18:21) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "git_commit": "6a9891e78f7264d008eb70e7e639c73735813647",
+  "git_status": [
+    "AM .gitattributes",
+    " M .gitignore",
+    " M \"1st round/01_data_reading.ipynb\"",
+    " M \"1st round/02_data_cleaning.ipynb\"",
+    " M \"1st round/03_feature_engineering.ipynb\"",
+    " M \"1st round/README.md\"",
+    " M \"2nd round/01_data_reading.ipynb\"",
+    " M \"2nd round/02_data_cleaning.ipynb\"",
+    " M \"2nd round/03_feature_engineering.ipynb\"",
+    " M \"2nd round/11_joint_levels.py\"",
+    " M \"2nd round/README.md\"",
+    " M final/2_writeup/writeup.pdf",
+    " M final/README.md",
+    " M final/pipeline.py",
+    " M submissions.py",
+    "?? final/1_predictions/week2_part2_best_practice_no_gender.csv",
+    "?? final/3_diagnostics/",
+    "?? final/baseline_manifest.py",
+    "?? final/best_practice_model.py",
+    "?? final/diagnostics.py",
+    "?? final/governance_report.py",
+    "?? final/leakage_audit.py"
+  ],
+  "packages": {
+    "numpy": "2.5.3",
+    "pandas": "3.0.5",
+    "lightgbm": "4.7.0",
+    "scikit-learn": "1.9.1",
+    "scipy": "1.18.1",
+    "glum": "3.4.1"
+  },
+  "submissions": {
+    "week1": {
+      "path": "final\\1_predictions\\week1_part1_predictions.csv",
+      "rows": 626639,
+      "sha256": "19f9559c6caff9ad881892bb925450c8a8c45bd0085889a836584711e6b5eac9",
+      "mean_prediction": 328.92533950531316,
+      "checks": {
+        "columns": true,
+        "unique_row_ids": true,
+        "finite_predictions": true,
+        "positive_predictions": true
+      }
+    },
+    "week2": {
+      "path": "final\\1_predictions\\week2_part2_predictions.csv",
+      "rows": 209063,
+      "sha256": "864b10b30575800409632b8db3e7b971c9cc93385b821d8e93d89773b8df982b",
+      "mean_prediction": 418.3732526408064,
+      "checks": {
+        "columns": true,
+        "unique_row_ids": true,
+        "finite_predictions": true,
+        "positive_predictions": true
+      }
+    }
+  }
+}

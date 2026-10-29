@@ -24,7 +24,8 @@ Week 2 (emerging market). Code: 1st round/ and 2nd round/.
 
 Then every rebuilt file is compared with the file that was submitted, the submitted files are
 copied into final/1_predictions/ (checked against the sample submission, listed in manifest.csv),
-and the write-up is rendered. Rebuilt files go to final/reproduced/.
+and the write-up is rendered. Rebuilt files go to final/reproduced/, and final/reproduced/steps/
+keeps the exact bytes each round step produced.
 """
 from __future__ import annotations
 
@@ -32,7 +33,6 @@ import argparse
 import hashlib
 import importlib
 import os
-import re
 import shutil
 import subprocess
 import sys
@@ -47,7 +47,9 @@ REPO = FINAL.parent
 R1, R2 = REPO / "1st round", REPO / "2nd round"
 W1 = R1 / "IAA_Part1_geo_models"            # the code that made the Week 1 file
 REBUILT = FINAL / "reproduced"
-ENV = dict(os.environ, PYTHONHASHSEED="0", PYTHONUTF8="1")   # same bytes on every run
+STEPS = REBUILT / "steps"     # every file the round steps produce in this run, exactly as produced
+ENV = dict(os.environ, PYTHONHASHSEED="0", PYTHONUTF8="1",          # same bytes on every run
+           SUBMISSIONS_EXPORT_DIR=str(STEPS))                       # read by submissions.py
 TOLERANCE = 1e-5          # largest relative difference still counted as the same file (rounding)
 
 WEEK1_DATA = ["addresses", "claims", "customers", "policies_buildings", "policies_contents", "policies_motor",
@@ -78,28 +80,21 @@ SUBMITTED = {
 }
 
 
-def run(script: str, *args: str, cwd: Path) -> str:
-    """Run one pipeline script as a user would, from its own folder; show and return its output."""
+def run(script: str, *args: str, cwd: Path) -> None:
+    """Run one pipeline script as a user would, from its own folder."""
     t0 = time.time()
     print(f"\n>>> {cwd.relative_to(REPO)}: python {script} {' '.join(args)}", flush=True)
-    proc = subprocess.Popen([sys.executable, script, *args], cwd=cwd, env=ENV, text=True, encoding="utf-8",
-                            errors="replace", stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    lines = []
-    for line in proc.stdout:
-        print(line, end="", flush=True)
-        lines.append(line)
-    if proc.wait():
-        raise subprocess.CalledProcessError(proc.returncode, script)
+    subprocess.run([sys.executable, script, *args], cwd=cwd, env=ENV, check=True)
     print(f">>> done in {(time.time() - t0) / 60:.1f} min", flush=True)
-    return "".join(lines)
 
 
-def last_version(output: str) -> str:
-    """The version the last submission step in ``output`` saved, or found identical to one registered."""
-    found = re.findall(r"(?:saved as|identical to) (v\d+)", output)
-    if not found:
-        raise RuntimeError("the step did not report the version it produced")
-    return found[-1]
+def last_saved() -> tuple[str, Path]:
+    """Version and exact copy of the last file a round step produced in this run (see submissions.py)."""
+    log = STEPS / "saved.csv"
+    if not log.exists():
+        raise RuntimeError("no round step has produced a submission file in this run")
+    version, file = log.read_text(encoding="utf-8").splitlines()[-1].split(",")
+    return version, STEPS / file
 
 
 # ------------------------------------------------------------------------------------------ Week 1
@@ -121,27 +116,26 @@ def week1(full: bool) -> Path:
         sys.path[:0] = [str(W1), str(W1 / "src")]
         rb = importlib.import_module("rebuild_from_cache")
         cache = {line: pd.read_parquet(W1 / "cache" / f"experts7_{line}.parquet") for line in rb.LINES}
-        rb.build(rb.MODELS["submission_week1_v4_geo6.csv"], cache).to_csv(out, index=False)
+        rb.build(rb.MODELS["submission_week1_v4_geo6.csv"], cache).to_csv(out, index=False, lineterminator="\n")
     return out
 
 
 # ------------------------------------------------------------------------------------------ Week 2
 
 def week2(full: bool) -> Path:
-    # Each step registers its file as a new version, or reports that it is identical to one already
-    # registered. Step 11 builds on the v5 this run produced (the scored files it reads were made
-    # from the registered v5; a rebuilt v5 that differs only by rounding keeps them in its family).
+    # Step 11 builds on the v5 this run produced. The scored files it reads were made from the
+    # registered v5, and a rebuilt v5 that differs only by rounding keeps them in its family.
     if full:
-        run("run_all.py", "--rounds", "1st round", cwd=REPO)                               # 01-03
-        v5 = last_version(run("run_all.py", "--rounds", "2nd round", "--models", cwd=REPO))   # 01-09
+        run("run_all.py", "--rounds", "1st round", cwd=REPO)                   # data steps 01-03
+        run("run_all.py", "--rounds", "2nd round", "--models", cwd=REPO)       # 01-09
     else:
-        v5 = last_version(run("09_rebase_to_best.py", cwd=R2))
-    v13 = last_version(run("11_joint_levels.py", "make", "--target", "public", "--scores-before", "v12",
-                           "--base", v5, cwd=R2))
+        run("09_rebase_to_best.py", cwd=R2)
+    v5, _ = last_saved()
+    run("11_joint_levels.py", "make", "--target", "public", "--scores-before", "v12", "--base", v5, cwd=R2)
+    v13, produced = last_saved()
     print(f"\nstep 9 produced {v5}; step 11 produced {v13}")
-    reg = pd.read_csv(R2 / "submissions" / "versions.csv", dtype=str).set_index("version")
     out = REBUILT / SUBMITTED["week2"]["file"]
-    shutil.copyfile(R2 / "submissions" / reg.loc[v13, "file"], out)
+    shutil.copyfile(produced, out)                 # the bytes step 11 made, not the registered copy
     return out
 
 
@@ -191,7 +185,7 @@ def package() -> None:
                      **facts, "public_score": d["public_score"], "private_score": d["private_score"],
                      "sha256": sha256(dst), "note": d["note"]})
         print(f"{d['file']}: {facts['rows']:,} rows, checks against the sample submission passed")
-    pd.DataFrame(rows).to_csv(folder / "manifest.csv", index=False)
+    pd.DataFrame(rows).to_csv(folder / "manifest.csv", index=False, lineterminator="\n")
 
 
 def render() -> None:
@@ -210,6 +204,7 @@ def main() -> int:
     ap.add_argument("--no-render", action="store_true", help="skip rendering the write-up")
     a = ap.parse_args()
     REBUILT.mkdir(exist_ok=True)
+    shutil.rmtree(STEPS, ignore_errors=True)
     rebuilt = {}
     if a.week in ("1", "both"):
         rebuilt["week1"] = week1(a.full)
@@ -217,7 +212,7 @@ def main() -> int:
         rebuilt["week2"] = week2(a.full)
     print("\n=== check: rebuilt against submitted")
     checks = [compare(w, p) for w, p in rebuilt.items()]
-    pd.DataFrame(checks).to_csv(REBUILT / "check.csv", index=False)
+    pd.DataFrame(checks).to_csv(REBUILT / "check.csv", index=False, lineterminator="\n")
     print("\n=== package: final/1_predictions")
     package()
     if not a.no_render:

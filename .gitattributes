@@ -1,0 +1,8 @@
+# The submission files are compared byte for byte and the registers hold their checksums, so git
+# must store and check them out exactly as written. Everything else follows git's usual text rules.
+**/submissions/*.csv       -text
+final/1_predictions/*.csv  -text
+*.parquet binary
+*.pdf     binary
+*.png     binary
+*.pptx    binary

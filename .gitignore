@@ -17,3 +17,6 @@ __pycache__/
 2nd round/models/
 1st round/data/experts/
 1st round/submissions/
+
+# Refitted by final/diagnostics.py (about an hour); kept locally so later runs reuse them
+final/3_diagnostics/week1_models/

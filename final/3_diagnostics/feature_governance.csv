@@ -1,0 +1,16 @@
+line,column,decision,reason,risk_class
+motor,dq_exposure_fixed,drop,data-quality flag,data_quality
+motor,dq_ncb_exceeds_licence,keep,adds value,data_quality
+motor,gender,keep,adds value,sensitive
+motor,occupation,keep,adds value,potential_proxy
+motor,marital_status,keep,adds value,potential_proxy
+buildings,dq_exposure_fixed,drop,data-quality flag,data_quality
+buildings,dq_sum_insured_fixed,drop,data-quality flag,data_quality
+buildings,gender,drop,no value,sensitive
+buildings,occupation,drop,no value,potential_proxy
+buildings,marital_status,drop,no value,potential_proxy
+contents,dq_exposure_fixed,drop,data-quality flag,data_quality
+contents,dq_sum_insured_fixed,drop,data-quality flag,data_quality
+contents,gender,drop,no value,sensitive
+contents,occupation,drop,no value,potential_proxy
+contents,marital_status,drop,no value,potential_proxy

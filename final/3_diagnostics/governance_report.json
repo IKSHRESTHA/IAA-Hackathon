@@ -1,0 +1,13 @@
+{
+  "status": "complete",
+  "governance_rows": 15,
+  "tail_rows": 9,
+  "validation_rows": 120,
+  "drift_rows": 5,
+  "reports": [
+    "feature_governance.csv",
+    "tail_sensitivity.csv",
+    "validation_summary.csv",
+    "population_drift.csv"
+  ]
+}

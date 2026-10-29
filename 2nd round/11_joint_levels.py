@@ -51,7 +51,7 @@ from the scores too: the fit is repeated over a grid and the value with the high
                python 11_joint_levels.py make --set motor_m=1.08 motor_f=0.93
                python 11_joint_levels.py make --target public --scores-before v12
                           (rebuilds v13: only the scores known before v12 and v13 were made)
-    evidence:  python 11_joint_levels.py evidence --ref-repo "C:/Users/.../iaa-pricing-part2"
+    evidence:  python 11_joint_levels.py evidence --ref-repo <path to the iaa-pricing-part2 repository>
 
 A ``--set`` key names a segment or a group of segments by its parts: ``motor_new`` is both motor
 new-business segments, ``contents_m`` both contents male segments, ``buildings`` the whole line.

@@ -18,7 +18,8 @@ python 06_geo_ensemble.py          # their geometric mean, recalibrated: submiss
 ```
 
 `03_feature_engineering.py --reuse-tests` reuses the saved test results and takes about 5 minutes
-instead of most of an hour. The notebooks of steps 1 to 3 show the same work with its evidence.
+instead of most of an hour. The notebooks of steps 1 to 3 show the same work with its evidence;
+to rerun one, from this folder: `python -m jupyter nbconvert --to notebook --execute --inplace 01_data_reading.ipynb`.
 Steps 4 to 6 write their files (`submissions/`, `data/experts/`, `models/`) locally; git keeps only
 their reports.
 

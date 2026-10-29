@@ -1,0 +1,21 @@
+check,segment,claims,exposure_share,a_over_e
+"Week 2, forward test 2024","buildings, new business",37,0.02314528725814067,0.4687749367293418
+"Week 2, forward test 2024","buildings, renewals",500,0.2333870530855526,0.6085680480684355
+"Week 2, forward test 2024","contents, new business, men",33,0.014906188316462196,1.1950446811204425
+"Week 2, forward test 2024","contents, new business, women",32,0.013970093227782285,1.5101840386414447
+"Week 2, forward test 2024","contents, renewals, men",210,0.14323911066082282,0.7675292040290381
+"Week 2, forward test 2024","contents, renewals, women",232,0.1449655708890694,1.0294927952693766
+"Week 2, forward test 2024","motor, new business, men",215,0.019492280290361087,0.8726603164888813
+"Week 2, forward test 2024","motor, new business, women",167,0.01932841212790871,1.0266867500936545
+"Week 2, forward test 2024","motor, renewals, men",1759,0.19162273938153687,1.2197236401856473
+"Week 2, forward test 2024","motor, renewals, women",1350,0.1959432647623633,0.9412026155101192
+"Week 2, out of fold 2023-24","buildings, new business",77,0.01978111606725731,0.7510691855854316
+"Week 2, out of fold 2023-24","buildings, renewals",979,0.23671515130120274,0.9183494937144865
+"Week 2, out of fold 2023-24","contents, new business, men",56,0.012301788070533826,1.2298537264878584
+"Week 2, out of fold 2023-24","contents, new business, women",46,0.01210629114661268,1.2120940988207485
+"Week 2, out of fold 2023-24","contents, renewals, men",424,0.1458632387567966,0.8368349224393847
+"Week 2, out of fold 2023-24","contents, renewals, women",472,0.14732127358819644,1.1324897124128306
+"Week 2, out of fold 2023-24","motor, new business, men",379,0.01644683098892112,1.33823632425845
+"Week 2, out of fold 2023-24","motor, new business, women",318,0.016778093115380862,1.125966876315125
+"Week 2, out of fold 2023-24","motor, renewals, men",3564,0.19428445128442967,1.0419517780236631
+"Week 2, out of fold 2023-24","motor, renewals, women",2787,0.19840176568066878,0.9102678611657279

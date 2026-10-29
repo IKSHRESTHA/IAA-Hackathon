@@ -24,6 +24,9 @@ which runs steps 1 to 9):
 | 11 | `11_joint_levels.py` | segment levels read from every public score: v11 to v13 |
 | 12 | `12_final_assembly.py` | ranking changes on v12's levels: v14, v15 |
 
+The notebooks of steps 1 to 3 show the same work with its evidence; to rerun one, from this folder:
+`python -m jupyter nbconvert --to notebook --execute --inplace 01_data_reading.ipynb`.
+
 `11_joint_levels.py make --target public --scores-before v12` rebuilds v13 using only the public
 scores known when it was made. `final/pipeline.py` runs steps 9 and 11 that way and checks the
 result against the submitted file.

@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "checks": [
+    "motor: checked 4 as-of history columns",
+    "buildings: checked 0 as-of history columns",
+    "contents: checked 0 as-of history columns"
+  ]
+}
