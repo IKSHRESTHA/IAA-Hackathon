@@ -110,11 +110,15 @@ def week1(full: bool) -> Path:
         shutil.copyfile(W1 / "outputs" / "submission_week1_v4_geo6.csv", out)
     else:
         # The ensemble stage of rebuild_from_cache.py, written to final/reproduced/ so the committed
-        # outputs/ stay untouched.
+        # outputs/ stay untouched. It runs in this process, so PYTHONHASHSEED (set for subprocesses
+        # in ENV) does not apply; the stage is numerically stable without it.
         print("\n>>> 1st round/IAA_Part1_geo_models: ensemble stage on the cached expert predictions", flush=True)
         sys.dont_write_bytecode = True               # leave no __pycache__ behind in that folder
         sys.path[:0] = [str(W1), str(W1 / "src")]
         rb = importlib.import_module("rebuild_from_cache")
+        missing = [p for p in (W1 / "cache" / f"experts7_{line}.parquet" for line in rb.LINES) if not p.exists()]
+        if missing:
+            raise SystemExit(f"missing {missing[0].relative_to(REPO)}; clone the full repository or run with --full")
         cache = {line: pd.read_parquet(W1 / "cache" / f"experts7_{line}.parquet") for line in rb.LINES}
         rb.build(rb.MODELS["submission_week1_v4_geo6.csv"], cache).to_csv(out, index=False, lineterminator="\n")
     return out

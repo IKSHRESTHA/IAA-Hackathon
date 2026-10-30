@@ -49,9 +49,7 @@ def assert_close(name: str, actual: pd.Series, expected: pd.Series) -> None:
 
 def check_history(line: str, rows: pd.DataFrame, claims: pd.DataFrame) -> list[str]:
     features = read(f"test_{line}", "features")
-    test_rows = rows.loc[rows["line"] == line].loc[
-        rows.loc[rows["line"] == line, "year"].eq(2025)
-    ].copy()
+    test_rows = rows.loc[(rows["line"] == line) & rows["year"].eq(2025)].copy()
     test_rows = test_rows.set_index("row_id").loc[features["row_id"].astype(str)].reset_index()
     ev = claims.loc[
         (claims["match_status"] == "matched")

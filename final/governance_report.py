@@ -57,11 +57,12 @@ def validation_summary() -> pd.DataFrame:
     ]
     output = []
     for path, source in sources:
-        if path.exists():
-            frame = pd.read_csv(path)
-            frame["source"] = source
-            output.append(frame)
-    return pd.concat(output, ignore_index=True) if output else pd.DataFrame()
+        if not path.exists():
+            raise SystemExit(f"missing {path.relative_to(REPO)}; run the 2nd round steps first")
+        frame = pd.read_csv(path)
+        frame["source"] = source
+        output.append(frame)
+    return pd.concat(output, ignore_index=True)
 
 
 def drift_summary() -> pd.DataFrame:

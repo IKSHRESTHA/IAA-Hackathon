@@ -173,16 +173,13 @@ ranking decision stayed with cross-validation.
 
 # Model governance and monitoring
 
-I used the AI agent to implement and review code, and I made the decisions myself. I chose the
-target, the valuation date, the fairness posture and whether a leaderboard input was allowed. I
-approved the plan before the agent implemented it. The checks I can point to are:
-
-* the baseline manifest (`baseline_manifest.json`) and the leakage audit (`leakage_audit.json`),
-  which I reviewed before using any feature set;
-* every candidate kept as a separate, numbered file, so each change can be reversed;
-* SHA-256 checksums, row order and positivity checks for each submitted file, recorded in
-  `1_predictions/manifest.csv`;
-* `pipeline.py`, which rebuilds both submitted files and compares them with the submitted ones.
+I used the AI agent to implement and review code, and I made the decisions: the target, the
+valuation date, the fairness posture, whether a leaderboard input was allowed, and approval of the
+plan before implementation. The checks I can point to are the baseline manifest and leakage audit
+(`baseline_manifest.json`, `leakage_audit.json`), reviewed before any feature set was used; every
+candidate kept as a numbered file so each change can be reversed; checksums, row order and
+positivity checks in `1_predictions/manifest.csv`; and `pipeline.py`, which rebuilds both submitted
+files and compares them with the submitted ones.
 
 Gender is used because the case study permits it as a rating factor. A discrimination-free variant
 [@lindholm2022] tested in earlier work cost 0.0027 on the public score, so this is a pricing-accuracy
@@ -235,24 +232,26 @@ relativities stay close to the prior, as its strong ridge intends (motor men aga
 
 I worked alone, with an AI coding agent, Claude Code [@claudecode], in VS Code at every step. It wrote and ran most of the code
 and drafted parts of this write-up. I set the questions, checked the evidence and decided what was
-built. AI assistance accelerated implementation, search, test construction and documentation; it
-did not replace actuarial judgment or approval.
+built. AI sped up implementation, search, testing and documentation; it did not replace actuarial
+judgment or approval.
 
-Most of the work was a long run of prompts, each asking the agent to try one idea and test it: the
-developed-market prior, the expert ensembles, the member search, the permutation test. An idea
-counted only if it held up in the tests of section 1.2.
+Most of the work was a long run of prompts, each asking the agent to try one idea and test it. An
+idea counted only if it held up in the tests of section 1.2.
 
 The agent kept no memory between sessions, so I gave it one. `KNOWLEDGE.md` records every
 idea tried, its test result and why it was kept or dropped, and the submission register does the
 same for every file. Each new task started by giving the agent that record and the question to
-answer, and each finished test was written back. This loop of trying, testing, writing it down and
-reusing it is the basic idea behind memory-based agent methods such as Memento [@zhou2025memento],
-done by hand: I chose which past results the agent saw, where Memento learns that choice. It kept
-the agent from starting over or repeating dead ends between sessions.
+answer, and each finished test was written back. This is a hand-made version of memory-based
+agent methods such as Memento [@zhou2025memento], and it kept the agent from repeating dead ends.
 
 Two project skills in the repository (`.claude/skills/data-scientist` and `ml-engineer`) set how the
 agent works: frame the problem first, test out of time, distrust its own gains, and keep the code
 reproducible and under version control.
+
+The agent made mistakes I had to catch. It used arbitrary numbers to chase the highest public
+score; I kept only changes backed by tests. It did not identify the data leakage, and despite the
+data-science and ML-engineering skills it did not identify best-practice errors. My own review
+found them, which is why the checks in section 3 exist.
 
 I did not accept a result from the same run that produced it. Each idea was questioned on its own,
 so the agent had to check its own work, and this caught real problems. Factor searches looked strong
@@ -270,8 +269,9 @@ Nothing went into the pipeline or a candidate file until I had reviewed the plan
 * For factors defined the same way in both markets, the developed market's relativities are a
   reasonable starting point; the emerging market differs in level and in a few effects the local
   models can learn.
-* The public leaderboard rows are a random sample of 2025, about 30%. The order of v12 and v13 holds
-  for any share from 20% to 50%.
+* The public leaderboard rows are a random sample of 2025, which I assumed to be about 30%.
+  `11_joint_levels.py` takes the share as an option, so the order of v12 and v13 can be re-checked
+  at other shares.
 
 # Limitations
 

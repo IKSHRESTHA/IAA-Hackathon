@@ -1,6 +1,6 @@
 """Model diagnostics for the two submitted files: where the models are right, and what drives them.
 
-    python final/diagnostics.py          about 5 minutes; writes final/3_diagnostics/
+    python final/diagnostics.py          about 25 minutes the first time; writes final/3_diagnostics/
 
 Calibration and lift, both weeks. Out-of-time predictions are cut into ten bands of equal exposure,
 ordered by predicted cost per year on cover. Each band shows its predicted and actual cost per year

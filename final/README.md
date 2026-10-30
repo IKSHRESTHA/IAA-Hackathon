@@ -21,7 +21,8 @@ downloading anything else.
 ```bash
 git clone https://github.com/IKSHRESTHA/IAA-Hackathon.git
 cd IAA-Hackathon
-python -m pip install -r requirements.txt        # Python 3.13 or 3.14; the clone is about 850 MB
+python -m pip install -r requirements.txt        # tested on Python 3.14, built with 3.13; the clone is about 850 MB
+# Quarto (https://quarto.org) is optional: it renders the write-up, and `--no-render` skips it
 
 python final/pipeline.py                         # quick run, about a minute
 python final/pipeline.py --full --week 2         # from the raw data: about 80 minutes on 8 cores
@@ -33,7 +34,7 @@ The quick run starts from the intermediate results in the repository, runs the l
 pipelines, renders the write-up (Quarto; `--no-render` skips it). The output includes:
 
 ```
-week1: rebuilt file matches the submitted file (same rows True, largest relative difference 3.6e-15 ...)
+week1: rebuilt file matches the submitted file (same rows True, largest relative difference about 3e-15 ...)
 week2: rebuilt file matches the submitted file (same rows True, largest relative difference 0.0e+00 ...)
 ```
 
