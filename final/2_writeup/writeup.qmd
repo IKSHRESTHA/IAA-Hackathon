@@ -243,9 +243,10 @@ same for every file. Each new task started by giving the agent that record and t
 answer, and each finished test was written back. This is a hand-made version of memory-based
 agent methods such as Memento [@zhou2025memento], and it kept the agent from repeating dead ends.
 
-Two project skills in the repository (`.claude/skills/data-scientist` and `ml-engineer`) set how the
-agent works: frame the problem first, test out of time, distrust its own gains, and keep the code
-reproducible and under version control.
+Three project skills in `.claude/skills` set how the agent works. `data-scientist` frames the problem
+first, tests out of time and distrusts the agent's own gains. `ml-engineer` keeps the code
+reproducible and under version control. `karpathy-guidelines` [@karpathy2026guidelines] says to state assumptions,
+keep changes small and set a check for each step.
 
 The agent made mistakes I had to catch. It used arbitrary numbers to chase the highest public
 score; I kept only changes backed by tests. It did not identify the data leakage, and despite the
