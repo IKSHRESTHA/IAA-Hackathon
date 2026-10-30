@@ -115,8 +115,7 @@ single LightGBM in every line and year, and the geometric mean beat each expert:
 against the baseline's 0.1364 and 0.1338. The recalibration ($b_1$ = 1.04, 1.10 and 1.09 for motor,
 buildings and contents), fitted on one year and scored on the other, kept or slightly raised the score. A seventh
 expert gave the same private score, so I kept the simpler file. The figure comes from the rebuilt
-pipeline. The original competition candidate came from the 22 October code, which reported 0.1380 and 0.1367, and
-its 2025 predictions have a log correlation of 0.996 to 0.998 with the rebuild.
+pipeline.
 
 # Adaptation to the new market
 
@@ -319,8 +318,8 @@ print(ff.markdown(ff.table_register()))
 predictions by $c$ changes the deviance by exactly
 $$\Delta D = 4\left[(c^{-1/2}-1)A + (c^{1/2}-1)B\right], \qquad A=\textstyle\sum y\,\mu^{-1/2},\quad B=\sum \mu^{1/2},$$
 so the best level is $c^* = A/B$, and any scored file that differs from another only by segment
-factors measures it. `11_joint_levels.py` fits one model, linear in the ten best levels, to 13
-public scores (all within 0.0001). The public rows are a sample, so a segment's best level on them
+factors measures it. `11_joint_levels.py` fits one model, linear in the ten best levels, to the
+public scores of the files in its family (all within 0.0001). The public rows are a sample, so a segment's best level on them
 is off by $\text{sd} = \sqrt{\phi / (\text{share}\cdot\sum\mu^{1/2})}$, which the model fits as a
 separate term.
 

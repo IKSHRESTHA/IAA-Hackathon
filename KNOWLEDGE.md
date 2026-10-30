@@ -116,7 +116,7 @@ from the earlier repositories this work grew out of.
   4 [(c^-0.5 - 1) A + (c^0.5 - 1) B], with A = sum y mu^-0.5 and B = sum mu^0.5 over its public rows,
   so the best level is A / B. Any scored file that differs from another only by segment factors
   measures it.
-* One model, linear in the ten best levels, fits 13 public scores within 0.0001. Read as factors on
+* One model, linear in the ten best levels, fits the public scores of the files in its family within 0.0001. Read as factors on
   v5, motor new business needs men about x1.37 and women about x0.97. Gender was the lever nobody
   had pushed: in the training data the male effect beyond the prior rose from +0.19 (2023) to +0.28
   (2024).
