@@ -2,7 +2,7 @@
 title: "Pricing a developed and an emerging insurance market"
 subtitle: "IAA AI-Assisted Hackathon 2026: final write-up"
 author: "{{< var team-name >}} ({{< var members >}})"
-date: 2026-10-28
+date: 2026-10-30
 date-format: "D MMMM YYYY"
 number-sections: true
 bibliography: references.bib
@@ -33,7 +33,7 @@ import final_figures as ff
 | | Week 1: developed market | Week 2: emerging market |
 |:-------|:----------------|:----------------|
 | Data | 2021-24, 163,150 claims; 626,639 rows to price | 2023-24, 9,258 claims; 209,063 rows to price |
-| Main competition candidate | geometric mean of six experts, recalibrated per line | v13: tested ensemble ranking, segment levels set for the 2025 mix |
+| Main competition candidate | `submission_week1_v4_geo6`: geometric mean of six experts, recalibrated per line | v13: tested ensemble ranking, segment levels set for the 2025 mix |
 | Public / private D² | 0.12851 / **0.13830** | **0.17172** / pending (v12, public 0.17095, also selected) |
 
 Both weeks of the hackathon [@kaggle2026part1; @kaggle2026part2] ask for the expected 2025 claim
@@ -173,15 +173,16 @@ ranking decision stayed with cross-validation.
 
 # Model governance and monitoring
 
-The workflow treats the AI agent as an implementation and review assistant, not as the decision
-maker. Human intervention occurred at every consequential gate:
+I used the AI agent to implement and review code, and I made the decisions myself. I chose the
+target, the valuation date, the fairness posture and whether a leaderboard input was allowed. I
+approved the plan before the agent implemented it. The checks I can point to are:
 
-* deciding the target, valuation date, fairness posture and whether a leaderboard input was allowed;
-* approving the ordered plan before implementation;
-* reviewing the baseline and leakage results;
-* challenging implausible metrics before any result was accepted;
-* keeping every candidate as a separate, numbered version, so each change can be reversed;
-* reviewing checksums, row order, positivity, reproducibility and documentation before use.
+* the baseline manifest (`baseline_manifest.json`) and the leakage audit (`leakage_audit.json`),
+  which I reviewed before using any feature set;
+* every candidate kept as a separate, numbered file, so each change can be reversed;
+* SHA-256 checksums, row order and positivity checks for each submitted file, recorded in
+  `1_predictions/manifest.csv`;
+* `pipeline.py`, which rebuilds both submitted files and compares them with the submitted ones.
 
 Gender is used because the case study permits it as a rating factor. A discrimination-free variant
 [@lindholm2022] tested in earlier work cost 0.0027 on the public score, so this is a pricing-accuracy
@@ -241,7 +242,7 @@ Most of the work was a long run of prompts, each asking the agent to try one ide
 developed-market prior, the expert ensembles, the member search, the permutation test. An idea
 counted only if it held up in the tests of section 1.2.
 
-The AI model itself never changed during the project; its memory did. `KNOWLEDGE.md` records every
+The agent kept no memory between sessions, so I gave it one. `KNOWLEDGE.md` records every
 idea tried, its test result and why it was kept or dropped, and the submission register does the
 same for every file. Each new task started by giving the agent that record and the question to
 answer, and each finished test was written back. This loop of trying, testing, writing it down and
@@ -275,7 +276,7 @@ Nothing went into the pipeline or a candidate file until I had reviewed the plan
 # Limitations
 
 * Buildings is the part I trust least. There are only two years of emerging-market data, a few large
-  claims decide its results, and its segment levels carry 8% to 10% uncertainty.
+  claims decide its results, and its segment levels carry 13% to 24% uncertainty.
 * The Week 2 segment levels rest partly on public scores. The competition allows that, but in real
   pricing it would mean calibrating on a sample of the book's own outcomes.
 * The Week 2 expert sets were chosen on folds that include 2024, so their forward-test gain is a

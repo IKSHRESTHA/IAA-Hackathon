@@ -142,6 +142,7 @@ def week2(full: bool) -> Path:
 # ------------------------------------------------------------------------------- check and package
 
 def sha256(path: Path) -> str:
+    """Hex SHA-256 of a file."""
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
@@ -174,11 +175,15 @@ def check_against_sample(sub: pd.DataFrame, sample: pd.DataFrame) -> dict:
 
 
 def package() -> None:
+    """Copy the submitted files into 1_predictions, check them against the samples, write the manifest."""
     folder = FINAL / "1_predictions"
     folder.mkdir(exist_ok=True)
     rows = []
     for d in SUBMITTED.values():
         dst = folder / d["file"]
+        if dst.exists() and sha256(dst) != sha256(REPO / d["source"]):
+            raise SystemExit(f"{dst.name} differs from its source {d['source']}; "
+                             "refusing to overwrite the submitted file")
         shutil.copyfile(REPO / d["source"], dst)
         facts = check_against_sample(pd.read_csv(dst, dtype={"row_id": str}), pd.read_parquet(REPO / d["sample"]))
         rows.append({"deliverable": d["deliverable"], "file": d["file"], "source": d["source"], "model": d["model"],
@@ -197,6 +202,7 @@ def render() -> None:
 
 
 def main() -> int:
+    """Rebuild the chosen files, compare them with the submitted ones, package and render."""
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0],
                                  formatter_class=argparse.RawDescriptionHelpFormatter, epilog=__doc__)
     ap.add_argument("--full", action="store_true", help="rebuild everything from the raw competition files")
@@ -214,7 +220,10 @@ def main() -> int:
     checks = [compare(w, p) for w, p in rebuilt.items()]
     pd.DataFrame(checks).to_csv(REBUILT / "check.csv", index=False, lineterminator="\n")
     print("\n=== package: final/1_predictions")
-    package()
+    if all(c["match"] for c in checks):
+        package()
+    else:
+        print("package skipped: a rebuilt file differs from the submitted one")
     if not a.no_render:
         print("\n=== render: final/2_writeup/writeup.pdf")
         render()

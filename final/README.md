@@ -30,10 +30,10 @@ python final/diagnostics.py                      # SHAP, lift, GLM: about 25 min
 ```
 
 The quick run starts from the intermediate results in the repository, runs the last stages of both
-pipelines, renders the write-up (Quarto; `--no-render` skips it) and ends with:
+pipelines, renders the write-up (Quarto; `--no-render` skips it). The output includes:
 
 ```
-week1: rebuilt file matches the submitted file (same rows True, largest relative difference 2.7e-15 ...)
+week1: rebuilt file matches the submitted file (same rows True, largest relative difference 3.6e-15 ...)
 week2: rebuilt file matches the submitted file (same rows True, largest relative difference 0.0e+00 ...)
 ```
 

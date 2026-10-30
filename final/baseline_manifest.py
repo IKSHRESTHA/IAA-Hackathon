@@ -67,7 +67,7 @@ def validate_submission(path: Path) -> dict[str, object]:
     if not all(checks.values()):
         raise ValueError(f"{path}: submission checks failed: {checks}")
     return {
-        "path": str(path.relative_to(REPO)),
+        "path": path.relative_to(REPO).as_posix(),
         "rows": int(len(frame)),
         "sha256": sha256(path),
         "mean_prediction": float(prediction.mean()),
@@ -78,7 +78,7 @@ def validate_submission(path: Path) -> dict[str, object]:
 def main() -> int:
     OUT.parent.mkdir(parents=True, exist_ok=True)
     manifest = {
-        "purpose": "Locked pre-change model baseline",
+        "purpose": "Final submission baseline",
         "python": sys.version,
         "platform": platform.platform(),
         "git_commit": git("rev-parse", "HEAD"),

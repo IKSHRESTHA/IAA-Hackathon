@@ -15,29 +15,34 @@ SEED = 20260515
 REPS = 500
 
 
+POWER = 1.5  # Tweedie power of the competition metric
+FLOOR = 1e-12  # keeps log and power terms finite
+
+
+def deviance(y: np.ndarray, mu: np.ndarray) -> np.ndarray:
+    """Row-wise Tweedie deviance at POWER."""
+    p = POWER
+    return 2 * (np.power(y, 2 - p) / ((1 - p) * (2 - p))
+                - y * np.power(mu, 1 - p) / (1 - p)
+                + np.power(mu, 2 - p) / (2 - p))
+
+
 def d2(y: np.ndarray, mu: np.ndarray) -> float:
+    """Share of the null (mean-only) Tweedie deviance that the prediction removes."""
     y = np.asarray(y, dtype=float)
-    mu = np.maximum(np.asarray(mu, dtype=float), 1e-12)
-    p = 1.5
-    dev = 2 * (np.power(y, 2 - p) / ((1 - p) * (2 - p))
-               - y * np.power(mu, 1 - p) / (1 - p)
-               + np.power(mu, 2 - p) / (2 - p))
-    null_mu = np.full_like(y, y.mean())
-    null = 2 * (np.power(y, 2 - p) / ((1 - p) * (2 - p))
-                - y * np.power(null_mu, 1 - p) / (1 - p)
-                + np.power(null_mu, 2 - p) / (2 - p))
-    return float(1 - dev.sum() / null.sum())
+    mu = np.maximum(np.asarray(mu, dtype=float), FLOOR)
+    return float(1 - deviance(y, mu).sum() / deviance(y, np.full_like(y, y.mean())).sum())
 
 
 def evaluate(name: str) -> pd.DataFrame:
+    """Bootstrap D2 by customer for one stored out-of-sample check."""
     members = json.loads((R2 / "reports" / "08_geo" / "summary.json").read_text())["members"]
     parts = []
     for line in LINES:
         frame = pd.read_parquet(R2 / "data" / "experts" / f"{line}_{name}.parquet")
-        prediction = np.ones(len(frame))
         logs = []
         for member in members[line]:
-            logs.append(np.log(np.maximum(frame[member].to_numpy(dtype=float), 1e-12)))
+            logs.append(np.log(np.maximum(frame[member].to_numpy(dtype=float), FLOOR)))
         prediction = np.exp(np.mean(logs, axis=0)) * frame["comp_cost"].fillna(1).to_numpy(dtype=float)
         parts.append(pd.DataFrame({
             "customer_id": frame["customer_id"].astype(str),
@@ -48,12 +53,12 @@ def evaluate(name: str) -> pd.DataFrame:
     customers = frame["customer_id"].unique()
     rng = np.random.default_rng(SEED)
     estimates = np.empty(REPS)
+    y = frame["y"].to_numpy(dtype=float)
+    mu = frame["mu"].to_numpy(dtype=float)
     for i in range(REPS):
         sampled = rng.choice(customers, size=len(customers), replace=True)
         counts = pd.Series(sampled.astype(str)).value_counts()
         weight = frame["customer_id"].astype(str).map(counts).fillna(0).to_numpy(dtype=float)
-        y = frame["y"].to_numpy(dtype=float)
-        mu = frame["mu"].to_numpy(dtype=float)
         estimates[i] = d2(np.repeat(y, weight.astype(int)), np.repeat(mu, weight.astype(int)))
     return pd.DataFrame([{
         "check": name,

@@ -18,6 +18,8 @@ LINES = ("motor", "buildings", "contents")
 CUTOFF = pd.Timestamp("2025-01-01")
 HISTORY_YEARS = 3
 TOLERANCE = 1e-5
+# Decided after the period or driven by its claims, so never available when pricing 2025.
+FORBIDDEN = {"renewal_decision", "customer_service_contacts"}
 
 
 def read(name: str, layer: str, columns: list[str] | None = None) -> pd.DataFrame:
@@ -105,10 +107,16 @@ def main() -> int:
         leaked = target_columns.intersection(test.columns)
         if leaked:
             raise AssertionError(f"{line}: target columns present in test features: {sorted(leaked)}")
+        forbidden = FORBIDDEN.intersection(train.columns) | FORBIDDEN.intersection(test.columns)
+        if forbidden:
+            raise AssertionError(f"{line}: leakage columns present in features: {sorted(forbidden)}")
         for column in ("comp_cost", "comp_count"):
             if column in train and not train[column].between(0, 1).all():
                 raise AssertionError(f"{line}.{column}: completeness outside [0, 1]")
-        messages.extend(check_history(line, rows, claims))
+        history = check_history(line, rows, claims)
+        if history[0].split(": checked ")[1].startswith("0 "):
+            print(f"warning: {history[0]}")
+        messages.extend(history)
     result = {"status": "passed", "checks": messages}
     out = REPO / "final" / "3_diagnostics" / "leakage_audit.json"
     out.parent.mkdir(parents=True, exist_ok=True)
